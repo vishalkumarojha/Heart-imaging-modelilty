@@ -1,0 +1,17 @@
+# envs / caches
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# raw dataset (~42 GB, external) and regenerable cache
+data/raw/
+data/processed/
+
+# model checkpoints (large binaries)
+outputs/checkpoints/
+*.pt
+
+# run logs (verbose, tqdm-interleaved) — keep the CSV results, drop the rest
+outputs/logs/*.log
+outputs/logs/*.pid

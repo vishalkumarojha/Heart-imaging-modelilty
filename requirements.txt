@@ -1,0 +1,11 @@
+# Phase 1 - Chest X-ray (Cardiomegaly / Effusion) pipeline
+# Install into a venv:  python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+torch
+torchvision
+pandas
+numpy
+scikit-learn
+albumentations
+Pillow
+tqdm
+matplotlib
