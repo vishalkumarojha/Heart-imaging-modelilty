@@ -1,14 +1,33 @@
 # Multi-Modality Heart-Condition Detection
 
 Independently trained per-modality encoders — **chest X-ray**, **echocardiogram
-video**, **cardiac MRI** — each producing a common **1024-d embedding**, built so
-they can be composed into a single late-fusion cardiac-diagnosis model.
+video**, **cardiac MRI** — each producing a common **1024-d embedding**, composed
+by a **late-fusion layer** that handles any subset of the three modalities being
+present via a learned missing-modality token.
 
-> **Status:** Phases 1–3 (the three encoders) complete and evaluated. Phase 4
-> (fusion) not started. Per-phase deep-dive references:
+> **Status:** all four phases complete. Phases 1–3 = the three encoders (trained
+> & evaluated). Phase 4 = the fusion layer, **validated single-modality-present**
+> on every real test set (there is no real tri-modal patient data — see §0).
+> Per-phase deep-dive references:
 > [`PHASE1_XRAY_SUMMARY.md`](PHASE1_XRAY_SUMMARY.md) ·
 > [`PHASE2_ECHO_SUMMARY.md`](PHASE2_ECHO_SUMMARY.md) ·
-> [`PHASE3_MRI_SUMMARY.md`](PHASE3_MRI_SUMMARY.md)
+> [`PHASE3_MRI_SUMMARY.md`](PHASE3_MRI_SUMMARY.md) ·
+> [`FUSION_SUMMARY.md`](FUSION_SUMMARY.md)
+
+---
+
+## 0. The hard constraint
+
+**NIH ChestX-ray14, EchoNet-Dynamic and ACDC are three different institutions
+with completely non-overlapping patients.** No patient has more than one
+modality, so there is **no real tri-modal data**. The fusion layer is therefore
+**trained and validated single-modality-present only** (each modality's real test
+set, the other two masked missing and replaced by a *learned* token — not zeros),
+and **demonstrated** only on explicitly-labelled **synthetic** combinations of
+three unrelated real people (`src/fusion_demo.py`). The only real fusion numbers
+are in `outputs/logs/fusion/single_modality_validation.csv`; synthetic outputs
+live in the separately-named `SYNTHETIC_demo_predictions.csv`. This separation is
+enforced in code comments, log messages, docstrings, and filenames throughout.
 
 ---
 
@@ -33,12 +52,13 @@ takes the tractable route:
 2. Enforce a **shared output contract** — every encoder maps its input to
    `[B, 1024]`, no classifier head, no final activation — so the encoders are
    drop-in interchangeable.
-3. **Phase 4:** discard the per-modality heads, concatenate the three 1024-d
-   embeddings (`→ 3072`), and train a small fusion head on whatever paired data
-   is available (or with the encoders frozen).
+3. **Phase 4:** discard the per-modality heads, freeze the encoders, and put a
+   **fusion layer** on the three 1024-d embeddings: per-modality LayerNorm →
+   substitute a learned token for any absent modality → concat (`→ 3072`) → MLP →
+   a shared representation feeding three task-specific heads (§3). Because there
+   is no paired data (§0), it is trained/validated single-modality-present.
 
-This repo is Phases 1–3. Each phase followed the **same staged process**
-(§5) so the write-up is reproducible.
+Each phase followed the **same staged process** (§5) so the write-up is reproducible.
 
 ---
 
@@ -54,6 +74,23 @@ misleading under class imbalance.
 | **1** | Chest X-ray — NIH ChestX-ray14 | 2-label (Cardiomegaly, Effusion) | 15,884 images | **0.878** mean | — | strong, generalises (test > val) |
 | **2** | Echo video — EchoNet-Dynamic | 3-class EF category | 1,277 videos | **0.802** macro | 0.713 | middle EF class is hard (0.68) |
 | **3** | Cardiac MRI — ACDC | 5-class diagnosis | 15 patients | **0.706** macro | 0.400 | small-data limited — see §4.3 |
+| **4** | Fusion — single-modality-present | routes each modality through the fusion block | (each real test set) | see below | | mechanism validated on X-ray + Echo |
+
+### Phase 4 — fusion pathway vs standalone (single-modality-present, real test sets)
+
+| Modality | Fusion-pathway AUROC | Phase 1–3 standalone | Δ | Test N |
+|---|---|---|---|---|
+| X-ray (mean) | **0.865** | 0.878 | **−0.013** | 15,884 |
+| Echo (macro) | **0.806** | 0.802 | **+0.004** | 1,277 |
+| MRI (macro) | **0.628** | 0.706 | **−0.078** | 15 |
+
+The fusion block (frozen encoder → LayerNorm → concat with two learned
+missing-modality tokens → MLP → task head) **preserves each encoder's signal** for
+X-ray and Echo (Δ ≈ 1 pp; Echo slightly up) — this is the result that validates
+the mechanism. MRI's −7.8 pp is within its error bars (N = 15; MRI val bounced
+0.61–0.86 during training) and consistent with its Phase 3 small-data limitation;
+left as the honest result, not tuned away. **No real multi-modal accuracy is
+claimed — there is no paired cohort.**
 
 ### Per-class detail
 
@@ -111,10 +148,24 @@ rebuilds *just* the encoder (strips the training head).
 | Params (total / trainable) | 6.96 M / 2.16 M frozen | 15.4 M / 4.2 M frozen | 15.4 M / 4.2 M frozen |
 | Checkpoint | `outputs/checkpoints/densenet121_best.pt` | `outputs/checkpoints/echo/echo_cnn_lstm_best.pt` | `outputs/checkpoints/mri/mri_resnet18_bilstm_best.pt` |
 
-**Phase 4 fusion (planned):** `concat([x_feat, echo_feat, mri_feat], dim=1)` →
-`Linear(3072, …)` → shared diagnosis head. Because the three source datasets are
-**disjoint patient populations** (§4.1), fusion will use either a small paired
-cohort or frozen encoders + a trainable head only.
+**Phase 4 — the fusion layer** (`src/fusion_model.py`, 1.85 M trainable params;
+encoders frozen & external):
+
+```
+e_i [B,1024] ──▶ per-modality LayerNorm            (X-ray embeddings are ~15× larger
+present?  ──────▶ if absent: learned missing_token[i]  in raw magnitude — the norm is
+                 (trainable [1024] param, NOT zeros)   load-bearing)
+                 concat(3 × [B,1024]) = [B,3072]
+                 → Linear 3072→512 → GELU → Dropout(0.3) → Linear 512→512 → GELU
+                 = shared z [B,512]
+z ──▶ 3 task heads:  xray Linear(512,2) · echo Linear(512,3) · mri Linear(512,5)
+```
+
+**Concat + MLP, not attention** — 3 fixed modality slots, nothing to route.
+**Task-specific heads, not a unified label** — keeps each dataset's real ground
+truth so validation is apples-to-apples with Phases 1–3 (a "risk level" appears
+only in the demo as an explicit untrained worst-of-3 heuristic). Trained on the
+union of the three training sets, each sample single-modality-present.
 
 ---
 
@@ -154,9 +205,9 @@ echo/echo_index.csv, mri/split_index.csv}`) and reproducible from seed 42.
 - **Two-tier checkpointing.** `*_best.pt` (metric-gated) + `*_last.pt` (every
   epoch, atomic write) + `--resume` (restores model + optimizer + AMP scaler +
   epoch counter; `metrics.csv` appended).
-- **Mixed precision** (`torch.amp`) throughout. `src/utils.py` (seeding, logging,
-  `multilabel_auroc`, confusion-rate helpers) is shared **unchanged** across all
-  three phases.
+- **Mixed precision** (`torch.amp`) for the encoder phases; Phase 4's fusion head
+  is trivial and runs fp32. `src/utils.py` (seeding, logging, `multilabel_auroc`,
+  confusion-rate helpers) is shared **unchanged** across all four phases.
 
 ### 4.3 Limitations (for the paper's "Threats to validity")
 
@@ -173,9 +224,11 @@ echo/echo_index.csv, mri/split_index.csv}`) and reproducible from seed 42.
 3. **Echo "Mildly Reduced" (EF 40–54)** is a 15-point band and echo-derived EF
    has ~±5 % measurement noise, so ~40 % of that class's ambiguity is
    intrinsic to the labels.
-4. **Phase 4 has no paired cohort.** Fusion cannot yet be validated on same-patient
-   multi-modal data; the plan is frozen encoders + a head trained on a small
-   paired set when one is obtained.
+4. **Phase 4 has no paired cohort.** The fusion layer is validated
+   single-modality-present only; true multi-modal accuracy is *unmeasured*.
+   All-3-present inference is out-of-distribution for a single-present-trained
+   model, so the synthetic demo shows the pathway runs, not that it is accurate.
+   Measuring real fusion needs a dataset where one patient has ≥ 2 modalities.
 5. **X-ray `images_012` is a partial download** (2.5 % of images missing, a
    contiguous tail block). Prevalence and the patient-level split are unaffected.
 
@@ -211,15 +264,15 @@ section for the paper:
 
 ### Per-phase training recipe
 
-| | Phase 1 — X-ray | Phase 2 — Echo | Phase 3 — MRI |
-|---|---|---|---|
-| Schedule | 5 ep frozen (`lr 1e-4`) + 5 ep unfrozen (`lr 1e-5`) | 3 ep CNN-frozen (`1e-4`) + 6 ep unfrozen (`1e-5`) | 25 ep, **CNN frozen throughout**, `lr 3e-4` |
-| Optimizer | Adam, wd 0 | Adam, wd 1e-4 | Adam, wd **1e-3** + head dropout 0.3 |
-| Loss | `BCEWithLogitsLoss(pos_weight)` | `CrossEntropyLoss(weight)` | `CrossEntropyLoss` |
-| Batch / precision | 32 / AMP | 8 / AMP | 8 / AMP |
-| Best epoch | 8 | 8 | 25 |
-| Val (primary) | mean AUROC **0.868** | macro AUROC **0.820** | macro AUROC **0.822** (noisy) |
-| Wall-clock (GTX 1650) | ~5 h 20 m | ~47 min | ~75 s |
+| | Phase 1 — X-ray | Phase 2 — Echo | Phase 3 — MRI | Phase 4 — Fusion |
+|---|---|---|---|---|
+| Schedule | 5 ep frozen (`lr 1e-4`) + 5 ep unfrozen (`lr 1e-5`) | 3 ep CNN-frozen (`1e-4`) + 6 ep unfrozen (`1e-5`) | 25 ep, **CNN frozen throughout**, `lr 3e-4` | 30 ep, encoders frozen, `lr 1e-3` |
+| Optimizer | Adam, wd 0 | Adam, wd 1e-4 | Adam, wd **1e-3** + head dropout 0.3 | Adam, wd 1e-4 + MLP dropout 0.3 |
+| Loss | `BCEWithLogitsLoss(pos_weight)` | `CrossEntropyLoss(weight)` | `CrossEntropyLoss` | per-modality BCE / CE on its own head |
+| Batch / precision | 32 / AMP | 8 / AMP | 8 / AMP | 256 / fp32 |
+| Best epoch | 8 | 8 | 25 | 13 |
+| Val (primary) | mean AUROC **0.868** | macro AUROC **0.820** | macro AUROC **0.822** (noisy) | combined **0.846** |
+| Wall-clock (GTX 1650) | ~5 h 20 m | ~47 min | ~75 s | ~7 min (embedding precompute) + <1 min train |
 
 ---
 
@@ -229,17 +282,18 @@ section for the paper:
 Capstone/
 ├── data/
 │   ├── raw/{<nih images>, echonet/, acdc/}          external, git-ignored
-│   └── processed/{split_index.csv, echo/, mri/}     frozen splits + norm stats
+│   └── processed/{split_index.csv, echo/, mri/, fusion/*.npz}   frozen splits + embedding cache
 ├── src/
-│   ├── utils.py                     shared, modality-agnostic (all 3 phases)
+│   ├── utils.py                     shared, modality-agnostic (all phases, unchanged)
 │   ├── config.py  dataset.py  model.py  train.py  evaluate.py  explore.py      # Phase 1
 │   ├── echo_config.py  echo_dataset.py  echo_model.py  echo_train.py  echo_evaluate.py  echo_explore.py
-│   └── mri_config.py   mri_dataset.py   mri_model.py   mri_train.py   mri_evaluate.py   mri_explore.py
+│   ├── mri_config.py   mri_dataset.py   mri_model.py   mri_train.py   mri_evaluate.py   mri_explore.py
+│   └── fusion_config.py  load_encoders.py  fusion_model.py  fusion_train.py  fusion_demo.py   # Phase 4
 ├── outputs/
-│   ├── checkpoints/{*.pt, echo/*.pt, mri/*.pt}      git-ignored (large)
-│   └── logs/{, echo/, mri/}                         metrics.csv + test_predictions.csv tracked
-├── requirements.txt  requirements_echo.txt  requirements_mri.txt
-├── PHASE1_XRAY_SUMMARY.md  PHASE2_ECHO_SUMMARY.md  PHASE3_MRI_SUMMARY.md
+│   ├── checkpoints/{*.pt, echo/*.pt, mri/*.pt, fusion/*.pt}     git-ignored (large)
+│   └── logs/{, echo/, mri/, fusion/}               metrics.csv + *predictions*.csv tracked; run logs ignored
+├── requirements.txt  requirements_echo.txt  requirements_mri.txt   (fusion adds no deps)
+├── PHASE1_XRAY_SUMMARY.md  PHASE2_ECHO_SUMMARY.md  PHASE3_MRI_SUMMARY.md  FUSION_SUMMARY.md
 └── README.md
 ```
 
@@ -264,15 +318,26 @@ python -m src.<p>_train                   # 3. full run  (add --resume to contin
 python -m src.<p>_evaluate                # 4. test metrics + predictions CSV
 ```
 
+Phase 4 (needs the three encoder checkpoints from Phases 1–3):
+
+```bash
+python -m src.load_encoders               # verify each checkpoint -> [B,1024], no head
+python -m src.fusion_train                # precompute embeddings -> train -> single-modality validation
+python -m src.fusion_demo --n 4           # SYNTHETIC multi-modal demonstration
+```
+
 Environment used: single **NVIDIA GTX 1650 (3.63 GB usable)**, Python 3.14,
 PyTorch 2.14 + CUDA 13, `.venv`. Every phase fits in < 2.1 GB VRAM.
 
 ---
 
-## 8. Next — Phase 4 (fusion)
+## 8. Future work
 
-- Build `FusionModel` = three frozen encoders (loaded via
-  `load_encoder_from_checkpoint`) → `concat → [B, 3072]` → MLP head.
-- Obtain / assemble a **paired** multi-modal cardiac cohort (the open problem).
-- Compare against each single-modality encoder + head, and against
-  modality-dropout at inference (robustness to a missing modality).
+- **A paired multi-modal cohort** (one patient, ≥ 2 modalities) — the open
+  problem. With it: retrain fusion on real multi-present samples; measure
+  multi-modal vs best-single-modality, and graceful degradation under
+  modality-dropout at inference.
+- **Strengthen the MRI encoder** (Phase 3's 70-patient weak link): 5-fold CV over
+  all 100 ACDC patients, or add the segmentation masks as input / auxiliary task.
+- **Cross-validation per phase** — current numbers are single-split point
+  estimates; error bars are largest for MRI.
