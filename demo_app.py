@@ -2,14 +2,13 @@
 
     python demo_app.py            # -> http://127.0.0.1:7860
 
-4 tabs: X-ray · ECHO · MRI · Fusion. Upload a file, get a live prediction from
-the frozen Phase 1-3 encoders + their trained heads, and (tab 4) the Phase 4
-fusion pathway. All inference runs on CPU (encoders are small & frozen — a
-single prediction is ~1-3 s).
+4 tabs: X-ray, Echocardiogram, MRI, Fusion. Upload a file, get a live prediction
+from the frozen Phase 1-3 encoders + their trained heads, and (tab 4) the Phase 4
+fusion pathway. All inference runs on CPU (~1-3 s per prediction).
 
-Real / synthetic transparency: the Fusion tab shows a prominent red banner
-whenever all three modalities are supplied together, because no real patient in
-any of the three source datasets has more than one modality.
+Real / synthetic transparency: the Fusion tab shows a prominent banner whenever
+all three modalities are supplied together, because no real patient in any of the
+three source datasets has more than one modality.
 """
 from __future__ import annotations
 
@@ -35,18 +34,86 @@ CKPT = {
     "fusion": "outputs/checkpoints/fusion/fusion_best.pt",
 }
 
-BIG_CSS = """
-.gradio-container {max-width: 1150px !important; margin: auto;}
-#hdr h1 {font-size: 1.7rem; margin-bottom: 0;}
-.bigtext, .bigtext p {font-size: 1.03rem; line-height: 1.6;}
-.synthetic-banner {
-    background:#b3261e; color:#fff; font-size:1.15rem; font-weight:700;
-    padding:16px 18px; border-radius:10px; border:3px solid #7a1a13; margin:6px 0;
+# --------------------------------------------------------------------------- #
+# Look & feel — a deliberate clinical palette, two typefaces, flat surfaces.
+#   ground  #f5f6f8 cool paper (not cream)   ink   #1b1f24
+#   muted   #59616c                          line  #dde1e6
+#   accent  #9c2f38 (ECG red — primary action + title rule only)
+#   Display: Newsreader (roman).  Body: Public Sans.  Mono: IBM Plex Mono.
+# --------------------------------------------------------------------------- #
+THEME = gr.themes.Base(
+    font=[gr.themes.GoogleFont("Public Sans"), "system-ui", "sans-serif"],
+    font_mono=[gr.themes.GoogleFont("IBM Plex Mono"), "ui-monospace", "monospace"],
+)
+
+CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
+
+:root, .gradio-container {
+  --ground:#f5f6f8; --panel:#ffffff; --ink:#1b1f24; --muted:#59616c;
+  --line:#dde1e6; --accent:#9c2f38;
+  --body-background-fill:var(--ground);
+  --background-fill-primary:var(--panel);
+  --background-fill-secondary:var(--ground);
+  --block-background-fill:var(--panel);
+  --block-border-color:var(--line);
+  --block-border-width:1px;
+  --block-shadow:none;
+  --block-radius:10px;
+  --border-color-primary:var(--line);
+  --body-text-color:var(--ink);
+  --body-text-color-subdued:var(--muted);
+  --button-primary-background-fill:var(--accent);
+  --button-primary-background-fill-hover:#872a31;
+  --button-primary-text-color:#ffffff;
+  --button-primary-border-color:var(--accent);
+  --radius-lg:10px; --radius-md:8px; --radius-sm:6px;
 }
+.gradio-container {max-width:1080px !important; margin:0 auto; background:var(--ground);}
+.gradio-container, .gradio-container .prose {color:var(--ink); font-size:16px; line-height:1.6;}
+
+/* headings: Newsreader roman, real size steps, no tracking */
+.gradio-container h1,.gradio-container h2,.gradio-container h3,.gradio-container h4 {
+  font-family:'Newsreader',Georgia,'Times New Roman',serif;
+  font-weight:500; letter-spacing:0; color:var(--ink); line-height:1.2;
+}
+.gradio-container h3 {font-size:1.32rem; margin:.2rem 0 .9rem;}
+.gradio-container .prose p {max-width:74ch; color:var(--ink);}
+.gradio-container .prose em {color:var(--muted); font-style:normal;}
+.gradio-container .prose code {font-size:.92em; background:#eef0f3; padding:.08em .35em; border-radius:4px;}
+
+/* app header */
+.app-head {padding:26px 4px 10px;}
+.app-title {font-family:'Newsreader',Georgia,serif; font-weight:500; font-size:2.15rem;
+  line-height:1.12; margin:0; color:var(--ink);}
+.app-title .rule {display:block; width:52px; height:3px; background:var(--accent); margin:14px 0 0;}
+.app-sub {margin:12px 0 0; color:var(--muted); font-size:1rem; max-width:70ch;}
+
+/* flat panels — one hairline edge, no shadow, modest radius */
+.gradio-container .block, .gradio-container .form {box-shadow:none !important; border-radius:10px;}
+.gradio-container .tab-nav button {font-size:.98rem; letter-spacing:0;}
+.gradio-container .tab-nav button.selected {color:var(--accent); border-bottom-color:var(--accent);}
+
+/* result readout */
+.readout .prose p {font-size:1.02rem;}
+.marks {font-variant-numeric:tabular-nums;}
+.marks .on {color:var(--accent); font-weight:600;}
+.marks .off {color:var(--muted);}
+
+/* synthetic-example banner: a solid block with a heavy left rule, not an alert toast */
+.synthetic-banner {
+  background:#fbeced; border:1px solid #e6b9bd; border-left:6px solid var(--accent);
+  color:#4d1a1f; padding:14px 16px; border-radius:8px; margin:4px 0 2px;
+  font-size:1rem; line-height:1.5;
+}
+.synthetic-banner b {font-weight:700;}
+
+.app-foot {margin-top:22px; padding-top:14px; border-top:1px solid var(--line);
+  color:var(--muted); font-size:.92rem; max-width:78ch;}
 """
 
 # --------------------------------------------------------------------------- #
-# Lazy model cache  (loaded on first use so the app starts instantly)
+# Lazy model cache
 # --------------------------------------------------------------------------- #
 _CACHE: dict = {}
 
@@ -54,7 +121,7 @@ _CACHE: dict = {}
 def _device():
     import torch
 
-    return torch.device("cpu")           # deterministic + no CUDA surprises for a live demo
+    return torch.device("cpu")
 
 
 def _load(key: str):
@@ -92,7 +159,7 @@ def _load(key: str):
 
 
 # --------------------------------------------------------------------------- #
-# Preprocessing  (reuses the exact Phase 1-3 pipelines)
+# Preprocessing (reuses the exact Phase 1-3 pipelines)
 # --------------------------------------------------------------------------- #
 def _prep_xray(path):
     import numpy as np
@@ -101,27 +168,24 @@ def _prep_xray(path):
     from src.dataset import build_transforms
 
     img = np.array(Image.open(path).convert("RGB"))
-    t = build_transforms(train=False, image_size=224)(image=img)["image"]
-    return t.unsqueeze(0)                                   # [1,3,224,224]
+    return build_transforms(train=False, image_size=224)(image=img)["image"].unsqueeze(0)
 
 
 def _prep_echo(path):
     from src.echo_dataset import apply_clip, build_transforms, load_norm_stats, read_clip
 
-    frames = read_clip(str(path), 16)                       # [16,H,W,3] uint8  (raises IOError if not a video)
+    frames = read_clip(str(path), 16)
     mean, std = load_norm_stats()
-    clip = apply_clip(build_transforms(False, 112, mean, std), frames)
-    return clip.unsqueeze(0)                                # [1,16,3,112,112]
+    return apply_clip(build_transforms(False, 112, mean, std), frames).unsqueeze(0)
 
 
 def _resolve_ed_es(files):
-    """From an uploaded file list, return (ed_path, es_path). ED = lowest frame #."""
     paths = [str(getattr(f, "name", f)) for f in files]
     vols = [p for p in paths if p.endswith((".nii.gz", ".nii")) and "_gt" not in os.path.basename(p)]
     if len(vols) < 2:
         raise ValueError(
-            f"Need 2 volume files (the ED and ES frames, .nii.gz). Got {len(vols)} usable "
-            f"of {len(paths)} uploaded. Do not upload the *_gt.nii.gz masks."
+            f"Need the two frame volumes (.nii.gz) for one patient. Got {len(vols)} usable "
+            f"of {len(paths)} uploaded. Do not include the *_gt.nii.gz masks."
         )
 
     def frame_no(p):
@@ -145,7 +209,7 @@ def _prep_mri(files):
 
 
 # --------------------------------------------------------------------------- #
-# Predict  (each wrapped by the tab handlers with try/except)
+# Predict
 # --------------------------------------------------------------------------- #
 def _predict_xray(path):
     import torch
@@ -198,119 +262,124 @@ def _predict_fusion(xray_path, echo_path, mri_files):
     xr = torch.sigmoid(out["xray"])[0].tolist()
     ec = torch.softmax(out["echo"].float(), 1)[0].tolist()
     mr = torch.softmax(out["mri"].float(), 1)[0].tolist()
-    return present, {XRAY_CLASSES[0]: xr[0], XRAY_CLASSES[1]: xr[1]}, \
-        dict(zip(ECHO_CLASSES, ec)), dict(zip(MRI_CLASSES, mr))
+    return (present, {XRAY_CLASSES[0]: xr[0], XRAY_CLASSES[1]: xr[1]},
+            dict(zip(ECHO_CLASSES, ec)), dict(zip(MRI_CLASSES, mr)))
 
 
 # --------------------------------------------------------------------------- #
-# Tab handlers  (never raise — always return a friendly message)
+# Tab handlers (never raise)
 # --------------------------------------------------------------------------- #
 def _err(msg: str) -> str:
-    return f"### ⚠️ {msg}"
+    return f"### {msg}"
 
 
 def run_xray(image_path):
     if not image_path:
-        return {}, _err("Upload a chest X-ray image (.png / .jpg) first.")
+        return {}, _err("Upload a chest X-ray image (PNG or JPEG) to begin.")
     try:
         p = _predict_xray(image_path)
     except Exception as e:
         traceback.print_exc()
-        return {}, _err(f"Could not read that as a chest X-ray image. ({type(e).__name__}: {e})")
+        return {}, _err(f"That file could not be read as a chest X-ray. ({type(e).__name__})")
     a, b = p["Cardiomegaly"], p["Effusion"]
 
     def line(name, v):
-        side = "above" if v >= 0.5 else "below"
-        return f"**{name}: {v * 100:.1f}%** — {side} the 0.50 decision threshold."
+        return f"**{name}: {v * 100:.1f}%**, {'above' if v >= 0.5 else 'below'} the 0.50 decision threshold."
 
     txt = (
         f"{line('Cardiomegaly', a)}  \n{line('Effusion', b)}  \n\n"
-        "These are **independent** probabilities (multi-label), not a distribution.  \n\n"
-        "_Model:_ DenseNet121 (ImageNet-pretrained), trained on NIH ChestX-ray14 "
-        "(109,312 images, patient-level split). **Test mean AUROC 0.878** "
-        "(Cardiomegaly 0.897, Effusion 0.859)."
+        "The two probabilities are scored independently (multi-label); they are not "
+        "one distribution and need not sum to 100%.  \n\n"
+        "_Model: DenseNet121, ImageNet-pretrained, trained on NIH ChestX-ray14 "
+        "(109,312 images, patient-level split). Test mean AUROC 0.878; per label, "
+        "Cardiomegaly 0.897 and Effusion 0.859. AUROC is the reported metric because "
+        "Cardiomegaly appears in about 2.5% of images._"
     )
     return p, txt
 
 
 def run_echo(video_path):
     if not video_path:
-        return {}, _err("Upload an echocardiogram video (.avi) first.")
+        return {}, _err("Upload an echocardiogram video (AVI) to begin.")
     try:
         p = _predict_echo(video_path)
     except Exception as e:
         traceback.print_exc()
-        return {}, _err(f"Could not read that as an echo video. ({type(e).__name__}: {e})")
+        return {}, _err(f"That file could not be read as an echo video. ({type(e).__name__})")
     top = max(p, key=p.get)
     txt = (
-        f"**Predicted EF category: {top}**  ({p[top] * 100:.0f}% confidence).  \n\n"
-        "Reduced = EF < 40 · Mildly Reduced = 40–54 · Normal = ≥ 55.  \n\n"
-        "_Model:_ ResNet18 + bidirectional LSTM over 16 sampled frames, trained on "
-        "EchoNet-Dynamic (official split). **Test macro one-vs-rest AUROC 0.802** "
-        "(Reduced 0.906, Mildly Reduced 0.678, Normal 0.822). The *Mildly Reduced* "
-        "band is intrinsically hard — a 15-point EF window with ~±5% measurement noise."
+        f"**Predicted ejection-fraction category: {top}**, at {p[top] * 100:.0f}% confidence.  \n\n"
+        "Category boundaries: Reduced below 40, Mildly Reduced 40 to 54, Normal 55 and above.  \n\n"
+        "_Model: ResNet18 applied per frame with a bidirectional LSTM over 16 sampled "
+        "frames, trained on EchoNet-Dynamic (official split). Test macro one-vs-rest "
+        "AUROC 0.802; by class, Reduced 0.906, Normal 0.822, Mildly Reduced 0.678. "
+        "The middle band is hard by construction: a 15-point window, and echo-derived "
+        "EF itself carries roughly ±5% measurement noise._"
     )
     return p, txt
 
 
 def run_mri(files):
     if not files:
-        return {}, _err("Upload this patient's ED and ES frame volumes (two .nii.gz files).")
+        return {}, _err("Upload one patient's ED and ES frame volumes (two .nii.gz files).")
     try:
         p, ed_name, es_name = _predict_mri(files)
     except ValueError as e:
         return {}, _err(str(e))
     except Exception as e:
         traceback.print_exc()
-        return {}, _err(f"Could not process those MRI files. ({type(e).__name__}: {e})")
+        return {}, _err(f"Those MRI files could not be processed. ({type(e).__name__})")
     top = max(p, key=p.get)
     txt = (
-        f"**Predicted diagnosis: {top} — {MRI_LONG[top]}**  ({p[top] * 100:.0f}%).  \n"
-        f"_Using_ `{ed_name}` (ED) and `{es_name}` (ES).  \n\n"
-        "⚠️ **Read with caution — documented limitation.** This model was trained on only "
-        "**70 ACDC patients**; the test set is **15 patients (3 per class)** and **test "
-        "macro AUROC is 0.706**, with HCM and MINF near chance. A single prediction here "
-        "illustrates the pipeline — it is **not** a diagnosis. The MRI encoder's real role "
-        "is as a component of the fusion model."
+        f"**Predicted diagnosis: {top}, {MRI_LONG[top]}**, at {p[top] * 100:.0f}% confidence.  \n"
+        f"_Read from_ `{ed_name}` _(ED) and_ `{es_name}` _(ES)._  \n\n"
+        "**Read this prediction with caution.** It is a documented limitation. The model "
+        "was trained on 70 ACDC patients; the test set holds 15 patients, three per class; "
+        "test macro AUROC is 0.706, and HCM and MINF sit close to chance. A single "
+        "prediction here shows that the pipeline runs, not that a diagnosis is reliable. "
+        "The MRI encoder's real role is as one input to the fusion model.  \n\n"
+        "_Classes: DCM dilated cardiomyopathy, HCM hypertrophic cardiomyopathy, "
+        "MINF prior myocardial infarction, NOR normal, RV abnormal right ventricle._"
     )
     return p, txt
 
 
 def run_fusion(xray_path, echo_path, mri_files):
     if not (xray_path or echo_path or mri_files):
-        return ("", _err("Upload at least one modality (any 1, 2 or 3)."), {}, {}, {}, "")
+        return "", _err("Upload at least one modality. Any one, two, or all three works."), {}, {}, {}, ""
     try:
         present, xr, ec, mr = _predict_fusion(xray_path, echo_path, mri_files)
     except ValueError as e:
-        return ("", _err(str(e)), {}, {}, {}, "")
+        return "", _err(str(e)), {}, {}, {}, ""
     except Exception as e:
         traceback.print_exc()
-        return ("", _err(f"Fusion inference failed. ({type(e).__name__}: {e})"), {}, {}, {}, "")
+        return "", _err(f"Fusion inference failed. ({type(e).__name__})"), {}, {}, {}, ""
 
     banner = ""
     if len(present) == 3:
         banner = (
-            "<div class='synthetic-banner'>⚠️ SYNTHETIC EXAMPLE — NOT ONE REAL PATIENT.<br>"
-            "No single patient in any available dataset has all three imaging modalities. "
-            "This combines <b>three different patients'</b> real scans to demonstrate the "
-            "fusion <b>architecture</b> only — it is not validated multi-modal performance.</div>"
+            "<div class='synthetic-banner'><b>Synthetic example. Not one real patient.</b><br>"
+            "No single patient in any of these datasets has all three imaging modalities. "
+            "This run combines scans from three different people to exercise the fusion "
+            "architecture. It is not a validated multi-modal result.</div>"
         )
-    name = {"xray": "X-ray", "echo": "ECHO", "mri": "MRI"}
-    presence_md = "**This run:**  \n" + "  \n".join(
-        f"- {name[k]}: " + ("✅ **real upload**" if k in present
-                            else "🔀 *learned missing-modality token* (no file given)")
+    label = {"xray": "X-ray", "echo": "Echocardiogram", "mri": "MRI"}
+    presence_md = "**This run**  \n<span class='marks'>" + "  \n".join(
+        (f"<span class='on'>&#9679; {label[k]}</span> — real upload" if k in present
+         else f"<span class='off'>&#9675; {label[k]}</span> — substituted with the learned missing-modality token")
         for k in ["xray", "echo", "mri"]
-    )
+    ) + "</span>"
     how = (
-        "**How the fusion layer combines modalities:** every present modality's *frozen* "
-        "encoder produces a 1024-d embedding; every absent modality is replaced by a "
-        "**learned** missing-modality token (a trained 1024-d parameter — not zeros). The "
-        "three vectors are LayerNorm'd, concatenated (→ 3072), passed through a shared "
-        "2-layer MLP (→ 512), then read by three task-specific heads.  \n\n"
-        "_Single-modality-present validation on the real test sets:_ X-ray mean AUROC "
-        "**0.865**, ECHO macro AUROC **0.806**, MRI macro AUROC **0.628** — the fusion "
+        "**How the fusion layer combines modalities.** Each present modality's frozen "
+        "encoder produces a 1024-dimensional embedding. Each absent modality is replaced "
+        "by a learned missing-modality token, a trained 1024-dimensional parameter rather "
+        "than a zero vector. The three vectors are LayerNorm'd, concatenated to 3072, "
+        "passed through a shared two-layer MLP to a 512-dimensional representation, and "
+        "read by three task heads.  \n\n"
+        "_Single-modality-present validation, on the real test sets: X-ray mean AUROC "
+        "0.865, Echocardiogram macro AUROC 0.806, MRI macro AUROC 0.628. The fusion "
         "pathway preserves each encoder's signal. No real tri-modal patient data exists, "
-        "so a true multi-modal accuracy figure cannot be reported."
+        "so a true multi-modal accuracy figure is not reported._"
     )
     return banner, presence_md, xr, ec, mr, how
 
@@ -318,78 +387,90 @@ def run_fusion(xray_path, echo_path, mri_files):
 # --------------------------------------------------------------------------- #
 # UI
 # --------------------------------------------------------------------------- #
+HEADER = (
+    "<div class='app-head'>"
+    "<h1 class='app-title'>Multi-Modal Cardiac Condition Detection"
+    "<span class='rule'></span></h1>"
+    "<p class='app-sub'>Three imaging modalities, three frozen encoders, one late-fusion "
+    "model. A capstone demonstration: upload a file in any tab for a live prediction.</p>"
+    "</div>"
+)
+FOOTER = (
+    "<div class='app-foot'>The three encoders were trained on three separate public "
+    "datasets with no shared patients. The Fusion tab's three-modality mode is an "
+    "architecture demonstration on unrelated scans, marked as synthetic whenever it "
+    "occurs. Inference runs on CPU.</div>"
+)
+
+
 def build_app() -> gr.Blocks:
     with gr.Blocks(title=TITLE) as demo:
-        gr.Markdown(f"# {TITLE}", elem_id="hdr")
-        gr.Markdown(
-            "Frozen per-modality encoders (chest X-ray · echo video · cardiac MRI), each a "
-            "1024-d embedding, plus a late-fusion layer. Upload a file in any tab — inference "
-            "runs on CPU in a few seconds."
-        )
+        gr.HTML(HEADER)
+
         with gr.Tabs():
-            with gr.Tab("1 · Chest X-ray"):
-                gr.Markdown("### Cardiomegaly & Effusion detection — NIH ChestX-ray14")
-                with gr.Row():
-                    with gr.Column():
-                        xr_in = gr.Image(type="filepath", label="Chest X-ray (.png / .jpg)", height=340)
+            with gr.Tab("X-ray"):
+                gr.Markdown("### Cardiomegaly and effusion — NIH ChestX-ray14")
+                with gr.Row(equal_height=False):
+                    with gr.Column(scale=5):
+                        xr_in = gr.Image(type="filepath", label="Chest X-ray (PNG / JPEG)", height=360)
                         xr_btn = gr.Button("Analyze X-ray", variant="primary")
-                    with gr.Column():
-                        xr_out = gr.Label(label="Predicted probabilities (independent)", num_top_classes=2)
-                xr_txt = gr.Markdown(elem_classes="bigtext")
+                    with gr.Column(scale=6):
+                        xr_out = gr.Label(label="Probability (each scored independently)", num_top_classes=2)
+                        xr_txt = gr.Markdown(elem_classes="readout")
                 xr_btn.click(run_xray, xr_in, [xr_out, xr_txt])
 
-            with gr.Tab("2 · Echocardiogram"):
+            with gr.Tab("Echocardiogram"):
                 gr.Markdown("### Ejection-fraction category — EchoNet-Dynamic")
-                with gr.Row():
-                    with gr.Column():
-                        ec_in = gr.Video(label="Echo video (.avi)", height=340)
-                        ec_btn = gr.Button("Analyze ECHO", variant="primary")
-                    with gr.Column():
-                        ec_out = gr.Label(label="EF category probabilities", num_top_classes=3)
-                ec_txt = gr.Markdown(elem_classes="bigtext")
+                with gr.Row(equal_height=False):
+                    with gr.Column(scale=5):
+                        ec_in = gr.Video(label="Echo video (AVI)", height=360)
+                        ec_btn = gr.Button("Analyze echo", variant="primary")
+                    with gr.Column(scale=6):
+                        ec_out = gr.Label(label="Category probability", num_top_classes=3)
+                        ec_txt = gr.Markdown(elem_classes="readout")
                 ec_btn.click(run_echo, ec_in, [ec_out, ec_txt])
 
-            with gr.Tab("3 · Cardiac MRI"):
-                gr.Markdown("### 5-class diagnosis — ACDC  ·  upload one patient's **ED + ES** frame volumes")
-                with gr.Row():
-                    with gr.Column():
-                        mr_in = gr.File(label="ED & ES volumes (.nii.gz) — 2 files, not the _gt masks",
-                                        file_count="multiple", file_types=[".gz", ".nii"])
+            with gr.Tab("MRI"):
+                gr.Markdown("### Five-class diagnosis — ACDC")
+                gr.Markdown(
+                    "Upload one patient's **ED and ES frame volumes** together "
+                    "(`patientNNN_frameXX.nii.gz`). Not the `_4d` or `_gt` files.")
+                with gr.Row(equal_height=False):
+                    with gr.Column(scale=5):
+                        mr_in = gr.File(label="ED + ES volumes (.nii.gz)", file_count="multiple",
+                                        file_types=[".gz", ".nii"])
                         mr_btn = gr.Button("Analyze MRI", variant="primary")
-                    with gr.Column():
-                        mr_out = gr.Label(label="Diagnosis probabilities", num_top_classes=5)
-                mr_txt = gr.Markdown(elem_classes="bigtext")
+                    with gr.Column(scale=6):
+                        mr_out = gr.Label(label="Diagnosis probability", num_top_classes=5)
+                        mr_txt = gr.Markdown(elem_classes="readout")
                 mr_btn.click(run_mri, mr_in, [mr_out, mr_txt])
 
-            with gr.Tab("4 · Fusion  (centerpiece)"):
-                gr.Markdown("### Multi-modal fusion — upload **any 1, 2, or 3** modalities")
+            with gr.Tab("Fusion"):
+                gr.Markdown("### Multi-modal fusion")
+                gr.Markdown(
+                    "Provide any one, two, or all three modalities. Anything you leave "
+                    "empty is filled with the learned missing-modality token.")
                 fu_banner = gr.HTML()
-                with gr.Row():
-                    fu_xray = gr.Image(type="filepath", label="X-ray (optional)", height=220)
-                    fu_echo = gr.Video(label="ECHO (optional)", height=220)
-                    fu_mri = gr.File(label="MRI ED+ES (optional)", file_count="multiple",
+                with gr.Row(equal_height=False):
+                    fu_xray = gr.Image(type="filepath", label="X-ray (optional)", height=210)
+                    fu_echo = gr.Video(label="Echocardiogram (optional)", height=210)
+                    fu_mri = gr.File(label="MRI ED + ES (optional)", file_count="multiple",
                                      file_types=[".gz", ".nii"])
                 fu_btn = gr.Button("Run fusion", variant="primary", size="lg")
-                fu_presence = gr.Markdown(elem_classes="bigtext")
-                with gr.Row():
+                fu_presence = gr.Markdown(elem_classes="readout")
+                with gr.Row(equal_height=True):
                     fu_xray_out = gr.Label(label="X-ray head", num_top_classes=2)
-                    fu_echo_out = gr.Label(label="EF head", num_top_classes=3)
+                    fu_echo_out = gr.Label(label="Ejection-fraction head", num_top_classes=3)
                     fu_mri_out = gr.Label(label="Diagnosis head", num_top_classes=5)
-                fu_how = gr.Markdown(elem_classes="bigtext")
+                fu_how = gr.Markdown(elem_classes="readout")
                 fu_btn.click(run_fusion, [fu_xray, fu_echo, fu_mri],
                              [fu_banner, fu_presence, fu_xray_out, fu_echo_out, fu_mri_out, fu_how])
 
-        gr.Markdown(
-            "---\n_Capstone project. The three encoders were trained on three separate "
-            "public datasets with **no shared patients**; the Fusion tab's 3-modality mode "
-            "is a synthetic architecture demonstration, flagged with a red banner whenever "
-            "it occurs._"
-        )
+        gr.HTML(FOOTER)
     return demo
 
 
 if __name__ == "__main__":
     build_app().queue().launch(
-        server_name="127.0.0.1", server_port=7860, show_error=True,
-        css=BIG_CSS, theme=gr.themes.Soft(),
+        server_name="127.0.0.1", server_port=7860, show_error=True, theme=THEME, css=CSS,
     )
