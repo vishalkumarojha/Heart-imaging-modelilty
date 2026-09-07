@@ -1,0 +1,5 @@
+# Interactive demo app (Gradio). Install on top of the phase requirements.
+-r requirements.txt
+-r requirements_echo.txt
+-r requirements_mri.txt
+gradio>=6.0
