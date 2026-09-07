@@ -1,0 +1,4 @@
+modality,n_test,primary_metric,fusion_pathway,standalone_baseline,delta,accuracy
+xray,15884,mean_auroc,0.8651,0.878,-0.0129,
+echo,1277,macro_auroc,0.8059,0.802,0.0039,0.7197
+mri,15,macro_auroc,0.6278,0.706,-0.0782,0.4

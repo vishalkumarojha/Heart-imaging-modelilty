@@ -1,0 +1,5 @@
+SYNTHETIC,synthetic_id,xray_source_id_NIH,echo_source_id_EchoNet,mri_source_id_ACDC,xray_P_Cardiomegaly,xray_P_Effusion,echo_pred,mri_pred,heuristic_risk_level
+TRUE  (not a real patient),1,00002633_020.png,0X6F489746D4866AAC,patient068,0.0307,0.2233,Normal,NOR,LOW
+TRUE  (not a real patient),2,00011925_077.png,0X46E076385E2BD694,patient084,0.0961,0.3902,Normal,RV,MODERATE
+TRUE  (not a real patient),3,00002589_001.png,0X6710BA6184204672,patient024,0.0375,0.2466,Normal,DCM,HIGH
+TRUE  (not a real patient),4,00002745_000.png,0X5226FB3272760299,patient098,0.0057,0.0712,Normal,DCM,HIGH
