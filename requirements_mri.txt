@@ -1,0 +1,9 @@
+# Phase 3 - ACDC cardiac MRI (5-class diagnosis) pipeline.
+# Install Phase 1 first:  pip install -r requirements.txt
+# Then:                   pip install -r requirements_mri.txt
+#
+# nibabel: .nii.gz volume loading. scipy (already present from Phase 1) provides
+# ndimage.zoom for volume resampling.
+
+-r requirements.txt
+nibabel>=5.2
