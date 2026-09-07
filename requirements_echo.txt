@@ -1,0 +1,11 @@
+# Phase 2 - EchoNet-Dynamic (EF-category) pipeline.
+# Install Phase 1 first:  pip install -r requirements.txt
+# Then:                   pip install -r requirements_echo.txt
+#
+# Video decoding uses cv2.VideoCapture. opencv-python-headless is already pulled
+# in by albumentations (Phase 1), so nothing new is strictly required — this file
+# just pins it explicitly. torchvision.io.read_video was removed in torchvision
+# 0.29, so we do NOT rely on it.
+
+-r requirements.txt
+opencv-python-headless>=4.9

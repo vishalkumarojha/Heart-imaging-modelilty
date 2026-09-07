@@ -13,5 +13,5 @@ outputs/checkpoints/
 *.pt
 
 # run logs (verbose, tqdm-interleaved) — keep the CSV results, drop the rest
-outputs/logs/*.log
-outputs/logs/*.pid
+outputs/logs/**/*.log
+outputs/logs/**/*.pid
