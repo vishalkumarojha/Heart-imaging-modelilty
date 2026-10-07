@@ -170,6 +170,50 @@ BOOTSTRAP_ITERATIONS = 2000
 BOOTSTRAP_CI_LEVEL = 0.95
 BOOTSTRAP_SEED = 42
 
+# --------------------------------------------------------------------------- #
+# IEEE-upgrade statistical settings (patient-level resampling ⇐ cluster unit)
+# --------------------------------------------------------------------------- #
+# The *historical* `confidence_intervals.csv` resampled test *images* (a legacy
+# artifact). The IEEE upgrade introduces patient-level cluster bootstrap:
+# patients (not images) are the resampling unit, so within-patient dependence is
+# preserved and every CI is a *paired* CI on the same patient resample.
+PATIENT_BOOTSTRAP_ITERATIONS = 5000    # preferred; 2000 is the minimum fallback
+PATIENT_BOOTSTRAP_MIN_ITERATIONS = 2000
+PATIENT_BOOTSTRAP_CI_LEVEL = 0.95
+PATIENT_BOOTSTRAP_SEED = 42
+
+# Threshold-stability analysis (validation bootstrap, patient-level)
+THRESHOLD_STABILITY_ITERATIONS = 2000
+THRESHOLD_STABILITY_SEED = 42
+THRESHOLD_STABILITY_BANDS = (0.05, 0.10)     # ±band fractions of first-fit τ
+
+# ECE sensitivity (bin-count grid), calibration comparison methods
+ECE_SENSITIVITY_BINS = (10, 15, 20)
+CALIBRATION_COMPARISON_METHODS = ("raw", "calibrated", "logistic")
+
+# Extension-arm semantics (extension experiments, NOT part of the A–D ablation)
+ALT_CALIBRATION_METHOD = "logistic"    # Platt-style logistic on logits
+
+# Prevalence-shift simulation grid (target test prevalences, as percentages)
+PREVALENCE_GRID = (1.0, 2.0, 5.0, 10.0, 20.0, 30.0, 50.0)
+PREVALENCE_SEED = 42
+
+# Artifacts for the upgrade (never overwrite the legacy confidence_intervals.csv)
+PATIENT_STATS_DIR = METRICS_DIR / "patient_stats"
+THRESHOLD_STABILITY_DIR = METRICS_DIR / "threshold_stability"
+ECE_SENSITIVITY_DIR = METRICS_DIR / "ece_sensitivity"
+PREVALENCE_DIR = METRICS_DIR / "prevalence"
+LOGISTIC_SCALERS_FILE = CALIBRATION_METRICS_DIR / "logistic_scalers.json"
+LOGISTIC_THRESHOLDS_FILE = THRESHOLD_METRICS_DIR / "thresholds_logistic_val.json"
+CONFIDENCE_INTERVALS_PATIENT_CSV = FINAL_RESULTS_DIR / "confidence_intervals_patient.csv"
+ARM_DIFFERENCES_CSV = FINAL_RESULTS_DIR / "arm_differences.csv"
+DECISION_POLICY_ANALYSIS_CSV = FINAL_RESULTS_DIR / "decision_policy_analysis.csv"
+STATISTICAL_REPORT_JSON = FINAL_RESULTS_DIR / "statistical_report.json"
+EXT_EXTENSION_ARMS_JSON = EXPERIMENT_METRICS_DIR / "ext_extension_arms.json"
+ECE_SENSITIVITY_JSON = ECE_SENSITIVITY_DIR / "ece_sensitivity.json"
+PREVALENCE_SHIFT_JSON = PREVALENCE_DIR / "prevalence_shift.json"
+THRESHOLD_STABILITY_JSON = THRESHOLD_STABILITY_DIR / "threshold_stability.json"
+
 for _d in (
     DATA_PROCESSED_DIR, CHECKPOINT_DIR, LOG_DIR,
     BASELINE_CHECKPOINT_DIR, RESEARCH_CHECKPOINT_DIR,
@@ -179,6 +223,8 @@ for _d in (
     PLOTS_DIR / "training", PLOTS_DIR / "roc", PLOTS_DIR / "pr",
     PLOTS_DIR / "calibration", PLOTS_DIR / "threshold", PLOTS_DIR / "external",
     PLOTS_DIR / "error_analysis", GRADCAM_DIR,
+    PATIENT_STATS_DIR, THRESHOLD_STABILITY_DIR, ECE_SENSITIVITY_DIR,
+    PREVALENCE_DIR,
     FINAL_RESULTS_DIR, FINAL_FIGURES_DIR, FINAL_GRADCAM_DIR, FINAL_TABLES_DIR,
     PAPER_DIR, PAPER_TABLES_DIR, PAPER_FIGURES_DIR,
 ):

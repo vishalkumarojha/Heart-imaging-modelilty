@@ -1,6 +1,6 @@
 """Tests for the paper package (final phase).
 
-Verifies the deliverables under `outputs/paper/`: the 9 tables, 9 figures,
+Verifies the deliverables under `outputs/paper/`: the 14 tables, 14 figures,
 evidence map, claim audit, reproducibility manifest, prose documents, and the
 number-hygiene discipline ("no paper number without a traceable source").
 
@@ -25,6 +25,11 @@ TABLES = {
     "table_07_error_analysis.csv": 5,
     "table_08_explainability.csv": 10,
     "table_09_external_validation_status.csv": 5,
+    "table_10_patient_bootstrap_ci.csv": 172,
+    "table_11_arm_differences.csv": 40,
+    "table_12_threshold_stability.csv": 24,
+    "table_13_calibration_comparison.csv": 6,
+    "table_14_prevalence_shift.csv": 14,
 }
 
 FIGURES = [
@@ -32,7 +37,9 @@ FIGURES = [
     "figure_03_roc.png", "figure_04_precision_recall.png",
     "figure_05_calibration.png", "figure_06_threshold_analysis.png",
     "figure_07_confusion_matrix.png", "figure_08_error_analysis.png",
-    "figure_09_gradcam.png",
+    "figure_09_gradcam.png", "figure_10_calibration_comparison.png",
+    "figure_11_ece_sensitivity.png", "figure_12_threshold_stability.png",
+    "figure_13_decision_policy.png", "figure_14_prevalence_sensitivity.png",
 ]
 
 DOCS = [
@@ -41,9 +48,14 @@ DOCS = [
     "titles.md", "abstract.md", "conclusion.md",
 ]
 
+AUDIT_COLUMNS = [
+    "claim_id", "claim", "claim_type", "section", "source_artifact",
+    "source_table_or_figure", "verified", "notes",
+]
+
 
 class TestPaperTables(unittest.TestCase):
-    def test_all_nine_tables_exist_with_expected_row_counts(self):
+    def test_all_fourteen_tables_exist_with_expected_row_counts(self):
         for name, rows in TABLES.items():
             p = C.PAPER_TABLES_DIR / name
             self.assertTrue(p.exists(), f"missing table {name}")
@@ -68,9 +80,52 @@ class TestPaperTables(unittest.TestCase):
         self.assertEqual(df[df.field == "no_metrics_were_computed"].value.iloc[0],
                          "true")
 
+    def test_table_10_matches_patient_bootstrap_artifact(self):
+        t = pd.read_csv(C.PAPER_TABLES_DIR / "table_10_patient_bootstrap_ci.csv")
+        art = pd.read_csv(C.CONFIDENCE_INTERVALS_PATIENT_CSV)
+        self.assertEqual(len(t), len(art))
+        self.assertEqual(t.metric.tolist(), art.metric.tolist())
+
+    def test_table_11_matches_arm_differences_artifact(self):
+        t = pd.read_csv(C.PAPER_TABLES_DIR / "table_11_arm_differences.csv")
+        art = pd.read_csv(C.ARM_DIFFERENCES_CSV)
+        self.assertEqual(len(t), len(art))
+        d = t[(t["class"] == "Cardiomegaly") & (t.metric == "f1") &
+              (t.arm_a == "A") & (t.arm_b == "D")].iloc[0]
+        self.assertAlmostEqual(d.delta_point_estimate, 0.0700, places=4)
+        self.assertAlmostEqual(d.ci_lower, 0.0280, places=4)
+        self.assertAlmostEqual(d.ci_upper, 0.1065, places=4)
+
+    def test_table_12_reports_stability_honestly(self):
+        t = pd.read_csv(C.PAPER_TABLES_DIR / "table_12_threshold_stability.csv")
+        self.assertEqual(len(t), 24)
+        cardio = t[(t["class"] == "Cardiomegaly") & (t.variant == "raw") &
+                   (t.policy == "f1_optimal")].iloc[0]
+        self.assertAlmostEqual(cardio.first_fit, 0.9021, places=4)
+        self.assertFalse(cardio.within_pm5pct)
+
+    def test_table_13_reports_logistic_params(self):
+        t = pd.read_csv(C.PAPER_TABLES_DIR / "table_13_calibration_comparison.csv")
+        log = t[(t["class"] == "Cardiomegaly") & (t.method == "logistic")].iloc[0]
+        self.assertAlmostEqual(log.logistic_a, 0.5441, places=4)
+        self.assertAlmostEqual(log.logistic_b, -2.8079, places=4)
+        self.assertLess(log.ece_at_reference, 0.01)
+        raw = t[(t["class"] == "Cardiomegaly") & (t.method == "raw")].iloc[0]
+        cal = t[(t["class"] == "Cardiomegaly") & (t.method == "calibrated")].iloc[0]
+        self.assertGreater(cal.ece_at_reference, raw.ece_at_reference)
+
+    def test_table_14_is_honest_about_below_natural_targets(self):
+        t = pd.read_csv(C.PAPER_TABLES_DIR / "table_14_prevalence_shift.csv")
+        self.assertEqual(len(t), 14)
+        self.assertEqual((t.simulated == True).sum(), 8)  # noqa: E712
+        self.assertEqual((t.target_not_feasible == True).sum(), 6)  # noqa: E712
+        infeasible = t[t.target_not_feasible].iloc[0]
+        self.assertTrue(infeasible.f1 is None or pd.isna(infeasible.f1))
+        self.assertIn("unreachable", infeasible.note)
+
 
 class TestPaperFigures(unittest.TestCase):
-    def test_all_nine_figures_exist_and_are_nonempty(self):
+    def test_all_fourteen_figures_exist_and_are_nonempty(self):
         for name in FIGURES:
             p = C.PAPER_FIGURES_DIR / name
             self.assertTrue(p.exists(), f"missing figure {name}")
@@ -84,7 +139,7 @@ class TestPaperFigures(unittest.TestCase):
 class TestEvidenceMap(unittest.TestCase):
     def test_every_claim_verified(self):
         em = json.loads(C.PAPER_EVIDENCE_MAP_JSON.read_text())
-        self.assertGreaterEqual(em["n_claims"], 60)
+        self.assertGreaterEqual(em["n_claims"], 100)
         self.assertEqual(em["n_verified"], em["n_claims"])
 
     def test_every_source_artifact_exists(self):
@@ -97,13 +152,17 @@ class TestEvidenceMap(unittest.TestCase):
                 self.assertTrue((C.PROJECT_ROOT / src).exists(),
                                 f"missing source {src} for claim: {c['claim']}")
 
+    def test_every_claim_has_a_display_reference(self):
+        em = json.loads(C.PAPER_EVIDENCE_MAP_JSON.read_text())
+        for c in em["claims"]:
+            self.assertIn("claim_type", c, c["claim"])
+            self.assertTrue(c["source_table_or_figure"], c["claim"])
+
 
 class TestClaimAudit(unittest.TestCase):
     def test_audit_columns_and_verification(self):
         df = pd.read_csv(C.PAPER_CLAIM_AUDIT_CSV)
-        self.assertEqual(list(df.columns),
-                         ["claim", "section", "numeric_or_text",
-                          "source_artifact", "verified", "notes"])
+        self.assertEqual(list(df.columns), AUDIT_COLUMNS)
         self.assertTrue((df.verified == True).all(), msg=df[df.verified != True])  # noqa: E712
         self.assertEqual(len(df), json.loads(
             C.PAPER_EVIDENCE_MAP_JSON.read_text())["n_claims"])

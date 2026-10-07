@@ -114,10 +114,10 @@
   "test_count_collected": 193,
   "git": {
     "branch": "research/xray-calibration",
-    "head_sha": "7e5e9bb",
-    "dirty_count": 0,
-    "modified": 0,
-    "untracked": 0,
+    "head_sha": "dc1261e",
+    "dirty_count": 44,
+    "modified": 4,
+    "untracked": 40,
     "excluded": [
       "outputs/research_snapshot.json",
       "outputs/paper/reproducibility_manifest.json",

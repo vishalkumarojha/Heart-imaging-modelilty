@@ -1,0 +1,15 @@
+class,target_prevalence_pct,simulated,target_not_feasible,observed_prevalence,n,n_positives_kept,n_negatives_kept,threshold_calibrated_f1_optimal,tp,fp,tn,fn,f1,precision,recall,specificity,auprc,note
+Cardiomegaly,1.0,False,True,0.0261,,,,,,,,,,,,,,"target below observed prevalence is unreachable: positives are kept in full and only negatives are subsampled, which can only raise prevalence — cell skipped"
+Cardiomegaly,2.0,False,True,0.0261,,,,,,,,,,,,,,"target below observed prevalence is unreachable: positives are kept in full and only negatives are subsampled, which can only raise prevalence — cell skipped"
+Cardiomegaly,5.0,True,False,0.05,8300.0,415.0,7885.0,0.8666,154.0,170.0,7715.0,261.0,0.4168,0.4753,0.3711,0.9784,0.4153,
+Cardiomegaly,10.0,True,False,0.1,4150.0,415.0,3735.0,0.8666,154.0,57.0,3678.0,261.0,0.492,0.7299,0.3711,0.9847,0.5955,
+Cardiomegaly,20.0,True,False,0.2,2075.0,415.0,1660.0,0.8666,154.0,33.0,1627.0,261.0,0.5116,0.8235,0.3711,0.9801,0.7285,
+Cardiomegaly,30.0,True,False,0.3001,1383.0,415.0,968.0,0.8666,154.0,17.0,951.0,261.0,0.5256,0.9006,0.3711,0.9824,0.8077,
+Cardiomegaly,50.0,True,False,0.5,830.0,415.0,415.0,0.8666,154.0,8.0,407.0,261.0,0.5338,0.9506,0.3711,0.9807,0.9002,
+Effusion,1.0,False,True,0.1257,,,,,,,,,,,,,,"target below observed prevalence is unreachable: positives are kept in full and only negatives are subsampled, which can only raise prevalence — cell skipped"
+Effusion,2.0,False,True,0.1257,,,,,,,,,,,,,,"target below observed prevalence is unreachable: positives are kept in full and only negatives are subsampled, which can only raise prevalence — cell skipped"
+Effusion,5.0,False,True,0.1257,,,,,,,,,,,,,,"target below observed prevalence is unreachable: positives are kept in full and only negatives are subsampled, which can only raise prevalence — cell skipped"
+Effusion,10.0,False,True,0.1257,,,,,,,,,,,,,,"target below observed prevalence is unreachable: positives are kept in full and only negatives are subsampled, which can only raise prevalence — cell skipped"
+Effusion,20.0,True,False,0.2,9985.0,1997.0,7988.0,0.7035,1075.0,761.0,7227.0,922.0,0.5609,0.5855,0.5383,0.9047,0.5981,
+Effusion,30.0,True,False,0.3,6656.0,1997.0,4659.0,0.7035,1075.0,434.0,4225.0,922.0,0.6132,0.7124,0.5383,0.9068,0.7161,
+Effusion,50.0,True,False,0.5,3994.0,1997.0,1997.0,0.7035,1075.0,212.0,1785.0,922.0,0.6547,0.8353,0.5383,0.8938,0.8332,

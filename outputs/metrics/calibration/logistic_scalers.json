@@ -1,0 +1,54 @@
+{
+  "type": "logistic_scaling",
+  "labels": [
+    "Cardiomegaly",
+    "Effusion"
+  ],
+  "method": "platt_logistic",
+  "parameters": {
+    "Cardiomegaly": {
+      "a": 0.5441069212579224,
+      "b": -2.8079212833804865,
+      "method": "platt_logistic",
+      "a_positive": true
+    },
+    "Effusion": {
+      "a": 0.7473906742935417,
+      "b": -1.9918989484843794,
+      "method": "platt_logistic",
+      "a_positive": true
+    }
+  },
+  "metadata": {
+    "type": "platt_logistic (Platt-style)",
+    "split": "val",
+    "n_rows": 16451,
+    "labels": [
+      "Cardiomegaly",
+      "Effusion"
+    ],
+    "optimizer": "scipy L-BFGS-B (deterministic, a=exp(c)>0)",
+    "nll_before": {
+      "Cardiomegaly": 0.23369075828209662,
+      "Effusion": 0.4889182845839118
+    },
+    "nll_after": {
+      "Cardiomegaly": 0.08452724343020931,
+      "Effusion": 0.26496138769012845
+    },
+    "parameters": {
+      "Cardiomegaly": {
+        "a": 0.5441069212579224,
+        "b": -2.8079212833804865,
+        "method": "platt_logistic",
+        "a_positive": true
+      },
+      "Effusion": {
+        "a": 0.7473906742935417,
+        "b": -1.9918989484843794,
+        "method": "platt_logistic",
+        "a_positive": true
+      }
+    }
+  }
+}

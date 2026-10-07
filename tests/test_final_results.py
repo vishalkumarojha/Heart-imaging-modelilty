@@ -176,7 +176,138 @@ class TestResearchSummary(unittest.TestCase):
         self.assertTrue(s["no_external_metrics_computed"])
 
 
-class TestResearchSnapshot(unittest.TestCase):
+class TestStatisticalUpgradeArtifacts(unittest.TestCase):
+    def test_delong_auroc(self):
+        d = load_json(C.PATIENT_STATS_DIR / "delong_auroc.json")
+        c, e = d["per_label"]["Cardiomegaly"], d["per_label"]["Effusion"]
+        self.assertAlmostEqual(c["auc"], 0.8972, places=4)
+        self.assertAlmostEqual(c["ci_lower"], 0.8821, places=4)
+        self.assertAlmostEqual(c["ci_upper"], 0.9124, places=4)
+        self.assertEqual((c["n_pos"], c["n_neg"]), (415, 15469))
+        self.assertAlmostEqual(e["auc"], 0.8587, places=4)
+        self.assertAlmostEqual(e["ci_lower"], 0.8507, places=4)
+        self.assertAlmostEqual(e["ci_upper"], 0.8667, places=4)
+        self.assertEqual((e["n_pos"], e["n_neg"]), (1997, 13887))
+
+    def test_paired_tests_primary_hypotheses(self):
+        p = load_json(C.PATIENT_STATS_DIR / "paired_tests.json")
+        self.assertEqual(p["n_permutations"], 5000)
+        self.assertEqual(p["rng_seed"], 42)
+        self.assertEqual(len(p["primary_hypotheses"]), 2)
+        card = [r for r in p["per_label_results"]
+                if r["label"] == "Cardiomegaly" and r.get("primary_hypothesis") is True][0]
+        self.assertLess(card["p_value"], 0.001)
+        self.assertLess(card["holm_adjusted_p"], 0.001)
+
+    def test_patient_bootstrap_artifact_contracts(self):
+        ci = pd.read_csv(C.CONFIDENCE_INTERVALS_PATIENT_CSV)
+        self.assertEqual(len(ci), 172)
+        self.assertEqual(int(ci.n_bootstraps.iloc[0]), 5000)
+        self.assertEqual(float(ci.confidence_level.iloc[0]), 0.95)
+        self.assertEqual(int(ci.rng_seed.iloc[0]), 42)
+        self.assertIn("resampling unit = patient", ci.method.iloc[0])
+        tol = 1e-4
+        inside = ((ci.point_estimate >= ci.ci_lower - tol)
+                  & (ci.point_estimate <= ci.ci_upper + tol))
+        self.assertTrue(inside.all(), ci[~inside])
+        d = ci[(ci["class"] == "Cardiomegaly") & (ci.calibration == "calibrated")
+               & (ci.threshold_policy == "f1_optimal") & (ci.metric == "f1")].iloc[0]
+        self.assertAlmostEqual(d.point_estimate, 0.3536, places=4)
+        ciw = d.ci_upper - d.ci_lower
+        self.assertAlmostEqual(ciw, 0.1361, places=4)
+
+    def test_arm_differences_and_primary_endpoints(self):
+        ad = pd.read_csv(C.ARM_DIFFERENCES_CSV)
+        self.assertEqual(len(ad), 40)
+        rep = load_json(C.STATISTICAL_REPORT_JSON)
+        for lbl, exp_d, exp_lo, exp_hi in [
+                ("Cardiomegaly", 0.0700, 0.0280, 0.1065),
+                ("Effusion", 0.0191, 0.0050, 0.0326)]:
+            row = ad[(ad["class"] == lbl) & (ad.arm_a == "A") & (ad.arm_b == "D")
+                     & (ad.metric == "f1")].iloc[0]
+            self.assertAlmostEqual(row.delta_point_estimate, exp_d, places=4)
+            self.assertAlmostEqual(row.ci_lower, exp_lo, places=4)
+            self.assertAlmostEqual(row.ci_upper, exp_hi, places=4)
+            pe = [x for x in rep["primary_endpoints"] if x["label"] == lbl][0]
+            self.assertEqual(pe["significance"], "significant")
+            self.assertFalse(pe["bootstrap_covers_zero"])
+
+    def test_threshold_stability_honest_and_vectorized(self):
+        s = load_json(C.THRESHOLD_STABILITY_JSON)
+        self.assertTrue(s["equivalence_check"]["passed"])
+        self.assertEqual(s["per_label"]["Cardiomegaly"]["raw"]["f1_optimal"]
+                         ["n_bootstraps"], 2000)
+        cardio = s["per_label"]["Cardiomegaly"]
+        self.assertAlmostEqual(cardio["raw"]["f1_optimal"]["first_fit"], 0.9021, places=4)
+        self.assertFalse(cardio["raw"]["f1_optimal"]["within_pm05pct_of_first_fit"])
+        for var in ("raw", "calibrated", "logistic"):
+            for pol in ("youden", "sensitivity_constrained",
+                        "precision_constrained"):
+                self.assertIn("ci_width", cardio[var][pol])
+
+    def test_ece_sensitivity_grid(self):
+        e = load_json(C.ECE_SENSITIVITY_JSON)
+        self.assertEqual(e["reference_binning"], {"n_bins": 15, "strategy": "equal_width"})
+        self.assertEqual(len(e["rows"]), 36)
+        ref = e["ece_at_reference_binning"]
+        self.assertAlmostEqual(ref["Cardiomegaly"]["logistic"], 0.0029, places=4)
+        self.assertAlmostEqual(ref["Effusion"]["logistic"], 0.0136, places=4)
+        self.assertGreater(ref["Cardiomegaly"]["calibrated"],
+                           ref["Cardiomegaly"]["raw"])
+
+    def test_logistic_calibration_report(self):
+        l = load_json(C.CALIBRATION_METRICS_DIR / "logistic_calibration_report.json")
+        self.assertIn("LOGISTIC CALIBRATION FITTED ON VALIDATION ONLY", l["status"])
+        self.assertGreater(l["parameters"]["Cardiomegaly"]["a"], 0)
+        self.assertGreater(l["parameters"]["Effusion"]["a"], 0)
+        # strictly monotone => AUROC/AUPRC invariant raw vs logistic
+        inv = l["auroc_auprc_invariance_checks"]
+        for k, v in inv.items():
+            if k.endswith("_raw"):
+                self.assertEqual(v, inv[k.replace("_raw", "_log")])
+        self.assertLess(list(l["nll_after"].values())[0],
+                        list(l["nll_before"].values())[0])
+
+    def test_extension_arms_equalities_and_difference(self):
+        e = load_json(C.EXT_EXTENSION_ARMS_JSON)
+        metrics = ("accuracy", "precision", "recall", "specificity", "f1")
+        for m in metrics:
+            for lbl in C.TARGET_LABELS:
+                self.assertEqual(e["per_label"][lbl]["A"][m],
+                                 e["per_label"][lbl]["B"][m], f"{lbl} A!=B {m}")
+                self.assertEqual(e["per_label"][lbl]["C"][m],
+                                 e["per_label"][lbl]["F"][m], f"{lbl} C!=F {m}")
+        card = e["per_label"]["Cardiomegaly"]
+        self.assertAlmostEqual(card["E"]["f1"], 0.1376, places=4)
+        self.assertAlmostEqual(card["E"]["precision"], 0.6400, places=4)
+        self.assertAlmostEqual(card["E"]["recall"], 0.0771, places=4)
+
+    def test_prevalence_shift_artifact(self):
+        pr = load_json(C.PREVALENCE_SHIFT_JSON)
+        self.assertEqual(pr["seed"], 42)
+        card, eff = pr["per_label"]["Cardiomegaly"], pr["per_label"]["Effusion"]
+        self.assertAlmostEqual(card["observed_prevalence"], 0.0261, places=4)
+        self.assertAlmostEqual(eff["observed_prevalence"], 0.1257, places=4)
+        cells = card["cohorts"] + eff["cohorts"]
+        self.assertEqual(len(cells), 14)
+        self.assertEqual(sum(1 for c in cells if c.get("simulated")), 8)
+        self.assertEqual(sum(1 for c in cells if c.get("target_not_feasible")), 6)
+        sim = [c for c in cells if c.get("simulated")]
+        for c in sim:
+            self.assertEqual(c["recall"], c["sensitivity"])
+            self.assertFalse(c["target_not_feasible"])
+        self.assertTrue(all(c["f1"] >= 0 for c in sim))
+
+    def test_decision_policy_analysis_covers_extension_rows(self):
+        df = pd.read_csv(C.DECISION_POLICY_ANALYSIS_CSV)
+        self.assertEqual(len(df), 30)
+        ext = load_json(C.EXT_EXTENSION_ARMS_JSON)
+        f = ext["per_label"]["Cardiomegaly"]["F"]
+        row = df[(df["class"] == "Cardiomegaly") & (df.variant == "logistic")
+                 & (df.policy == "f1_optimal")].iloc[0]
+        self.assertAlmostEqual(row["test_f1"], f["f1"], places=4)
+        self.assertAlmostEqual(row["test_precision"], f["precision"], places=4)
+        self.assertAlmostEqual(row["test_recall"], f["recall"], places=4)
     def test_snapshot_fields(self):
         snap = load_json(C.RESEARCH_SNAPSHOT_JSON)
         self.assertEqual(snap["baseline_id"], "BASELINE_v1")

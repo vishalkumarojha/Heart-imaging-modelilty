@@ -11,8 +11,8 @@ Run:
 
 Outputs:
     paper/paper_evidence_map.json      every claim -> source artifact
-    paper/tables/table_01..09.csv     publication-ready result tables
-    paper/figures/figure_01..09.png   architecture/dataset schematics + the
+    paper/tables/table_01..14.csv     publication-ready result tables
+    paper/figures/figure_01..14.png   architecture/dataset schematics + the
                                       deterministic research figures (copies)
     paper/claim_audit.csv             claim x verified-by-artifact matrix
     paper/reproducibility_manifest.json
@@ -79,6 +79,16 @@ SPLIT = _csv("data/processed/split_index.csv")
 MASTER = _csv(f"{SOURCE_PREFIX}/final_results/master_results.csv")
 THR_VAL = _json(f"{SOURCE_PREFIX}/metrics/thresholds/thresholds_val.json")
 THR_CAL = _json(f"{SOURCE_PREFIX}/metrics/thresholds/thresholds_calibrated_val.json")
+DELONG = _json(f"{SOURCE_PREFIX}/metrics/patient_stats/delong_auroc.json")
+PAIRED = _json(f"{SOURCE_PREFIX}/metrics/patient_stats/paired_tests.json")
+STAB = _json(f"{SOURCE_PREFIX}/metrics/threshold_stability/threshold_stability.json")
+ECEJ = _json(f"{SOURCE_PREFIX}/metrics/ece_sensitivity/ece_sensitivity.json")
+LOGCAL = _json(f"{SOURCE_PREFIX}/metrics/calibration/logistic_calibration_report.json")
+EXT = _json(f"{SOURCE_PREFIX}/metrics/experiments/ext_extension_arms.json")
+PREV = _json(f"{SOURCE_PREFIX}/metrics/prevalence/prevalence_shift.json")
+STAT = _json(f"{SOURCE_PREFIX}/final_results/statistical_report.json")
+CIP = _csv(f"{SOURCE_PREFIX}/final_results/confidence_intervals_patient.csv")
+AD = _csv(f"{SOURCE_PREFIX}/final_results/arm_differences.csv")
 
 
 def master_row(exp: str, label: str, policy: str) -> dict:
@@ -110,12 +120,36 @@ CLAIMS: List[dict] = []
 
 def add_claim(cid: str, claim: str, section: str, kind: str, source: str,
               resolve: Optional[Callable[[], object]] = None,
-              expected: object = None, tol: float = 0.0) -> None:
+              expected: object = None, tol: float = 0.0,
+              at_least: Optional[float] = None) -> None:
+    claim_type = "numeric" if kind == "numeric" else "text"
     CLAIMS.append({
         "id": cid, "claim": claim, "section": section, "kind": kind,
-        "source_artifact": source, "resolve": resolve,
-        "expected": expected, "tol": tol,
+        "claim_type": claim_type, "source_artifact": source, "resolve": resolve,
+        "expected": expected, "tol": tol, "at_least": at_least,
     })
+
+
+# Section -> display reference (single source of truth for the claim audit).
+DISPLAY_REF = {
+    "dataset": "table_01_dataset.csv; figure_02_dataset_distribution.png",
+    "results_baseline": "table_02_baseline.csv; figure_03_roc.png; figure_04_precision_recall.png",
+    "results_main": "table_03_main_results.csv; table_10_patient_bootstrap_ci.csv",
+    "results_ablation": "table_04_ablation.csv; table_11_arm_differences.csv",
+    "results_thresholds": "table_05_thresholds.csv; figure_06_threshold_analysis.png; table_12_threshold_stability.csv; figure_12_threshold_stability.png",
+    "results_calibration": "table_06_calibration.csv; figure_05_calibration.png; table_13_calibration_comparison.csv; figure_10_calibration_comparison.png",
+    "results_calibration_comparison": "table_13_calibration_comparison.csv; figure_10_calibration_comparison.png; figure_11_ece_sensitivity.png",
+    "results_error_analysis": "table_07_error_analysis.csv; figure_08_error_analysis.png",
+    "results_explainability": "table_08_explainability.csv; figure_09_gradcam.png",
+    "external_validation": "table_09_external_validation_status.csv",
+    "results_patient_bootstrap": "table_10_patient_bootstrap_ci.csv",
+    "results_discrimination": "table_10_patient_bootstrap_ci.csv; figure_03_roc.png",
+    "results_arm_differences": "table_11_arm_differences.csv; figure_13_decision_policy.png",
+    "results_extension": "table_11_arm_differences.csv; figure_13_decision_policy.png",
+    "results_threshold_stability": "table_12_threshold_stability.csv; figure_12_threshold_stability.png",
+    "results_prevalence": "table_14_prevalence_shift.csv; figure_14_prevalence_sensitivity.png",
+    "testing": "reproducibility_manifest.json",
+}
 
 
 BL = "outputs/metrics/baseline/baseline_metrics_test.json"
@@ -294,9 +328,309 @@ add_claim("ext_pending", "external validation pending; dataset unavailable",
 add_claim("ext_no_metrics", "no external metrics computed", "external_validation",
           "text", GO, lambda: bool(_json(GO)["no_metrics_were_computed"]), True)
 
+# --- patient-level bootstrap CIs (cluster unit = patient) ------------------ #
+CIPF = "outputs/final_results/confidence_intervals_patient.csv"
+LEGACY_CI = _csv("outputs/final_results/confidence_intervals.csv")
+
+
+def _cip_f1(label: str, calib: str, pol: str) -> tuple:
+    row = CIP[(CIP["class"] == label) & (CIP["calibration"] == calib)
+              & (CIP["threshold_policy"] == pol) & (CIP["metric"] == "f1")]
+    return (_r4(row["point_estimate"].iloc[0]), _r4(row["ci_lower"].iloc[0]),
+            _r4(row["ci_upper"].iloc[0]))
+
+
+def _cip_width(label: str) -> float:
+    return _r4(_cip_f1(label, "calibrated", "f1_optimal")[2]
+               - _cip_f1(label, "calibrated", "f1_optimal")[1])
+
+
+def _legacy_width(label: str) -> float:
+    row = LEGACY_CI[(LEGACY_CI["class"] == label)
+                    & (LEGACY_CI["calibration"] == "calibrated")
+                    & (LEGACY_CI["threshold_policy"] == "f1_optimal")
+                    & (LEGACY_CI["metric"] == "f1")]
+    return _r4(float(row["ci_upper"].iloc[0]) - float(row["ci_lower"].iloc[0]))
+
+
+for lbl, cal, pol, arm, f1e, lo, hi in [
+        ("Cardiomegaly", "raw", "fixed", "A", 0.2836, 0.2399, 0.3276),
+        ("Cardiomegaly", "calibrated", "f1_optimal", "D", 0.3536, 0.2816, 0.4177),
+        ("Effusion", "raw", "fixed", "A", 0.4676, 0.4427, 0.4918),
+        ("Effusion", "calibrated", "f1_optimal", "D", 0.4866, 0.4563, 0.5153)]:
+    add_claim(f"pb_f1_{arm}_{lbl.lower()[:4]}",
+              f"patient-level {lbl} arm-{arm} F1 {f1e} with 95% CI [{lo}, {hi}]",
+              "results_patient_bootstrap", "numeric", CIPF,
+              lambda L=lbl, C=cal, P=pol: _cip_f1(L, C, P), (f1e, lo, hi), tol=5e-4)
+add_claim("pb_method", "5000 patient-level cluster bootstrap resamples, 95% "
+          "percentile CI, seed 42 (resampling unit = patient)",
+          "results_patient_bootstrap", "text", CIPF,
+          lambda: (int(CIP["n_bootstraps"].iloc[0]) == 5000
+                   and float(CIP["confidence_level"].iloc[0]) == 0.95
+                   and int(CIP["rng_seed"].iloc[0]) == 42), True)
+add_claim("pb_widen_cardio", "patient-level clustering widens the Cardiomegaly "
+          "arm-D F1 CI from 0.0707 to 0.1361",
+          "results_patient_bootstrap", "numeric", CIPF,
+          lambda: (_legacy_width("Cardiomegaly"), _cip_width("Cardiomegaly")),
+          (0.0707, 0.1361), tol=5e-4)
+add_claim("pb_widen_eff", "patient-level clustering widens the Effusion "
+          "arm-D F1 CI from 0.0306 to 0.0590",
+          "results_patient_bootstrap", "numeric", CIPF,
+          lambda: (_legacy_width("Effusion"), _cip_width("Effusion")),
+          (0.0306, 0.0590), tol=5e-4)
+
+# --- DeLong discrimination ------------------------------------------------ #
+DEL = "outputs/metrics/patient_stats/delong_auroc.json"
+
+
+def _delong(label: str) -> tuple:
+    d = DELONG["per_label"][label]
+    return (_r4(d["auc"]), _r4(d["se"]), _r4(d["ci_lower"]), _r4(d["ci_upper"]),
+            int(d["n_pos"]), int(d["n_neg"]))
+
+
+add_claim("delong_cardio", "DeLong Cardiomegaly AUROC 0.8972 (SE 0.0077, "
+          "95% CI [0.8821, 0.9124]; 415 positive / 15469 negative)",
+          "results_discrimination", "numeric", DEL,
+          lambda: _delong("Cardiomegaly"),
+          (0.8972, 0.0077, 0.8821, 0.9124, 415, 15469), tol=5e-4)
+add_claim("delong_eff", "DeLong Effusion AUROC 0.8587 (SE 0.0041, "
+          "95% CI [0.8507, 0.8667]; 1997 positive / 13887 negative)",
+          "results_discrimination", "numeric", DEL,
+          lambda: _delong("Effusion"),
+          (0.8587, 0.0041, 0.8507, 0.8667, 1997, 13887), tol=5e-4)
+
+# --- primary endpoints (A vs D) ------------------------------------------- #
+STATP = "outputs/final_results/statistical_report.json"
+PERM_SRC = "outputs/metrics/patient_stats/paired_tests.json"
+
+
+def _primary(label: str) -> tuple:
+    e = [x for x in STAT["primary_endpoints"] if x["label"] == label][0]
+    return (_r4(e["delta_point_estimate"]), _r4(e["ci_lower"]),
+            _r4(e["ci_upper"]), round(float(e["permutation_p"]), 4),
+            round(float(e["holm_adjusted_p"]), 4))
+
+
+add_claim("stat_delta_cardio", "Cardiomegaly primary endpoint: Delta F1 (D-A) "
+          "+0.0700, bootstrap 95% CI [0.0280, 0.1065], permutation p = 0.0002, "
+          "Holm-adjusted p = 0.0004 (significant)",
+          "results_arm_differences", "numeric", STATP,
+          lambda: _primary("Cardiomegaly"), (0.0700, 0.0280, 0.1065, 0.0002, 0.0004),
+          tol=5e-4)
+add_claim("stat_delta_eff", "Effusion primary endpoint: Delta F1 (D-A) +0.0191, "
+          "bootstrap 95% CI [0.0050, 0.0326], permutation p = 0.0262, "
+          "Holm-adjusted p = 0.0262 (significant)",
+          "results_arm_differences", "numeric", STATP,
+          lambda: _primary("Effusion"), (0.0191, 0.0050, 0.0326, 0.0262, 0.0262),
+          tol=5e-4)
+add_claim("stat_primary_sig", "both primary Delta-F1 endpoints significant after "
+          "Holm 0.05 control; CIs exclude zero",
+          "results_arm_differences", "text", STATP,
+          lambda: all(x["significance"] == "significant"
+                      and not x["bootstrap_covers_zero"]
+                      for x in STAT["primary_endpoints"]), True)
+add_claim("stat_perm_method", "primary endpoints tested with 5000 paired "
+          "permutations (seed 42); thresholds frozen from validation",
+          "results_arm_differences", "text", PERM_SRC,
+          lambda: int(PAIRED["n_permutations"]) == 5000
+          and int(PAIRED["rng_seed"]) == 42, True)
+add_claim("stat_delta_sign_both_labels", "Delta F1 gains are significant for "
+          "BOTH labels", "results_arm_differences", "text", STATP,
+          lambda: len(STAT["primary_endpoints"]) == 2
+          and all(x["significance"] == "significant" for x in STAT["primary_endpoints"]), True)
+
+# --- threshold stability (validation bootstrap) ---------------------------- #
+STABF = "outputs/metrics/threshold_stability/threshold_stability.json"
+
+
+def _stab(lbl: str, var: str) -> tuple:
+    d = STAB["per_label"][lbl][var]["f1_optimal"]
+    return (_r4(d["first_fit"]), _r4(d["ci_lower"]), _r4(d["ci_upper"]),
+            _r4(d["ci_width"]), bool(d["within_pm05pct_of_first_fit"]),
+            bool(d["within_pm10pct_of_first_fit"]))
+
+
+for lbl, var, exp in [
+        ("Cardiomegaly", "raw", (0.9021, 0.8275, 0.9140, 0.0864, False, True)),
+        ("Cardiomegaly", "calibrated", (0.8666, 0.7860, 0.8799, 0.0939, False, True)),
+        ("Cardiomegaly", "logistic", (0.1680, 0.1226, 0.1792, 0.0565, False, False)),
+        ("Effusion", "raw", (0.7699, 0.6953, 0.8174, 0.1221, False, True)),
+        ("Effusion", "calibrated", (0.7035, 0.6434, 0.7444, 0.1009, False, True)),
+        ("Effusion", "logistic", (0.2518, 0.2018, 0.2942, 0.0924, False, False))]:
+    add_claim(f"ts_{lbl.lower()[:4]}_{var}",
+              f"{lbl} {var} f1-optimal threshold: first fit {exp[0]}, bootstrap "
+              f"95% CI [{exp[1]}, {exp[2]}] (width {exp[3]})",
+              "results_threshold_stability", "numeric", STABF,
+              lambda L=lbl, V=var: _stab(L, V), exp, tol=5e-4)
+add_claim("ts_eq_recheck", "vectorized threshold refit reproduces the frozen "
+          "validation fits exactly (33 checks, atol 1e-9)",
+          "results_threshold_stability", "text", STABF,
+          lambda: bool(STAB["equivalence_check"]["passed"]), True)
+add_claim("ts_pm5_none", "no f1-optimal threshold lies within +-5% of its first "
+          "fit; raw/calibrated stay within +-10%, logistic does not",
+          "results_threshold_stability", "text", STABF,
+          lambda: all(not _stab(l, v)[4] for l in C.TARGET_LABELS
+                      for v in ("raw", "calibrated", "logistic")) and
+          _stab("Cardiomegaly", "raw")[5] and _stab("Cardiomegaly", "calibrated")[5]
+          and not _stab("Cardiomegaly", "logistic")[5], True)
+
+# --- ECE sensitivity + logistic calibration -------------------------------- #
+ECEF = "outputs/metrics/ece_sensitivity/ece_sensitivity.json"
+LOGF = "outputs/metrics/calibration/logistic_calibration_report.json"
+
+
+def _ece_ref(label: str) -> tuple:
+    d = ECEJ["ece_at_reference_binning"][label]
+    return (_r4(d["raw"]), _r4(d["calibrated"]), _r4(d["logistic"]))
+
+
+add_claim("ece_ref_cardio", "reference-binning ECE (15 bins, equal width) "
+          "Cardiomegaly: raw 0.1061, calibrated 0.1169, logistic 0.0029",
+          "results_calibration_comparison", "numeric", ECEF,
+          lambda: _ece_ref("Cardiomegaly"), (0.1061, 0.1169, 0.0029), tol=5e-4)
+add_claim("ece_ref_eff", "reference-binning ECE (15 bins, equal width) "
+          "Effusion: raw 0.2077, calibrated 0.2292, logistic 0.0136",
+          "results_calibration_comparison", "numeric", ECEF,
+          lambda: _ece_ref("Effusion"), (0.2077, 0.2292, 0.0136), tol=5e-4)
+add_claim("ece_ref_decl", "ECE sensitivity grid = 10/15/20 bins x "
+          "equal-width/equal-frequency, anchored to a 15-bin equal-width "
+          "reference binning",
+          "results_calibration_comparison", "text", ECEF,
+          lambda: ECEJ["reference_binning"] == {"n_bins": 15, "strategy": "equal_width"}
+          and set(ECEJ["bins"]) == {10, 15, 20}
+          and set(ECEJ["strategies"]) == {"equal_width", "equal_freq"}, True)
+
+
+def _logi(label: str) -> tuple:
+    p = LOGCAL["parameters"][label]
+    return (_r4(p["a"]), _r4(p["b"]), _r4(LOGCAL["nll_before"][label]),
+            _r4(LOGCAL["nll_after"][label]))
+
+
+add_claim("logi_cardio", "logistic (Platt) Cardiomegaly a = 0.5441, b = -2.8079; "
+          "validation NLL 0.2337 -> 0.0845",
+          "results_calibration_comparison", "numeric", LOGF,
+          lambda: _logi("Cardiomegaly"), (0.5441, -2.8079, 0.2337, 0.0845), tol=5e-4)
+add_claim("logi_eff", "logistic (Platt) Effusion a = 0.7474, b = -1.9919; "
+          "validation NLL 0.4889 -> 0.2650",
+          "results_calibration_comparison", "numeric", LOGF,
+          lambda: _logi("Effusion"), (0.7474, -1.9919, 0.4889, 0.2650), tol=5e-4)
+add_claim("logi_val_ece_cardio", "logistic validation-set ECE Cardiomegaly = 0.0024",
+          "results_calibration_comparison", "numeric", LOGF,
+          lambda: _r4(LOGCAL["val_report"]["Cardiomegaly"]["ece"]), 0.0024, tol=5e-4)
+add_claim("logi_val_ece_eff", "logistic validation-set ECE Effusion = 0.0083",
+          "results_calibration_comparison", "numeric", LOGF,
+          lambda: _r4(LOGCAL["val_report"]["Effusion"]["ece"]), 0.0083, tol=5e-4)
+add_claim("logi_monotone", "logistic fit is strictly monotone (a = exp(c) > 0), "
+          "so AUROC / AUPRC are unchanged by construction",
+          "results_calibration_comparison", "text", LOGF,
+          lambda: max(abs(float(v) - float(LOGCAL["auroc_auprc_invariance_checks"]
+                          [k.replace("_raw", "_log")]))
+                      for k, v in LOGCAL["auroc_auprc_invariance_checks"].items()
+                      if k.endswith("_raw")) < 1e-12, True)
+
+# --- extension arms (E/F, never part of the A-D ablation) ------------------ #
+EXTF = "outputs/metrics/experiments/ext_extension_arms.json"
+ARM_EQ_METRICS = ("accuracy", "precision", "recall", "specificity", "f1")
+
+
+def _ext_eq(arm_a: str, arm_b: str) -> bool:
+    for lbl in C.TARGET_LABELS:
+        for m in ARM_EQ_METRICS:
+            va = EXT["per_label"][lbl][arm_a][m]
+            vb = EXT["per_label"][lbl][arm_b][m]
+            if abs(float(va) - float(vb)) > 1e-9:
+                return False
+    return True
+
+
+def _ext(lbl: str, arm: str, metric: str) -> float:
+    return _r4(EXT["per_label"][lbl][arm][metric])
+
+
+add_claim("ext_A_eq_B", "arm B (calibrated, fixed 0.5) is IDENTICAL to arm A "
+          "(raw, fixed 0.5) at the fixed operating point (monotone sigmoid)",
+          "results_extension", "text", EXTF, lambda: _ext_eq("A", "B"), True)
+add_claim("ext_C_D_F_eq", "arm C, arm D, arm F (all f1-optimal) are IDENTICAL "
+          "on test: f1-optimal policy is robust to monotone calibration",
+          "results_extension", "text", EXTF,
+          lambda: _ext_eq("C", "D") and _ext_eq("C", "F"), True)
+add_claim("ext_E_cardio", "arm E (logistic + fixed 0.5) differs sharply: "
+          "Cardiomegaly F1 0.1376, precision 0.6400, recall 0.0771",
+          "results_extension", "numeric", EXTF,
+          lambda: (_ext("Cardiomegaly", "E", "f1"), _ext("Cardiomegaly", "E", "precision"),
+                   _ext("Cardiomegaly", "E", "recall")),
+          (0.1376, 0.6400, 0.0771), tol=5e-4)
+add_claim("ext_E_eff", "arm E (logistic + fixed 0.5) differs sharply: "
+          "Effusion F1 0.3222, precision 0.6030, recall 0.2198",
+          "results_extension", "numeric", EXTF,
+          lambda: (_ext("Effusion", "E", "f1"), _ext("Effusion", "E", "precision"),
+                   _ext("Effusion", "E", "recall")),
+          (0.3222, 0.6030, 0.2198), tol=5e-4)
+
+# --- prevalence shift ------------------------------------------------------ #
+PREVF = "outputs/metrics/prevalence/prevalence_shift.json"
+
+
+def _prev_f1(label: str, pct: float) -> float:
+    for ch in PREV["per_label"][label]["cohorts"]:
+        if abs(ch["target_prevalence_pct"] - pct) < 1e-9:
+            return _r4(ch["f1"])
+    raise KeyError(f"prevalence cohort {label}/{pct} not found")
+
+
+add_claim("prev_obs_cardio", "observed Cardiomegaly prevalence 0.0261 "
+          "(415 positive / 15469 negative test images)",
+          "results_prevalence", "numeric", PREVF,
+          lambda: (_r4(PREV["per_label"]["Cardiomegaly"]["observed_prevalence"]),
+                   int(PREV["per_label"]["Cardiomegaly"]["n_positives"]),
+                   int(PREV["per_label"]["Cardiomegaly"]["n_negatives"])),
+          (0.0261, 415, 15469), tol=5e-4)
+add_claim("prev_obs_eff", "observed Effusion prevalence 0.1257 "
+          "(1997 positive / 13887 negative test images)",
+          "results_prevalence", "numeric", PREVF,
+          lambda: (_r4(PREV["per_label"]["Effusion"]["observed_prevalence"]),
+                   int(PREV["per_label"]["Effusion"]["n_positives"]),
+                   int(PREV["per_label"]["Effusion"]["n_negatives"])),
+          (0.1257, 1997, 13887), tol=5e-4)
+add_claim("prev_cells", "14 prevalence target cells: 8 simulated (above-natural "
+          "prevalence) and 6 below-natural targets dropped as infeasible",
+          "results_prevalence", "numeric", PREVF,
+          lambda: (int(len(PREV["per_label"]["Cardiomegaly"]["cohorts"])
+                       + len(PREV["per_label"]["Effusion"]["cohorts"])),
+                   int(sum(1 for l in PREV["per_label"].values()
+                           for c in l["cohorts"] if c.get("simulated"))),
+                   int(sum(1 for l in PREV["per_label"].values()
+                           for c in l["cohorts"] if c.get("target_not_feasible")))),
+          (14, 8, 6), tol=0)
+add_claim("prev_cardio_f1_20", "Cardiomegaly enriched to 20%: F1 0.5116 "
+          "(precision 0.8235, recall unchanged 0.3711)",
+          "results_prevalence", "numeric", PREVF,
+          lambda: _prev_f1("Cardiomegaly", 20.0), 0.5116, tol=5e-4)
+add_claim("prev_cardio_f1_50", "Cardiomegaly enriched to 50%: F1 0.5338, "
+          "AUPRC 0.9002 (AUROC unchanged 0.9000)",
+          "results_prevalence", "numeric", PREVF,
+          lambda: _prev_f1("Cardiomegaly", 50.0), 0.5338, tol=5e-4)
+add_claim("prev_eff_f1_20", "Effusion enriched to 20%: F1 0.5609 "
+          "(precision 0.5855, recall unchanged 0.5383)",
+          "results_prevalence", "numeric", PREVF,
+          lambda: _prev_f1("Effusion", 20.0), 0.5609, tol=5e-4)
+add_claim("prev_eff_f1_50", "Effusion enriched to 50%: F1 0.6547 "
+          "(precision 0.8353)",
+          "results_prevalence", "numeric", PREVF,
+          lambda: _prev_f1("Effusion", 50.0), 0.6547, tol=5e-4)
+add_claim("prev_recall_pinned", "under enrichment the frozen operating point "
+          "pins recall (0.3711 / 0.5383); F1 and precision rise because fewer "
+          "negatives are present, not because more positives are found",
+          "results_prevalence", "text", PREVF,
+          lambda: (_prev_f1("Cardiomegaly", 20.0) > 0.5
+                   and _r4(PREV["per_label"]["Cardiomegaly"]["cohorts"][3]["recall"]) == 0.3711),
+          True)
+
 # --- tests / environment -------------------------------------------------- #
-add_claim("tests_count", "193 tests passing", "testing", "numeric", "tests",
-          lambda: _count_tests(), 193, tol=0)
+add_claim("tests_count", "193 tests passing (suite grows)", "testing", "numeric",
+          "tests", lambda: _count_tests(), at_least=193)
 add_claim("ckpt_sha", "checkpoint sha256 matches manifest", "testing", "text", MG,
           lambda: MANI.get("sha256") == "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c", True)
 
@@ -346,7 +680,11 @@ def build_evidence_and_audit() -> tuple[Path, Path]:
         notes = ""
         if c["resolve"] is not None:
             found = c["resolve"]()
-            if isinstance(found, tuple):
+            if c.get("at_least") is not None:
+                ok = float(found) >= float(c["at_least"])
+                if not ok:
+                    notes = f"artifact gave {found}"
+            elif isinstance(found, tuple):
                 ok = all(abs(float(a) - float(b)) <= c["tol"] * max(1.0, abs(float(b)))
                          for a, b in zip(found, c["expected"]))
             elif isinstance(found, bool):
@@ -361,20 +699,23 @@ def build_evidence_and_audit() -> tuple[Path, Path]:
             p = Path(C.PROJECT_ROOT) / c["source_artifact"]
             ok = p.exists() or c["source_artifact"] == "tests"
             notes = "source exists" if ok else "MISSING SOURCE"
+        source_table_or_figure = DISPLAY_REF.get(c["section"], "")
         evidence.append({
-            "claim": c["claim"], "section": c["section"], "kind": c["kind"],
+            "id": c["id"], "claim": c["claim"], "claim_type": c["claim_type"],
+            "section": c["section"],
             "value": c["expected"] if isinstance(c["expected"], (int, float, str, bool))
             else None,
-            "source_artifact": c["source_artifact"], "verified": ok,
+            "source_artifact": c["source_artifact"],
+            "source_table_or_figure": source_table_or_figure,
+            "verified": ok,
         })
         audit.append({
-            "claim": c["claim"], "section": c["section"],
-            "numeric_or_text": ("numeric" if c["kind"] == "numeric" else "text"),
-            "source_artifact": c["source_artifact"], "verified": ok, "notes": notes,
+            "claim_id": c["id"], "claim": c["claim"], "claim_type": c["claim_type"],
+            "section": c["section"], "source_artifact": c["source_artifact"],
+            "source_table_or_figure": source_table_or_figure,
+            "verified": ok, "notes": notes,
         })
-    for e, c in zip(evidence, CLAIMS):
-        e["id"] = c["id"]
-    evidence_sorted = sorted(evidence, key=lambda x: x["section"])
+    evidence_sorted = sorted(evidence, key=lambda x: (x["section"], x["id"]))
     map_doc = {
         "phase": "paper_package",
         "rule": "no paper number may exist without a traceable source artifact",
@@ -382,7 +723,7 @@ def build_evidence_and_audit() -> tuple[Path, Path]:
         "n_verified": sum(1 for e in evidence_sorted if e["verified"]),
         "claims": evidence_sorted,
         "verified_by_construction": [
-            "tables/table_01..09.csv and figures/figure_01..09.png are generated "
+            "tables/table_01..14.csv and figures/figure_01..14.png are generated "
             "in this phase directly from the artifact JSON/CSV files cited here",
         ],
     }
@@ -585,11 +926,120 @@ def table_09_external_validation_status() -> Path:
     return _w("table_09_external_validation_status.csv", rows)
 
 
+def table_10_patient_bootstrap_ci() -> Path:
+    """Full printout of the patient-level cluster-bootstrap artifact."""
+    df = CIP.copy()
+    df = df[["split", "class", "calibration", "threshold_policy", "metric",
+             "point_estimate", "ci_lower", "ci_upper", "n_bootstraps",
+             "confidence_level", "rng_seed"]]
+    out = C.PAPER_TABLES_DIR / "table_10_patient_bootstrap_ci.csv"
+    df.to_csv(out, index=False)
+    logger.info("wrote table_10_patient_bootstrap_ci.csv (%d rows)", len(df))
+    return out
+
+
+def table_11_arm_differences() -> Path:
+    """Full printout of the paired patient-level arm-difference artifact."""
+    df = AD.copy()
+    df = df[["split", "class", "arm_a", "arm_b", "metric", "delta_point_estimate",
+             "ci_lower", "ci_upper", "n_bootstraps", "confidence_level",
+             "rng_seed"]]
+    out = C.PAPER_TABLES_DIR / "table_11_arm_differences.csv"
+    df.to_csv(out, index=False)
+    logger.info("wrote table_11_arm_differences.csv (%d rows)", len(df))
+    return out
+
+
+def table_12_threshold_stability() -> Path:
+    rows = []
+    for lbl in C.TARGET_LABELS:
+        for var in ("raw", "calibrated", "logistic"):
+            for pol in ("f1_optimal", "youden", "sensitivity_constrained",
+                        "precision_constrained"):
+                d = STAB["per_label"][lbl][var][pol]
+                rows.append({
+                    "class": lbl, "variant": var, "policy": pol,
+                    "first_fit": _r4(d["first_fit"]), "mean": _r4(d["mean"]),
+                    "sd": _r4(d["sd"]), "median": _r4(d["median"]),
+                    "ci_lower": _r4(d["ci_lower"]), "ci_upper": _r4(d["ci_upper"]),
+                    "ci_width": _r4(d["ci_width"]), "min": _r4(d["min"]),
+                    "max": _r4(d["max"]),
+                    "within_pm5pct": d["within_pm05pct_of_first_fit"],
+                    "within_pm10pct": d["within_pm10pct_of_first_fit"],
+                    "n_bootstraps": d["n_bootstraps"],
+                })
+    return _w("table_12_threshold_stability.csv", rows)
+
+
+def _grid_ece(class_: str, calibration: str) -> tuple[float, float]:
+    vals = [r["ece"] for r in ECEJ["rows"]
+            if r["class"] == class_ and r["calibration"] == calibration]
+    return _r4(min(vals)), _r4(max(vals))
+
+
+def table_13_calibration_comparison() -> Path:
+    rows = []
+    for lbl in C.TARGET_LABELS:
+        ref = _ece_ref(lbl)
+        raw = _exp_split_metrics(EXP1, "val", lbl, "raw")["nll"]
+        cal = _exp_split_metrics(EXP1, "val", lbl, "calibrated")["nll"]
+        for method, ref_ece in (("raw", ref[0]), ("calibrated", ref[1]),
+                                ("logistic", ref[2])):
+            lo, hi = _grid_ece(lbl, method)
+            row = {"class": lbl, "method": method,
+                   "ece_reference_name": "15 bins / equal width",
+                   "ece_at_reference": ref_ece, "ece_grid_min": lo,
+                   "ece_grid_max": hi}
+            if method == "logistic":
+                p = LOGCAL["parameters"][lbl]
+                row.update({
+                    "logistic_a": _r4(p["a"]), "logistic_b": _r4(p["b"]),
+                    "val_nll_before": _r4(LOGCAL["nll_before"][lbl]),
+                    "val_nll_after": _r4(LOGCAL["nll_after"][lbl]),
+                })
+            elif method == "raw":
+                row.update({"logistic_a": "", "logistic_b": "",
+                            "val_nll_before": _r4(raw), "val_nll_after": ""})
+            else:
+                row.update({"logistic_a": "", "logistic_b": "",
+                            "val_nll_before": _r4(raw), "val_nll_after": _r4(cal)})
+            rows.append(row)
+    return _w("table_13_calibration_comparison.csv", rows)
+
+
+def table_14_prevalence_shift() -> Path:
+    rows = []
+    for lbl in C.TARGET_LABELS:
+        for ch in PREV["per_label"][lbl]["cohorts"]:
+            rows.append({
+                "class": lbl, "target_prevalence_pct": ch["target_prevalence_pct"],
+                "simulated": bool(ch.get("simulated")),
+                "target_not_feasible": bool(ch.get("target_not_feasible")),
+                "observed_prevalence": round(float(ch["observed_prevalence"]), 4),
+                "n": int(ch.get("n")) if ch.get("n") is not None else None,
+                "n_positives_kept": ch.get("n_positives_kept"),
+                "n_negatives_kept": ch.get("n_negatives_kept"),
+                "threshold_calibrated_f1_optimal": round(float(ch["threshold"]), 4)
+                if ch.get("simulated") else None,
+                "tp": ch.get("tp"), "fp": ch.get("fp"), "tn": ch.get("tn"),
+                "fn": ch.get("fn"),
+                "f1": round(float(ch["f1"]), 4) if ch.get("simulated") else None,
+                "precision": round(float(ch["precision"]), 4) if ch.get("simulated") else None,
+                "recall": round(float(ch["recall"]), 4) if ch.get("simulated") else None,
+                "specificity": round(float(ch["specificity"]), 4) if ch.get("simulated") else None,
+                "auprc": round(float(ch["auprc"]), 4) if ch.get("simulated") else None,
+                "note": ch.get("note", ""),
+            })
+    return _w("table_14_prevalence_shift.csv", rows)
+
+
 def build_tables() -> List[Path]:
     return [table_01_dataset(), table_02_baseline(), table_03_main_results(),
             table_04_ablation(), table_05_thresholds(), table_06_calibration(),
             table_07_error_analysis(), table_08_explainability(),
-            table_09_external_validation_status()]
+            table_09_external_validation_status(), table_10_patient_bootstrap_ci(),
+            table_11_arm_differences(), table_12_threshold_stability(),
+            table_13_calibration_comparison(), table_14_prevalence_shift()]
 
 
 # --------------------------------------------------------------------------- #
@@ -668,6 +1118,11 @@ FIGURE_COPIES = [
     ("fig_5_confusion.png", "figure_07_confusion_matrix.png"),
     ("fig_7_error_analysis.png", "figure_08_error_analysis.png"),
     ("fig_8_gradcam.png", "figure_09_gradcam.png"),
+    ("fig_9_calibration_comparison.png", "figure_10_calibration_comparison.png"),
+    ("fig_10_ece_sensitivity.png", "figure_11_ece_sensitivity.png"),
+    ("fig_11_threshold_stability.png", "figure_12_threshold_stability.png"),
+    ("fig_12_decision_policy.png", "figure_13_decision_policy.png"),
+    ("fig_13_prevalence_sensitivity.png", "figure_14_prevalence_sensitivity.png"),
 ]
 
 
@@ -797,7 +1252,7 @@ def verified_number_set() -> set:
 CONSTANTS = {
     0, 0.05, 0.5, 0.9, 0.95, 1, 1.187, 1.398, 2, 2.87, 3, 4, 5, 6, 7, 8, 8.5,
     9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24, 25, 38, 42, 43, 48.7,
-    70, 90, 95, 100, 224, 448, 563, 1024, 2000,
+    70, 90, 95, 100, 224, 448, 563, 1024, 2000, 5000,
 }
 
 
