@@ -23,6 +23,6 @@ All primary statistical artifacts are present and verified. Patient-level infere
 - statistical_report.json, delong_auroc.json, paired_tests.json, logistic_calibration_report.json, ext_extension_arms.json, prevalence_shift.json, decision_policy_analysis.csv
 
 ## Verification
-All tests pass: paper package tests (20/20), final results (47/47), statistical artifacts validated against ground-truth values from artifacts.
+At package generation, paper-package and final-results checks passed; statistical artifacts were validated against their source artifacts.
 
 This report is prepared for IEEE submission readiness. No results were fabricated or retrained.

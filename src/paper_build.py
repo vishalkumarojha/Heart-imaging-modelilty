@@ -1246,6 +1246,14 @@ def verified_number_set() -> set:
             for v in e:
                 if isinstance(v, (int, float)):
                     nums.add(round(float(v), 4))
+    # Metadata values used in IEEE_READINESS_REPORT.md are sourced from these
+    # already-frozen artifacts. Include them in number hygiene without
+    # duplicating their values as free-standing constants.
+    nums.update((len(CIP), len(AD), len(ECEJ["rows"]), len(CLAIMS)))
+    checks = re.search(r"\((\d+) checks\)", STAB["equivalence_check"]["detail"])
+    if checks:
+        nums.add(float(checks.group(1)))
+    nums.update(float(v) for v in PREV["grid_pct"])
     return nums
 
 
@@ -1265,7 +1273,9 @@ def check_prose_numbers() -> List[str]:
     violations = []
     pattern = re.compile(r"\b\d+(?:\.\d+)?\b")
     for md in sorted(Path(C.PAPER_DIR).glob("*.md")):
-        text = md.read_text().replace(",", "")
+        # Remove only conventional thousands separators. Preserve commas
+        # between adjacent decimals (e.g. CI endpoints `0.0280,0.1065`).
+        text = re.sub(r"(?<=\d),(?=\d{3}(?:\D|$))", "", md.read_text())
         for tok in pattern.findall(text):
             val = float(tok)
             if not any(abs(val - a) <= 5e-4 * max(1.0, abs(a)) for a in allowed):
