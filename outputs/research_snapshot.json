@@ -1,7 +1,7 @@
 {
   "snapshot_version": "1.0",
   "baseline_id": "BASELINE_v1",
-  "created_utc": "2026-10-07T03:47:55Z",
+  "created_utc": "2026-10-07T03:53:23Z",
   "study": {
     "primary_modality": "Chest X-ray",
     "primary_task": "multi-label Cardiomegaly + Effusion classification",
@@ -154,7 +154,7 @@
     }
   },
   "environment": {
-    "timestamp_utc": "2026-10-07T03:47:53+00:00",
+    "timestamp_utc": "2026-10-07T03:53:22+00:00",
     "python": "3.14.7",
     "python_full": "3.14.7 (main, Aug 10 2026, 00:00:00) [GCC 15.3.1 20260722 (Red Hat 15.3.1-1)]",
     "platform": "Linux-7.2.5-100.fc43.x86_64-x86_64-with-glibc2.42",
@@ -190,16 +190,14 @@
     "note": "system python3 has no torch \u2014 always use .venv/bin/python"
   },
   "git": {
-    "head_commit": "ee1af00143d5b3adda2ba17cdbbf3c1c0f931186",
-    "head_subject": "Finalize X-ray research: calibration-aware decision policies + paper package",
-    "dirty": true,
+    "head_commit": "7e5e9bbca6b2da6dab80eb2dc8bef120a6459f79",
+    "head_subject": "fix: porcelain path parsing in freeze git-state exclusion",
+    "dirty": false,
     "status_short": [
       "M outputs/metrics/error_analysis/error_analysis_test.json",
       " M outputs/metrics/external/status.json",
       " M outputs/paper/reproducibility_manifest.json",
-      " M outputs/research_snapshot.json",
-      " M src/paper_build.py",
-      " M src/research_freeze.py"
+      " M outputs/research_snapshot.json"
     ],
     "excluded": [
       "outputs/research_snapshot.json",
@@ -213,7 +211,7 @@
     "status": "PASS",
     "tests_run": 193,
     "returncode": 0,
-    "summary": "Ran 193 tests in 25.452s",
+    "summary": "Ran 193 tests in 15.084s",
     "command": "/home/arno/Desktop/Projects/Capstone/.venv/bin/python -m unittest discover -s tests"
   },
   "project_status": {
