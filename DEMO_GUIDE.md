@@ -1,143 +1,85 @@
-# Demo Guide — Multi-Modal Cardiac Condition Detection System
+# Research Demonstration Dashboard
 
-Quick reference for the live capstone presentation.
+This is a faculty-facing presentation layer for the frozen NIH ChestX-ray14
+calibration and decision-policy study. It reads verified artifacts and does not
+train, refit, or alter research results.
 
-## Launch
+## Install and launch
 
-```bash
-cd Capstone
-. .venv/bin/activate          # or: source .venv/bin/activate
-python demo_app.py
-```
-
-Opens on **http://127.0.0.1:7860**. First prediction in each tab takes ~2–3 s
-(loads that checkpoint once); every prediction after is < 1 s. **CPU only** — no
-GPU needed, nothing to configure. Leave the terminal running; `Ctrl-C` to stop.
-
-If port 7860 is already in use, start on another port:
+From the repository root, using the project environment:
 
 ```bash
-GRADIO_SERVER_PORT=7861 python demo_app.py
+.venv/bin/python research_demo_app.py
 ```
 
-Then open **http://127.0.0.1:7861**. The same override works with any available
-port.
+Open [http://127.0.0.1:7860](http://127.0.0.1:7860). To use another local port,
+set `GRADIO_SERVER_PORT`, for example `GRADIO_SERVER_PORT=7861
+.venv/bin/python research_demo_app.py`. For a fresh environment, create a Python
+virtual environment, install the project requirements and `requirements_demo.txt`,
+then launch as above. Gradio is served locally; the dashboard does not require
+GitHub or an external service.
 
-**Pre-flight (do this before the audience is watching):** open the app, click
-through all four tabs once with the sample files so every checkpoint is warm.
+## Checkpoint and sample image
 
-Sample files are in `demo_samples/` — see `demo_samples/README.md` for each
-file's true label and expected output.
+Live inference uses `outputs/checkpoints/baseline/densenet121_best.pt` and the
+exact evaluation transform from `src.dataset.build_transforms`: RGB conversion,
+224 × 224 resize, ImageNet normalization, tensor conversion. The checkpoint labels
+must be ordered Cardiomegaly, Effusion. The output path is raw logits → sigmoid
+probabilities → frozen per-label temperature scaling `sigmoid(z/T)` → calibrated
+validation-frozen F1-optimal thresholds. The research code and threshold fitting
+are not invoked during inference. If the checkpoint is missing, live inference
+reports that it is unavailable; artifact tabs continue to work.
 
----
+Use a PNG or JPEG chest X-ray. Curated examples, if present, are described in
+[`demo_samples/README.md`](demo_samples/README.md). An uploaded image receives
+model scores and predicted labels, not a diagnosis. No live Grad-CAM is created;
+the dashboard may show the saved, exploratory research Grad-CAM figure with its
+nonclinical attribution caveat.
 
-## Tab 1 · Chest X-ray
+## Dashboard tabs
 
-**What it is:** DenseNet121 (ImageNet-pretrained), Phase 1. Multi-label —
-Cardiomegaly and Effusion are scored **independently** (not a distribution).
+1. **Research Overview** — question, fixed model and data design, pipeline, and
+   research-only notice.
+2. **Live X-ray Demonstration** — raw probability, calibrated score, frozen
+   threshold, and per-label model output for an uploaded image.
+3. **Calibration** — validation NLL, Brier score, ECE, temperature values, the
+   separately marked logistic extension, and the existing ECE-sensitivity plot.
+4. **A/B/C/D Decision Policy** — A: raw + 0.50; B: temperature + 0.50; C: raw +
+   validation F1-optimal threshold; D: temperature + validation F1-optimal
+   threshold. Test operating-point results use those frozen thresholds.
+5. **Statistical Evidence** — patient-level bootstrap D−A F1 differences and
+   intervals, paired permutation/Holm results, and test AUROC with DeLong CIs.
+6. **Threshold Stability** — validation patient-cluster bootstrap summaries and
+   the recorded vectorized/frozen equality check.
+7. **Error Analysis** — saved test error strata, error figure, and exploratory
+   Grad-CAM figure. Attribution is not validated clinical localization.
+8. **Decision Policy Comparison** — test precision, recall, specificity, and F1
+   across frozen operating policies, distinct from threshold-free model AUROC.
+9. **Prevalence Sensitivity** — existing negative-subsampling simulation and
+   feasibility notes; it is not external validation.
+10. **Reproducibility & Limitations** — manifest, checkpoint availability,
+    validation-only fitting, study limitations, and external-data status.
 
-**Demo flow:** upload `demo_samples/xray/both_cardiomegaly+effusion__*.png` →
-both bars near 100 %. Then `no_finding__*.png` → both near 0 %. Then
-`cardiomegaly_only__*.png` → one high, one low.
+## Presentation flow
 
-**Talking points:**
-- Trained on NIH ChestX-ray14, 109k images, **patient-level** train/val/test
-  split (no patient in two splits).
-- **Test mean AUROC 0.878** (Cardiomegaly 0.897, Effusion 0.859) — and test
-  *beat* validation, so it generalises.
-- We report **AUROC, not accuracy**: Cardiomegaly is ~2.5 % of images, so a
-  "always negative" model is 97 % accurate and useless.
-- Low precision at the 0.5 threshold is deliberate — the loss up-weights the
-  rare positive class; you'd tune the threshold per deployment.
+Select **Presentation** mode, then move through Overview → Live X-ray → A/B/C/D
+→ Statistical Evidence → Threshold Stability → Error Analysis → Limitations.
+Select **Technical** mode to expose source-path and audit details. Artifact tables
+and figures point to repository-generated results rather than copied metric values.
 
----
+## Limitations and external validation
 
-## Tab 2 · Echocardiogram
+The dataset split and DenseNet121 baseline are fixed. Thresholds and temperature
+parameters were fit on validation data only; the held-out test set is used only
+for evaluation. Temperature scaling improves NLL and Brier in the reported
+validation artifacts while reference ECE rises for both labels, illustrating
+metric-dependent calibration behavior. Results come from a single patient-level
+split. External CheXpert validation is **PENDING / BLOCKED** because the dataset
+is unavailable; no external metrics were computed. This dashboard is a research
+demonstration, not clinical software.
 
-**What it is:** ResNet18 applied per frame + a bidirectional LSTM over 16
-evenly-sampled frames, Phase 2. Single-label 3-class ejection-fraction category.
+## Existing multimodal demo
 
-**Demo flow:** upload `reduced_EF22__*.avi` → "Reduced" ~97 %. Then
-`normal_EF71__*.avi` → "Normal" ~98 %. Then `mildly_reduced_EF50__*.avi` →
-"Mildly Reduced" ~72 % (point out this is the hard class).
-
-**Talking points:**
-- EF buckets: **Reduced < 40 · Mildly Reduced 40–54 · Normal ≥ 55**.
-- Uses EchoNet-Dynamic's **official** train/val/test split (one video per patient).
-- **Test macro one-vs-rest AUROC 0.802.** Per class: Reduced 0.906, Normal
-  0.822, **Mildly Reduced 0.678**.
-- The middle class is hard *by construction* — a 15-point EF window, and
-  echo-derived EF itself carries ~±5 % measurement noise, so borderline cases
-  are genuinely ambiguous.
-
----
-
-## Tab 3 · Cardiac MRI
-
-**What it is:** ResNet18 per short-axis slice + BiLSTM over 10 slices, Phase 3.
-Each slice is a 3-channel image `[ED frame, ES frame, ED−ES]` — the difference
-channel encodes contraction. Single-label 5-class diagnosis.
-
-**Demo flow:** upload **both** files from `demo_samples/mri/DCM__patient002/` →
-"DCM" ~84 %. Then `RV__patient084/` → "RV" ~89 %. Then `NOR__patient068/` →
-"NOR" ~77 %.
-
-**Talking points — be candid here:**
-- Classes: **DCM** dilated / **HCM** hypertrophic / **MINF** prior infarct /
-  **NOR** normal / **RV** abnormal right ventricle.
-- ACDC has **only 100 patients** total → our split is **70 / 15 / 15**.
-- **Test macro AUROC 0.706, accuracy 6/15.** DCM, NOR, RV classify reasonably;
-  **HCM and MINF are near chance** — the model confuses thick-walled HCM with
-  dilated DCM, and regional-wall-motion MINF needs segmentation we didn't use.
-- This is an **honest, expected limitation of dataset size**, documented in
-  `PHASE3_MRI_SUMMARY.md`. The MRI encoder's real value is as a **component of
-  the fusion model**, not a standalone diagnostic.
-
----
-
-## Tab 4 · Fusion  (the centerpiece)
-
-**What it is:** Phase 4. The three frozen encoders → three 1024-d embeddings →
-a fusion layer → three task-specific heads. Handles **any subset** of modalities.
-
-**Demo flow:**
-1. **One modality** — upload just an X-ray. Panel shows ECHO and MRI as
-   "🔀 learned missing-modality token". The X-ray head still fires.
-2. **Two modalities** — add an ECHO video. Now two "✅ real upload", one token.
-3. **All three** — add an MRI folder's two files. **A large red banner appears:**
-   *"SYNTHETIC EXAMPLE — NOT ONE REAL PATIENT."* All three heads fire.
-
-**Talking points:**
-- **Missing-modality token:** an absent modality is replaced by a *trained*
-  1024-d parameter vector — **not zeros**. The model learns a meaningful
-  "this modality is unavailable" prior.
-- **Combination:** per-modality LayerNorm (X-ray embeddings are ~15× larger in
-  magnitude) → concatenate (→ 3072) → shared 2-layer MLP (→ 512) → three heads.
-  We chose concat+MLP over attention: only 3 fixed slots, nothing to route.
-- **We kept each dataset's real labels** (X-ray 2-label, EF 3-class, diagnosis
-  5-class) rather than inventing a unified label — so we can measure exactly
-  what the fusion pathway costs.
-- **Validation — single-modality-present** (each real test set, other two
-  masked): X-ray mean AUROC **0.865** (vs 0.878 standalone), ECHO macro AUROC
-  **0.806** (vs 0.802), MRI **0.628** (vs 0.706, within noise at N=15). **The
-  fusion pathway preserves each encoder's signal** — that's the result.
-- **The honest caveat, say it plainly:** the three datasets come from three
-  institutions with **no shared patients**, so there is **no real tri-modal
-  patient** anywhere. We cannot and do not report a real multi-modal accuracy
-  number. The all-three-present mode is an **architecture demonstration** on
-  three unrelated people's scans — hence the banner. Measuring true fusion
-  performance needs a paired cohort, which is the stated future work.
-
----
-
-## If something goes wrong live
-
-- **Bad upload / wrong file type** → the tab shows a plain `⚠️` message, not a
-  crash. Just pick a `demo_samples/` file and retry.
-- **MRI tab error "Need 2 volume files"** → you uploaded one file, or included a
-  `_gt` mask. Upload exactly the two `_frameNN.nii.gz` files from one folder.
-- **Port 7860 in use** → `python demo_app.py` after `pkill -f demo_app` (or edit
-  `server_port` at the bottom of `demo_app.py`).
-- **App won't start** → check the three encoder checkpoints exist under
-  `outputs/checkpoints/{,echo/,mri/,fusion/}`; they are git-ignored (large), so
-  a fresh clone needs them copied in or regenerated.
+The earlier X-ray / echocardiogram / MRI / fusion demo remains available with
+`python demo_app.py`. It is separate from this calibration-focused research
+dashboard and retains its synthetic multi-modality caveats.

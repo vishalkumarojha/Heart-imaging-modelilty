@@ -292,6 +292,17 @@ Capstone/
 
 ## 6. Hard rules this project does not break
 
+### Research Demo
+
+Launch the faculty-facing, read-only X-ray dashboard from the repository root
+with `.venv/bin/python research_demo_app.py`. It opens at
+`http://127.0.0.1:7860` and reads the frozen calibration, threshold, statistical,
+stability, error, and prevalence artifacts under `outputs/`. Live X-ray inference
+uses the baseline checkpoint when available; the evidence dashboard remains
+available without it. See [`DEMO_GUIDE.md`](DEMO_GUIDE.md) for setup, tab guide,
+presentation flow, and limitations. The older four-modality capstone demo remains
+available through `python demo_app.py`.
+
 1. **No refitting on test/external data** — enforced at runtime (`ValueError`)
    and by tests, not by convention.
 2. **No new architecture** — no CBAM/SE/attention/transformers/focal loss, no
