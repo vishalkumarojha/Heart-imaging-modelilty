@@ -701,8 +701,11 @@ def _git_state() -> dict:
         "outputs/metrics/error_analysis/error_analysis_test.json",
         "outputs/metrics/external/status.json",
     )
-    kept = [ln for ln in lines if not any(
-        ln[3:].lstrip().startswith(p) for p in excluded)]
+    kept = []
+    for ln in lines:
+        path = ln[3:].lstrip() if len(ln) > 3 and ln[2] == " " else ln[2:].lstrip()
+        if not any(path.startswith(p) for p in excluded):
+            kept.append(ln)
     return {
         "branch": git, "head_sha": head,
         "dirty_count": len(kept),

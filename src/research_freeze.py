@@ -58,7 +58,7 @@ _REFRESHED_OUTPUTS = (
 
 
 def _is_refreshed_output(line: str) -> bool:
-    path = line[3:].lstrip()
+    path = line[3:].lstrip() if len(line) > 3 and line[2] == " " else line[2:].lstrip()
     return any(path.startswith(p) for p in _REFRESHED_OUTPUTS)
 
 
