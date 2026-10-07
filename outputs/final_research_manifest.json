@@ -1,0 +1,64 @@
+{
+  "title": "Calibration-Aware Decision Policies for Chest X-Ray Classification",
+  "phase": "final_ieee_package",
+  "generated_at": "Wed Oct 07 2026",
+  "repo_root": "/home/arno/Desktop/Projects/Capstone",
+  "branch": "research/xray-calibration",
+  "head_sha": "dc1261e",
+  "interpreter": "/home/arno/Desktop/Projects/Capstone/.venv/bin/python",
+  "seed": 42,
+  "frozen_baseline": true,
+  "claims_verified": 111,
+  "n_tables": 14,
+  "n_figures": 14,
+  "external_validation": {
+    "status": "PENDING",
+    "available": false,
+    "no_metrics_computed": true
+  },
+  "primary_endpoints": {
+    "Cardiomegaly": {
+      "arm_a": "A",
+      "arm_b": "D",
+      "metric": "f1",
+      "delta": 0.0700,
+      "ci_95": [0.0280, 0.1065],
+      "permutation_p": 0.0002,
+      "holm_p": 0.0004,
+      "significant": true
+    },
+    "Effusion": {
+      "arm_a": "A",
+      "arm_b": "D",
+      "metric": "f1",
+      "delta": 0.0191,
+      "ci_95": [0.0050, 0.0326],
+      "permutation_p": 0.0262,
+      "holm_p": 0.0262,
+      "significant": true
+    }
+  },
+  "deLong_auroc_test": {
+    "Cardiomegaly": [0.8972, 0.0077, 0.8821, 0.9124, 415, 15469],
+    "Effusion": [0.8587, 0.0041, 0.8507, 0.8667, 1997, 13887]
+  },
+  "prevalence_shift": {
+    "cells_total": 14,
+    "simulated": 8,
+    "not_feasible": 6,
+    "note": "positives kept in full; below-natural targets infeasible (raises prevalence only)"
+  },
+  "artifacts_key": {
+    "evidence_map": "outputs/paper/paper_evidence_map.json",
+    "claim_audit": "outputs/paper/claim_audit.csv",
+    "statistical_report": "outputs/final_results/statistical_report.json",
+    "patient_bootstrap_ci": "outputs/final_results/confidence_intervals_patient.csv",
+    "arm_differences": "outputs/final_results/arm_differences.csv",
+    "decision_policy_analysis": "outputs/final_results/decision_policy_analysis.csv"
+  },
+  "reproducibility_command": "python -m src.paper_build",
+  "tests": {
+    "paper_package": "20/20 passed",
+    "final_results": "47/47 passed"
+  }
+}

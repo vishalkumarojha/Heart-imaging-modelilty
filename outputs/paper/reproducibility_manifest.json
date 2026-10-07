@@ -1,0 +1,135 @@
+{
+  "phase": "paper_package",
+  "model": "DenseNet121 (torchvision, ImageNet-1K V1 pretrained)",
+  "checkpoint": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_best.pt",
+  "checkpoint_sha256": "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c",
+  "dataset": "NIH ChestX-ray14",
+  "labels": [
+    "Cardiomegaly",
+    "Effusion"
+  ],
+  "split": {
+    "method": "patient-level 70/15/15",
+    "fractions": [
+      0.7,
+      0.15,
+      0.15
+    ],
+    "seed": 42,
+    "index_file": "/home/arno/Desktop/Projects/Capstone/data/processed/split_index.csv",
+    "rows_by_split": null,
+    "patients_by_split": null,
+    "label_counts_by_split": null,
+    "patient_overlap": null
+  },
+  "seed": 42,
+  "preprocessing": {
+    "input_resolution": 224,
+    "normalization_mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "normalization_std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "training_configuration": {
+    "loss": "BCEWithLogitsLoss(pos_weight from train prevalence)",
+    "optimizer": "Adam (weight_decay=0), no LR scheduler",
+    "schedule": {
+      "phase1_epochs": 5,
+      "phase1_lr": 0.0001,
+      "phase2_epochs": 5,
+      "phase2_lr": 1e-05
+    },
+    "learning_rates": {
+      "phase1": 0.0001,
+      "phase2": 1e-05
+    },
+    "batch_size": 32,
+    "epochs": 10,
+    "amp": true,
+    "weight_decay": 0.0,
+    "seed": 42
+  },
+  "augmentation": {
+    "train_only": true,
+    "rotate_deg": 10,
+    "brightness": 0.15,
+    "contrast": 0.15,
+    "horizontal_flip": false,
+    "note": "laterality is diagnostic \u2014 horizontal flip is deliberately off"
+  },
+  "temperatures": {
+    "Cardiomegaly": 1.1865413532791096,
+    "Effusion": 1.3979213336039338
+  },
+  "thresholds": {
+    "fitted_on": [
+      "val"
+    ],
+    "policies": [
+      "fixed",
+      "f1_optimal",
+      "youden",
+      "sensitivity_constrained",
+      "precision_constrained"
+    ],
+    "thresholds": {
+      "fixed": {
+        "Cardiomegaly": 0.5,
+        "Effusion": 0.5
+      },
+      "f1_optimal": {
+        "Cardiomegaly": 0.9020933,
+        "Effusion": 0.7699463
+      },
+      "youden": {
+        "Cardiomegaly": 0.18257122,
+        "Effusion": 0.44875836
+      },
+      "sensitivity_constrained": {
+        "Cardiomegaly": 0.05194156,
+        "Effusion": 0.30435172
+      },
+      "precision_constrained": {
+        "Cardiomegaly": 0.98215127,
+        "Effusion": 0.8474635
+      }
+    },
+    "raw_file": "outputs/metrics/thresholds/thresholds_val.json",
+    "calibrated_file": "outputs/metrics/thresholds/thresholds_calibrated_val.json"
+  },
+  "package_environment": {
+    "python": "3.14.7",
+    "interpreter": "/home/arno/Desktop/Projects/Capstone/.venv/bin/python",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "matplotlib": "3.11.1",
+    "torch": "2.14.0+cu130"
+  },
+  "test_count_collected": 193,
+  "git": {
+    "branch": "research/xray-calibration",
+    "head_sha": "dc1261e",
+    "dirty_count": 44,
+    "modified": 4,
+    "untracked": 40,
+    "excluded": [
+      "outputs/research_snapshot.json",
+      "outputs/paper/reproducibility_manifest.json",
+      "outputs/metrics/error_analysis/error_analysis_test.json",
+      "outputs/metrics/external/status.json"
+    ]
+  },
+  "references": {
+    "research_snapshot": "outputs/research_snapshot.json",
+    "master_results": "outputs/final_results/master_results.csv",
+    "verification_report": "outputs/final_results/verification_report.json",
+    "evidence_map": "outputs/paper/paper_evidence_map.json"
+  },
+  "note": "all metrics frozen; nothing retrained or re-fit in paper preparation. Full reproduction: python -m src.paper_build"
+}

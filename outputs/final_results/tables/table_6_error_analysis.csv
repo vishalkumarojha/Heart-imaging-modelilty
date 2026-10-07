@@ -1,0 +1,3 @@
+class,error_rate,n_errors,tp,fp,fn,tn,high_conf_errors,high_conf_share_of_errors,mean_certainty
+Cardiomegaly,0.0354,563,154,302,261,15167,274,0.4867,0.8822
+Effusion,0.1428,2268,1075,1346,922,12541,193,0.0851,0.7439

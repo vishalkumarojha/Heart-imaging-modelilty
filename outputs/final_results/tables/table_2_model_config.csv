@@ -1,0 +1,16 @@
+key,value
+dataset,NIH ChestX-ray14
+task,multi-label Cardiomegaly + Effusion (binary per label)
+architecture,"densenet121 (torchvision, ImageNet-1K V1 pretrained)"
+classifier,"Linear(1024, 2), logits out; sigmoid applied for metrics"
+input resolution,224×224
+split,"patient-level 70/15/15, seed 42"
+loss,BCEWithLogitsLoss(pos_weight from train prevalence)
+optimizer,"Adam (weight_decay=0), no LR scheduler"
+schedule,"{""phase1_epochs"": 5, ""phase1_lr"": 0.0001, ""phase2_epochs"": 5, ""phase2_lr"": 1e-05}"
+batch size,32
+mixed precision,True
+seed,42
+checkpoint selection,max mean validation AUROC
+checkpoint sha256,35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c
+baseline status,FROZEN BASELINE — do not overwrite

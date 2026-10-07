@@ -1,0 +1,404 @@
+{
+  "experiment": "exp4_robustness",
+  "title": "Sensitivity of the conclusions to binning, constraint targets and validation resampling",
+  "status": "COMPLETED",
+  "checkpoint": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_best.pt",
+  "checkpoint_sha256": "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c",
+  "parameter_fit_split": "val",
+  "environment": {
+    "timestamp_utc": "2026-10-06T21:10:27+00:00",
+    "python": "3.14.7",
+    "python_full": "3.14.7 (main, Aug 10 2026, 00:00:00) [GCC 15.3.1 20260722 (Red Hat 15.3.1-1)]",
+    "platform": "Linux-7.2.5-100.fc43.x86_64-x86_64-with-glibc2.42",
+    "machine": "x86_64",
+    "processor": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+    "torch": "2.14.0+cu130",
+    "cuda_available": true,
+    "cuda_runtime": "13.0",
+    "cudnn": 92400,
+    "gpu": {
+      "name": "NVIDIA GeForce GTX 1650",
+      "total_memory_gb": 3.63,
+      "capability": "7.5"
+    },
+    "torchvision": "0.29.0+cu130"
+  },
+  "ece_binning_sensitivity": {
+    "val/bins=5/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.10864542400079666,
+        "Effusion": 0.21453375344113898
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11944754796411197,
+        "Effusion": 0.23513140644897132
+      }
+    },
+    "val/bins=5/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.10898935459148351,
+        "Effusion": 0.2145337534411385
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11944754796411203,
+        "Effusion": 0.2351314064489703
+      }
+    },
+    "val/bins=10/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.10864542400079646,
+        "Effusion": 0.2145337534411384
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11944754796411208,
+        "Effusion": 0.23513140644897065
+      }
+    },
+    "val/bins=10/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.10898935459148341,
+        "Effusion": 0.2145337534411387
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11944754796411218,
+        "Effusion": 0.23513140644897096
+      }
+    },
+    "val/bins=15/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.1086454240007964,
+        "Effusion": 0.2145337534411385
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11944754796411211,
+        "Effusion": 0.2351314064489706
+      }
+    },
+    "val/bins=15/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.10898935459148369,
+        "Effusion": 0.2145337534411385
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.1194895625446625,
+        "Effusion": 0.23513140644897068
+      }
+    },
+    "val/bins=20/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.10864542400079642,
+        "Effusion": 0.2145337534411384
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11944754796411211,
+        "Effusion": 0.23513140644897063
+      }
+    },
+    "val/bins=20/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.10902748679877575,
+        "Effusion": 0.21453375344113843
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11952573892563531,
+        "Effusion": 0.23513140644897068
+      }
+    },
+    "test/bins=5/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.10614299535375264,
+        "Effusion": 0.2077405626502919
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687622921642567,
+        "Effusion": 0.22915634503612287
+      }
+    },
+    "test/bins=5/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.10625647384396805,
+        "Effusion": 0.20774056265029195
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687622921642586,
+        "Effusion": 0.22915634503612242
+      }
+    },
+    "test/bins=10/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.10614299535375261,
+        "Effusion": 0.20774056265029206
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687622921642574,
+        "Effusion": 0.22915634503612284
+      }
+    },
+    "test/bins=10/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.10625647384396852,
+        "Effusion": 0.207740562650292
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687622921642563,
+        "Effusion": 0.22915634503612264
+      }
+    },
+    "test/bins=15/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.10614299535375264,
+        "Effusion": 0.207740562650292
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687622921642567,
+        "Effusion": 0.22915634503612273
+      }
+    },
+    "test/bins=15/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.10631689324232105,
+        "Effusion": 0.20774056265029198
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687839658629534,
+        "Effusion": 0.22915634503612267
+      }
+    },
+    "test/bins=20/equal_width": {
+      "raw": {
+        "Cardiomegaly": 0.10614299535375266,
+        "Effusion": 0.2077405626502921
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687622921642571,
+        "Effusion": 0.22915634503612284
+      }
+    },
+    "test/bins=20/equal_freq": {
+      "raw": {
+        "Cardiomegaly": 0.1062760377594125,
+        "Effusion": 0.2077405626502921
+      },
+      "calibrated": {
+        "Cardiomegaly": 0.11687622921642565,
+        "Effusion": 0.22915634503612267
+      }
+    }
+  },
+  "constraint_target_sweeps": {
+    "sensitivity_constrained": [
+      {
+        "target": 0.8,
+        "label": "Cardiomegaly",
+        "threshold": 0.16052906,
+        "constraint_met": true,
+        "test_precision": 0.09971181556195965,
+        "test_recall": 0.8337349397590361,
+        "test_f1": 0.17812097812097813,
+        "test_specificity": 0.7980477083198655
+      },
+      {
+        "target": 0.8,
+        "label": "Effusion",
+        "threshold": 0.5149263,
+        "constraint_met": true,
+        "test_precision": 0.33751080380293863,
+        "test_recall": 0.7821732598898348,
+        "test_f1": 0.4715471698113207,
+        "test_specificity": 0.7792179736444157
+      },
+      {
+        "target": 0.9,
+        "label": "Cardiomegaly",
+        "threshold": 0.05194156,
+        "constraint_met": true,
+        "test_precision": 0.0688536409516943,
+        "test_recall": 0.9204819277108434,
+        "test_f1": 0.1281234278047962,
+        "test_specificity": 0.6660417609412373
+      },
+      {
+        "target": 0.9,
+        "label": "Effusion",
+        "threshold": 0.30435172,
+        "constraint_met": true,
+        "test_precision": 0.26824487334137515,
+        "test_recall": 0.8908362543815723,
+        "test_f1": 0.4123305133850968,
+        "test_specificity": 0.6505364729603226
+      },
+      {
+        "target": 0.95,
+        "label": "Cardiomegaly",
+        "threshold": 0.015543648,
+        "constraint_met": true,
+        "test_precision": 0.049329025844930416,
+        "test_recall": 0.9566265060240964,
+        "test_f1": 0.09382015833628736,
+        "test_specificity": 0.5053978925593122
+      },
+      {
+        "target": 0.95,
+        "label": "Effusion",
+        "threshold": 0.13341522,
+        "constraint_met": true,
+        "test_precision": 0.2041142613515242,
+        "test_recall": 0.9589384076114171,
+        "test_f1": 0.33658493716495297,
+        "test_specificity": 0.4623028731907539
+      }
+    ],
+    "precision_constrained": [
+      {
+        "target": 0.4,
+        "label": "Cardiomegaly",
+        "threshold": 0.96538115,
+        "constraint_met": true,
+        "test_precision": 0.43577981651376146,
+        "test_recall": 0.2289156626506024,
+        "test_f1": 0.30015797788309634,
+        "test_specificity": 0.9920486133557438
+      },
+      {
+        "target": 0.4,
+        "label": "Effusion",
+        "threshold": 0.6984323,
+        "constraint_met": true,
+        "test_precision": 0.41466622821440313,
+        "test_recall": 0.6314471707561342,
+        "test_f1": 0.5005954743946011,
+        "test_specificity": 0.8718225678692302
+      },
+      {
+        "target": 0.5,
+        "label": "Cardiomegaly",
+        "threshold": 0.98215127,
+        "constraint_met": true,
+        "test_precision": 0.5303030303030303,
+        "test_recall": 0.1686746987951807,
+        "test_f1": 0.25594149908592323,
+        "test_specificity": 0.9959919839679359
+      },
+      {
+        "target": 0.5,
+        "label": "Effusion",
+        "threshold": 0.8474635,
+        "constraint_met": true,
+        "test_precision": 0.5157194679564692,
+        "test_recall": 0.4271407110665999,
+        "test_f1": 0.46726924130375236,
+        "test_specificity": 0.9423201555411536
+      },
+      {
+        "target": 0.6,
+        "label": "Cardiomegaly",
+        "threshold": 0.99835795,
+        "constraint_met": true,
+        "test_precision": 0.75,
+        "test_recall": 0.021686746987951807,
+        "test_f1": 0.04215456674473068,
+        "test_specificity": 0.9998060637403839
+      },
+      {
+        "target": 0.6,
+        "label": "Effusion",
+        "threshold": 0.9329437,
+        "constraint_met": true,
+        "test_precision": 0.6023936170212766,
+        "test_recall": 0.22684026039058588,
+        "test_f1": 0.32957439068752276,
+        "test_specificity": 0.978469071793764
+      }
+    ]
+  },
+  "bootstrap_threshold_stability": {
+    "n_bootstrap": 10,
+    "seed": 42,
+    "results": {
+      "fixed": {
+        "Cardiomegaly": {
+          "mean": 0.5,
+          "std": 0.0,
+          "min": 0.5,
+          "max": 0.5,
+          "frozen_threshold": 0.5
+        },
+        "Effusion": {
+          "mean": 0.5,
+          "std": 0.0,
+          "min": 0.5,
+          "max": 0.5,
+          "frozen_threshold": 0.5
+        }
+      },
+      "f1_optimal": {
+        "Cardiomegaly": {
+          "mean": 0.880741714,
+          "std": 0.020511941277355096,
+          "min": 0.85536855,
+          "max": 0.9020933,
+          "frozen_threshold": 0.9020933
+        },
+        "Effusion": {
+          "mean": 0.768593405,
+          "std": 0.03793621975632501,
+          "min": 0.7000752,
+          "max": 0.8174288,
+          "frozen_threshold": 0.7699463
+        }
+      },
+      "youden": {
+        "Cardiomegaly": {
+          "mean": 0.171867461,
+          "std": 0.038490919919017125,
+          "min": 0.10706346,
+          "max": 0.2237161,
+          "frozen_threshold": 0.18257122
+        },
+        "Effusion": {
+          "mean": 0.457812403,
+          "std": 0.036060908021739835,
+          "min": 0.41318116,
+          "max": 0.53209084,
+          "frozen_threshold": 0.44875836
+        }
+      },
+      "sensitivity_constrained": {
+        "Cardiomegaly": {
+          "mean": 0.0443555735,
+          "std": 0.008371438147784611,
+          "min": 0.031380434,
+          "max": 0.05823862,
+          "frozen_threshold": 0.05194156
+        },
+        "Effusion": {
+          "mean": 0.297200623,
+          "std": 0.014176128892108073,
+          "min": 0.2752271,
+          "max": 0.31584147,
+          "frozen_threshold": 0.30435172
+        }
+      },
+      "precision_constrained": {
+        "Cardiomegaly": {
+          "mean": 0.981239936,
+          "std": 0.005657714790595596,
+          "min": 0.97622,
+          "max": 0.99544394,
+          "frozen_threshold": 0.98215127
+        },
+        "Effusion": {
+          "mean": 0.848997553,
+          "std": 0.012315805341427767,
+          "min": 0.8271311,
+          "max": 0.87439936,
+          "frozen_threshold": 0.8474635
+        }
+      }
+    }
+  },
+  "notes": [
+    "ECE is a binned statistic: its value moves with the bin count and with the binning strategy \u2014 report it together with Brier/NLL.",
+    "Bootstrap thresholds are resampled from validation only; test data is used exclusively to evaluate the resulting operating points."
+  ]
+}

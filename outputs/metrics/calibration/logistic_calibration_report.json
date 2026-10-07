@@ -1,0 +1,93 @@
+{
+  "status": "LOGISTIC CALIBRATION FITTED ON VALIDATION ONLY",
+  "method": "platt_logistic",
+  "model": "p = \u03c3(a\u00b7z + b), a = exp(c) > 0",
+  "split": "val",
+  "n_rows": 16451,
+  "parameters": {
+    "Cardiomegaly": {
+      "a": 0.5441069212579224,
+      "b": -2.8079212833804865,
+      "method": "platt_logistic",
+      "a_positive": true
+    },
+    "Effusion": {
+      "a": 0.7473906742935417,
+      "b": -1.9918989484843794,
+      "method": "platt_logistic",
+      "a_positive": true
+    }
+  },
+  "nll_before": {
+    "Cardiomegaly": 0.23369075828209662,
+    "Effusion": 0.4889182845839118
+  },
+  "nll_after": {
+    "Cardiomegaly": 0.08452724343020931,
+    "Effusion": 0.26496138769012845
+  },
+  "val_report": {
+    "Cardiomegaly": {
+      "ece": 0.0023896592455322544,
+      "mce": 0.3784884863985034,
+      "brier": 0.020428430295399955,
+      "nll": 0.08452724343020931,
+      "n": 16451,
+      "prevalence": 0.02382833870281442,
+      "mean_confidence": 0.023828341938124366,
+      "n_bins": 15,
+      "binning": "equal_width"
+    },
+    "Effusion": {
+      "ece": 0.00828894066191013,
+      "mce": 0.4343739177420909,
+      "brier": 0.07966684535178614,
+      "nll": 0.26496138769012845,
+      "n": 16451,
+      "prevalence": 0.11950641298401313,
+      "mean_confidence": 0.11950641531380099,
+      "n_bins": 15,
+      "binning": "equal_width"
+    }
+  },
+  "auroc_auprc_invariance_checks": {
+    "val/Cardiomegaly/auroc_raw": 0.875063302922514,
+    "val/Cardiomegaly/auroc_log": 0.875063302922514,
+    "val/Cardiomegaly/auprc_raw": 0.23067291392607156,
+    "val/Cardiomegaly/auprc_log": 0.23067291392607156,
+    "val/Effusion/auroc_raw": 0.8605203895986693,
+    "val/Effusion/auroc_log": 0.8605203895986693,
+    "val/Effusion/auprc_raw": 0.47514856602298294,
+    "val/Effusion/auprc_log": 0.47514856602298294,
+    "test/Cardiomegaly/auroc_raw": 0.8972288922968361,
+    "test/Cardiomegaly/auroc_log": 0.8972288922968361,
+    "test/Cardiomegaly/auprc_raw": 0.3042669219007368,
+    "test/Cardiomegaly/auprc_log": 0.3042669219007368,
+    "test/Effusion/auroc_raw": 0.8586858468735723,
+    "test/Effusion/auroc_log": 0.8586858468735723,
+    "test/Effusion/auprc_raw": 0.4699653913847005,
+    "test/Effusion/auprc_log": 0.4699653913847005
+  },
+  "thresholds_logistic_val": {
+    "fixed": {
+      "Cardiomegaly": 0.5,
+      "Effusion": 0.5
+    },
+    "f1_optimal": {
+      "Cardiomegaly": 0.16803454215503866,
+      "Effusion": 0.2517981190539106
+    },
+    "youden": {
+      "Cardiomegaly": 0.02599403623509556,
+      "Effusion": 0.10474042100560435
+    },
+    "sensitivity_constrained": {
+      "Cardiomegaly": 0.012271003461257108,
+      "Effusion": 0.06851438378669
+    },
+    "precision_constrained": {
+      "Cardiomegaly": 0.34813599549699104,
+      "Effusion": 0.3295456598975165
+    }
+  }
+}

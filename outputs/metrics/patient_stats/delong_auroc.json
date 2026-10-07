@@ -1,0 +1,144 @@
+{
+  "generated_utc": null,
+  "split": "test",
+  "method": "DeLong placement-value covariance: single-curve SE/CI per label; two-curve Z-test shown only to document the monotone degeneracy of AUROC under calibration",
+  "confidence_level": 0.95,
+  "per_label": {
+    "Cardiomegaly": {
+      "auc": 0.8972288922968361,
+      "se": 0.007730077868222175,
+      "ci_lower": 0.8820782180774305,
+      "ci_upper": 0.9123795665162417,
+      "n_pos": 415,
+      "n_neg": 15469
+    },
+    "Effusion": {
+      "auc": 0.8586858468735725,
+      "se": 0.004095046151529146,
+      "ci_lower": 0.850659703901546,
+      "ci_upper": 0.866711989845599,
+      "n_pos": 1997,
+      "n_neg": 13887
+    }
+  },
+  "single_curve_by_variant": [
+    {
+      "label": "Cardiomegaly",
+      "arm": "raw",
+      "auc": 0.8972288922968361,
+      "se": 0.007730077868222175,
+      "ci_lower": 0.8820782180774305,
+      "ci_upper": 0.9123795665162417,
+      "n_pos": 415,
+      "n_neg": 15469
+    },
+    {
+      "label": "Cardiomegaly",
+      "arm": "calibrated",
+      "auc": 0.8972288922968361,
+      "se": 0.007730077868222175,
+      "ci_lower": 0.8820782180774305,
+      "ci_upper": 0.9123795665162417,
+      "n_pos": 415,
+      "n_neg": 15469
+    },
+    {
+      "label": "Cardiomegaly",
+      "arm": "logistic",
+      "auc": 0.8972288922968361,
+      "se": 0.007730077868222175,
+      "ci_lower": 0.8820782180774305,
+      "ci_upper": 0.9123795665162417,
+      "n_pos": 415,
+      "n_neg": 15469
+    },
+    {
+      "label": "Cardiomegaly",
+      "test": "raw_vs_calibrated",
+      "auc_a": 0.8972288922968361,
+      "auc_b": 0.8972288922968361,
+      "se_a": 0.007730077868222175,
+      "se_b": 0.007730077868222175,
+      "se_diff": NaN,
+      "cov": 5.975410384877828e-05,
+      "z": NaN,
+      "p": NaN,
+      "n_pos": 415,
+      "n_neg": 15469
+    },
+    {
+      "label": "Cardiomegaly",
+      "test": "raw_vs_logistic",
+      "auc_a": 0.8972288922968361,
+      "auc_b": 0.8972288922968361,
+      "se_a": 0.007730077868222175,
+      "se_b": 0.007730077868222175,
+      "se_diff": NaN,
+      "cov": 5.975410384877828e-05,
+      "z": NaN,
+      "p": NaN,
+      "n_pos": 415,
+      "n_neg": 15469
+    },
+    {
+      "label": "Effusion",
+      "arm": "raw",
+      "auc": 0.8586858468735725,
+      "se": 0.004095046151529146,
+      "ci_lower": 0.850659703901546,
+      "ci_upper": 0.866711989845599,
+      "n_pos": 1997,
+      "n_neg": 13887
+    },
+    {
+      "label": "Effusion",
+      "arm": "calibrated",
+      "auc": 0.8586858468735725,
+      "se": 0.004095046151529146,
+      "ci_lower": 0.850659703901546,
+      "ci_upper": 0.866711989845599,
+      "n_pos": 1997,
+      "n_neg": 13887
+    },
+    {
+      "label": "Effusion",
+      "arm": "logistic",
+      "auc": 0.8586858468735725,
+      "se": 0.004095046151529146,
+      "ci_lower": 0.850659703901546,
+      "ci_upper": 0.866711989845599,
+      "n_pos": 1997,
+      "n_neg": 13887
+    },
+    {
+      "label": "Effusion",
+      "test": "raw_vs_calibrated",
+      "auc_a": 0.8586858468735725,
+      "auc_b": 0.8586858468735725,
+      "se_a": 0.004095046151529146,
+      "se_b": 0.004095046151529146,
+      "se_diff": 8.231806349783991e-11,
+      "cov": 1.6769402983153664e-05,
+      "z": 0.0,
+      "p": 1.0,
+      "n_pos": 1997,
+      "n_neg": 13887
+    },
+    {
+      "label": "Effusion",
+      "test": "raw_vs_logistic",
+      "auc_a": 0.8586858468735725,
+      "auc_b": 0.8586858468735725,
+      "se_a": 0.004095046151529146,
+      "se_b": 0.004095046151529146,
+      "se_diff": 8.231806349783991e-11,
+      "cov": 1.6769402983153664e-05,
+      "z": 0.0,
+      "p": 1.0,
+      "n_pos": 1997,
+      "n_neg": 13887
+    }
+  ],
+  "monotone_invariance_note": "Temperature and logistic (slope>0) calibration are strictly monotone, so AUC(raw) == AUC(calibrated) == AUC(logistic) exactly.  The paired DeLong \u0394AUC therefore has variance 0 and no p-value: calibration cannot and does not claim discrimination gains.",
+  "informed_consent": "no cross-label AUROC comparisons are performed with DeLong, since the two labels are different outcomes."
+}

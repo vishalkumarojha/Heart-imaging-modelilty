@@ -1,0 +1,29 @@
+{
+  "scope": "cautious localization check, NOT a diagnostic localization validation",
+  "cohort_definition": "test images with a NIH radiologist box, for the boxed label only (fixed set, no cherry-picking)",
+  "n_cases": 43,
+  "aggregate": {
+    "mean_concentration_ratio": 2.601,
+    "median_concentration_ratio": 2.8726,
+    "fraction_ratio_above_1": 0.8837,
+    "pointing_game_hits": 21,
+    "pointing_game_accuracy": 0.4884
+  },
+  "per_label": {
+    "Cardiomegaly": {
+      "n_with_box": 24,
+      "pointing_game_accuracy": 0.7917,
+      "mean_concentration_ratio": 2.7151,
+      "mean_box_area_fraction": 0.1875,
+      "mean_heat_mass_inside_box": 0.5023
+    },
+    "Effusion": {
+      "n_with_box": 19,
+      "pointing_game_accuracy": 0.1053,
+      "mean_concentration_ratio": 2.4569,
+      "mean_box_area_fraction": 0.0726,
+      "mean_heat_mass_inside_box": 0.1319
+    }
+  },
+  "interpretation": "The concentration-ratio (heat mass inside the NIH box relative to expected under uniformity) is >1 for most test images that carry a box, over 2.0 on average, and the pointing game accuracy is class-dependent \u2014 evidence for the baseline attending to overlapping anatomy, not a claim of clinical localization validity."
+}

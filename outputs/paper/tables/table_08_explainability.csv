@@ -1,0 +1,11 @@
+metric,value
+Grad-CAM cases,16
+target layer,encoder.features.denseblock4
+bbox sanity cohort n,43
+pointing-game hits,21
+pointing accuracy,0.4884
+mean concentration ratio,2.601
+median concentration ratio,2.8726
+ratio > 1 (n cases),38
+cohort share Cardiomegaly,24
+cohort share Effusion,19

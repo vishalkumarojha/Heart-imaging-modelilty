@@ -1,0 +1,247 @@
+{
+  "snapshot_version": "1.0",
+  "baseline_id": "BASELINE_v1",
+  "created_utc": "2026-10-07T03:53:23Z",
+  "study": {
+    "primary_modality": "Chest X-ray",
+    "primary_task": "multi-label Cardiomegaly + Effusion classification",
+    "research_focus": "calibration-aware decision analysis under class imbalance",
+    "secondary_analysis": "error analysis + explainability",
+    "dataset": "NIH ChestX-ray14"
+  },
+  "model": {
+    "name": "DenseNet121 (torchvision, ImageNet-1K V1 pretrained)",
+    "classifier": "Linear(1024, 2), logits out; sigmoid applied for metrics",
+    "num_labels": 2,
+    "labels": [
+      "Cardiomegaly",
+      "Effusion"
+    ],
+    "checkpoint_selection": "max mean validation AUROC"
+  },
+  "data": {
+    "dataset": "NIH ChestX-ray14",
+    "labels": [
+      "Cardiomegaly",
+      "Effusion"
+    ],
+    "split": {
+      "method": "patient-level 70/15/15",
+      "fractions": [
+        0.7,
+        0.15,
+        0.15
+      ],
+      "seed": 42,
+      "index_file": "/home/arno/Desktop/Projects/Capstone/data/processed/split_index.csv",
+      "rows_by_split": null,
+      "patients_by_split": null,
+      "label_counts_by_split": null,
+      "patient_overlap": null
+    }
+  },
+  "preprocessing": {
+    "input_resolution": 224,
+    "normalization_mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "normalization_std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "augmentation": {
+    "train_only": true,
+    "rotate_deg": 10,
+    "brightness": 0.15,
+    "contrast": 0.15,
+    "horizontal_flip": false,
+    "note": "laterality is diagnostic \u2014 horizontal flip is deliberately off"
+  },
+  "training": {
+    "loss": "BCEWithLogitsLoss(pos_weight from train prevalence)",
+    "optimizer": "Adam (weight_decay=0), no LR scheduler",
+    "schedule": {
+      "phase1_epochs": 5,
+      "phase1_lr": 0.0001,
+      "phase2_epochs": 5,
+      "phase2_lr": 1e-05
+    },
+    "learning_rates": {
+      "phase1": 0.0001,
+      "phase2": 1e-05
+    },
+    "batch_size": 32,
+    "epochs": 10,
+    "amp": true,
+    "weight_decay": 0.0,
+    "seed": 42
+  },
+  "checkpoints": {
+    "best": {
+      "path": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_best.pt",
+      "exists": true,
+      "sha256": "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c"
+    },
+    "last": {
+      "path": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_last.pt",
+      "exists": true,
+      "sha256": "e5f6360d834a998863f60e4f86a43d5d94e3bd28162c8a1ef7543f077e995afd"
+    },
+    "manifest": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/baseline_manifest.json",
+    "legacy_root_checkpoint": {
+      "path": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/densenet121_best.pt",
+      "exists": true,
+      "note": "kept for legacy ECHO/MRI/fusion/demo hard dependency"
+    }
+  },
+  "calibration": {
+    "status": "FROZEN",
+    "method": "post-hoc temperature scaling (single scalar per label)",
+    "objective": "negative log-likelihood on validation",
+    "fitted_on": "val",
+    "file": "/home/arno/Desktop/Projects/Capstone/outputs/metrics/calibration/temperature_scalers.json",
+    "temperature": {
+      "Cardiomegaly": 1.1865413532791096,
+      "Effusion": 1.3979213336039338
+    },
+    "nll_val_before": {
+      "Cardiomegaly": 0.233691,
+      "Effusion": 0.488918
+    },
+    "nll_val_after": {
+      "Cardiomegaly": 0.230191,
+      "Effusion": 0.472142
+    }
+  },
+  "thresholds": {
+    "status": "FROZEN",
+    "fitted_on": [
+      "val"
+    ],
+    "file": "/home/arno/Desktop/Projects/Capstone/outputs/metrics/thresholds/thresholds_val.json",
+    "policies": [
+      "fixed",
+      "f1_optimal",
+      "youden",
+      "sensitivity_constrained",
+      "precision_constrained"
+    ],
+    "thresholds": {
+      "fixed": {
+        "Cardiomegaly": 0.5,
+        "Effusion": 0.5
+      },
+      "f1_optimal": {
+        "Cardiomegaly": 0.9020933,
+        "Effusion": 0.7699463
+      },
+      "youden": {
+        "Cardiomegaly": 0.18257122,
+        "Effusion": 0.44875836
+      },
+      "sensitivity_constrained": {
+        "Cardiomegaly": 0.05194156,
+        "Effusion": 0.30435172
+      },
+      "precision_constrained": {
+        "Cardiomegaly": 0.98215127,
+        "Effusion": 0.8474635
+      }
+    }
+  },
+  "environment": {
+    "timestamp_utc": "2026-10-07T03:53:22+00:00",
+    "python": "3.14.7",
+    "python_full": "3.14.7 (main, Aug 10 2026, 00:00:00) [GCC 15.3.1 20260722 (Red Hat 15.3.1-1)]",
+    "platform": "Linux-7.2.5-100.fc43.x86_64-x86_64-with-glibc2.42",
+    "machine": "x86_64",
+    "processor": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+    "torch": "2.14.0+cu130",
+    "cuda_available": true,
+    "cuda_runtime": "13.0",
+    "cudnn": 92400,
+    "gpu": {
+      "name": "NVIDIA GeForce GTX 1650",
+      "total_memory_gb": 3.63,
+      "capability": "7.5"
+    },
+    "torchvision": "0.29.0+cu130",
+    "packages": {
+      "numpy": "2.5.3",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "albumentations": "2.0.8",
+      "Pillow": "12.3.0",
+      "tqdm": "4.70.0",
+      "matplotlib": "3.11.1",
+      "opencv-python-headless": "5.0.0.93",
+      "nibabel": "5.4.2",
+      "gradio": "6.26.0",
+      "pytest": null
+    }
+  },
+  "interpreter": {
+    "executable": "/home/arno/Desktop/Projects/Capstone/.venv/bin/python",
+    "python": "3.14.7",
+    "note": "system python3 has no torch \u2014 always use .venv/bin/python"
+  },
+  "git": {
+    "head_commit": "7e5e9bbca6b2da6dab80eb2dc8bef120a6459f79",
+    "head_subject": "fix: porcelain path parsing in freeze git-state exclusion",
+    "dirty": false,
+    "status_short": [
+      "M outputs/metrics/error_analysis/error_analysis_test.json",
+      " M outputs/metrics/external/status.json",
+      " M outputs/paper/reproducibility_manifest.json",
+      " M outputs/research_snapshot.json"
+    ],
+    "excluded": [
+      "outputs/research_snapshot.json",
+      "outputs/paper/reproducibility_manifest.json",
+      "outputs/metrics/error_analysis/error_analysis_test.json",
+      "outputs/metrics/external/status.json"
+    ],
+    "note": "dirty excludes timestamp-only regenerated freeze outputs (snapshot, paper manifest, error-analysis/status metadata); see git_state() in src/research_freeze.py"
+  },
+  "tests": {
+    "status": "PASS",
+    "tests_run": 193,
+    "returncode": 0,
+    "summary": "Ran 193 tests in 15.084s",
+    "command": "/home/arno/Desktop/Projects/Capstone/.venv/bin/python -m unittest discover -s tests"
+  },
+  "project_status": {
+    "core_research": "COMPLETE",
+    "baseline": "FROZEN",
+    "calibration": "COMPLETE",
+    "threshold_analysis": "COMPLETE",
+    "ablation": "COMPLETE",
+    "error_analysis": "COMPLETE",
+    "explainability": "COMPLETE",
+    "external_validation": "PENDING",
+    "paper_preparation": "COMPLETE / READY FOR AUTHOR REVIEW",
+    "note": "external_validation stays PENDING until an external cohort is available (see outputs/metrics/external/status.json)."
+  },
+  "source_of_truth": {
+    "results": [
+      "outputs/metrics/baseline/baseline_metrics.json",
+      "outputs/metrics/experiments/exp1_calibration.json",
+      "outputs/metrics/experiments/exp2_thresholds_raw.json",
+      "outputs/metrics/experiments/exp3_thresholds_calibrated.json",
+      "outputs/metrics/experiments/exp4_robustness.json",
+      "outputs/metrics/error_analysis/error_analysis_test.json",
+      "outputs/gradcam/bbox_localization.json",
+      "outputs/metrics/external/status.json"
+    ],
+    "documentation": [
+      "docs/PROJECT_SCOPE.md",
+      "docs/BASELINE.md",
+      "docs/FINAL_PROJECT_STATUS.md"
+    ]
+  },
+  "immutability": "This snapshot describes the FROZEN baseline. It is written once and read-only afterwards; re-running the module is a no-op verification."
+}

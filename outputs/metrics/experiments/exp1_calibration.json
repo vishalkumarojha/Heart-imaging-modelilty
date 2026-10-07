@@ -1,0 +1,155 @@
+{
+  "experiment": "exp1_calibration",
+  "title": "Calibration quality of the frozen model, raw vs temperature-scaled",
+  "status": "COMPLETED",
+  "checkpoint": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_best.pt",
+  "checkpoint_sha256": "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c",
+  "parameter_fit_split": "val",
+  "environment": {
+    "timestamp_utc": "2026-10-06T21:09:32+00:00",
+    "python": "3.14.7",
+    "python_full": "3.14.7 (main, Aug 10 2026, 00:00:00) [GCC 15.3.1 20260722 (Red Hat 15.3.1-1)]",
+    "platform": "Linux-7.2.5-100.fc43.x86_64-x86_64-with-glibc2.42",
+    "machine": "x86_64",
+    "processor": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+    "torch": "2.14.0+cu130",
+    "cuda_available": true,
+    "cuda_runtime": "13.0",
+    "cudnn": 92400,
+    "gpu": {
+      "name": "NVIDIA GeForce GTX 1650",
+      "total_memory_gb": 3.63,
+      "capability": "7.5"
+    },
+    "torchvision": "0.29.0+cu130"
+  },
+  "temperatures": {
+    "Cardiomegaly": 1.1865413532791096,
+    "Effusion": 1.3979213336039338
+  },
+  "calibration_fitted_on": "val",
+  "n_bins": 15,
+  "binning": "equal_width",
+  "splits": {
+    "val": {
+      "Cardiomegaly": {
+        "raw": {
+          "ece": 0.1086454240007964,
+          "mce": 0.7306760728971966,
+          "brier": 0.07049823802523855,
+          "nll": 0.23369075679834403,
+          "n": 16451,
+          "prevalence": 0.02382833870281442,
+          "mean_confidence": 0.1324737627036109,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "calibrated": {
+          "ece": 0.11944754796411211,
+          "mce": 0.7050296973847762,
+          "brier": 0.06994577597569201,
+          "nll": 0.23019090475053544,
+          "n": 16451,
+          "prevalence": 0.02382833870281442,
+          "mean_confidence": 0.14327588666692645,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "auroc_raw": 0.875063302922514,
+        "auroc_calibrated": 0.875063302922514,
+        "auprc_raw": 0.23067291392607156,
+        "auprc_calibrated": 0.23067291392607156
+      },
+      "Effusion": {
+        "raw": {
+          "ece": 0.2145337534411385,
+          "mce": 0.5078722218619585,
+          "brier": 0.15854845871279646,
+          "nll": 0.488918284369708,
+          "n": 16451,
+          "prevalence": 0.11950641298401313,
+          "mean_confidence": 0.33404016642515166,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "calibrated": {
+          "ece": 0.2351314064489706,
+          "mce": 0.4395981932506979,
+          "brier": 0.15476207607184567,
+          "nll": 0.4721418442664876,
+          "n": 16451,
+          "prevalence": 0.11950641298401313,
+          "mean_confidence": 0.35463781943298384,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "auroc_raw": 0.8605203895986693,
+        "auroc_calibrated": 0.8605203895986693,
+        "auprc_raw": 0.47514856602298294,
+        "auprc_calibrated": 0.47514856602298294
+      },
+      "predictions_file": "/home/arno/Desktop/Projects/Capstone/outputs/predictions/calibrated/calibrated_val_predictions.csv"
+    },
+    "test": {
+      "Cardiomegaly": {
+        "raw": {
+          "ece": 0.10614299535375264,
+          "mce": 0.6925895369154231,
+          "brier": 0.06808255003707243,
+          "nll": 0.22966802415469867,
+          "n": 15884,
+          "prevalence": 0.0261269201712415,
+          "mean_confidence": 0.13226991552499415,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "calibrated": {
+          "ece": 0.11687622921642567,
+          "mce": 0.6783495562684105,
+          "brier": 0.06775820153513111,
+          "nll": 0.22617133331977438,
+          "n": 15884,
+          "prevalence": 0.0261269201712415,
+          "mean_confidence": 0.14300314938766717,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "auroc_raw": 0.8972288922968361,
+        "auroc_calibrated": 0.8972288922968361,
+        "auprc_raw": 0.3042669219007368,
+        "auprc_calibrated": 0.3042669219007368
+      },
+      "Effusion": {
+        "raw": {
+          "ece": 0.207740562650292,
+          "mce": 0.5114612809766761,
+          "brier": 0.15614782765402754,
+          "nll": 0.4819300754929258,
+          "n": 15884,
+          "prevalence": 0.12572399899269707,
+          "mean_confidence": 0.33346456164298915,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "calibrated": {
+          "ece": 0.22915634503612273,
+          "mce": 0.4357091527634057,
+          "brier": 0.15332075621481234,
+          "nll": 0.46902431474297224,
+          "n": 15884,
+          "prevalence": 0.12572399899269707,
+          "mean_confidence": 0.35488034402881985,
+          "n_bins": 15,
+          "binning": "equal_width"
+        },
+        "auroc_raw": 0.8586858468735723,
+        "auroc_calibrated": 0.8586858468735723,
+        "auprc_raw": 0.4699653913847005,
+        "auprc_calibrated": 0.4699653913847005
+      },
+      "predictions_file": "/home/arno/Desktop/Projects/Capstone/outputs/predictions/calibrated/calibrated_test_predictions.csv"
+    }
+  },
+  "auroc_auprc_invariant_to_temperature": true,
+  "interpretation": "ECE is measured with equal-width bins and may *increase* after temperature scaling: T is fitted by maximum likelihood (NLL), not by minimising ECE \u2014 the two objectives disagree when the score distribution is heavily concentrated in the lowest bin. Brier and NLL are the proper scoring rules used to judge the fit."
+}

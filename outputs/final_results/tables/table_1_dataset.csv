@@ -1,0 +1,5 @@
+split,images,patients,cardiomegaly_positive,effusion_positive
+train,76977,20797,1880,9001
+val,16451,4468,392,1966
+test,15884,4455,415,1996
+total,109312,29720,2687,12963

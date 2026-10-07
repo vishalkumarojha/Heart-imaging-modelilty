@@ -1,0 +1,6 @@
+class,errors,error_rate,high_confidence_errors_>=_0.9,share_of_errors
+Cardiomegaly,563,0.0354,274.0,0.4867
+Effusion,2268,0.1428,193.0,0.0851
+cross-label (both classes wrong),585,0.1315,,0.13149022252191503
+cross-label (either class wrong),4449,,,
+patients_with_errors,4449,1317.0,60.0,

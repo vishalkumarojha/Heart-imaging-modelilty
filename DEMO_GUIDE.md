@@ -14,6 +14,15 @@ Opens on **http://127.0.0.1:7860**. First prediction in each tab takes ~2–3 s
 (loads that checkpoint once); every prediction after is < 1 s. **CPU only** — no
 GPU needed, nothing to configure. Leave the terminal running; `Ctrl-C` to stop.
 
+If port 7860 is already in use, start on another port:
+
+```bash
+GRADIO_SERVER_PORT=7861 python demo_app.py
+```
+
+Then open **http://127.0.0.1:7861**. The same override works with any available
+port.
+
 **Pre-flight (do this before the audience is watching):** open the app, click
 through all four tabs once with the sample files so every checkpoint is warm.
 

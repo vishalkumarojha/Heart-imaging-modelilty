@@ -1,0 +1,288 @@
+{
+  "split": "test",
+  "bins": [
+    10,
+    15,
+    20
+  ],
+  "strategies": [
+    "equal_width",
+    "equal_freq"
+  ],
+  "methods": [
+    "raw",
+    "calibrated",
+    "logistic"
+  ],
+  "reference_binning": {
+    "n_bins": 15,
+    "strategy": "equal_width"
+  },
+  "ece_at_reference_binning": {
+    "Cardiomegaly": {
+      "raw": 0.10614299535375264,
+      "calibrated": 0.11687622921642567,
+      "logistic": 0.0028719838203485563
+    },
+    "Effusion": {
+      "raw": 0.207740562650292,
+      "calibrated": 0.22915634503612273,
+      "logistic": 0.013603014261689767
+    }
+  },
+  "rows": [
+    {
+      "class": "Cardiomegaly",
+      "calibration": "raw",
+      "n_bins": 10,
+      "binning": "equal_width",
+      "ece": 0.106143
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "raw",
+      "n_bins": 10,
+      "binning": "equal_freq",
+      "ece": 0.106256
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "raw",
+      "n_bins": 15,
+      "binning": "equal_width",
+      "ece": 0.106143
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "raw",
+      "n_bins": 15,
+      "binning": "equal_freq",
+      "ece": 0.106317
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "raw",
+      "n_bins": 20,
+      "binning": "equal_width",
+      "ece": 0.106143
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "raw",
+      "n_bins": 20,
+      "binning": "equal_freq",
+      "ece": 0.106276
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "calibrated",
+      "n_bins": 10,
+      "binning": "equal_width",
+      "ece": 0.116876
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "calibrated",
+      "n_bins": 10,
+      "binning": "equal_freq",
+      "ece": 0.116876
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "calibrated",
+      "n_bins": 15,
+      "binning": "equal_width",
+      "ece": 0.116876
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "calibrated",
+      "n_bins": 15,
+      "binning": "equal_freq",
+      "ece": 0.116878
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "calibrated",
+      "n_bins": 20,
+      "binning": "equal_width",
+      "ece": 0.116876
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "calibrated",
+      "n_bins": 20,
+      "binning": "equal_freq",
+      "ece": 0.116876
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "logistic",
+      "n_bins": 10,
+      "binning": "equal_width",
+      "ece": 0.001691
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "logistic",
+      "n_bins": 10,
+      "binning": "equal_freq",
+      "ece": 0.003441
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "logistic",
+      "n_bins": 15,
+      "binning": "equal_width",
+      "ece": 0.002872
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "logistic",
+      "n_bins": 15,
+      "binning": "equal_freq",
+      "ece": 0.003424
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "logistic",
+      "n_bins": 20,
+      "binning": "equal_width",
+      "ece": 0.00346
+    },
+    {
+      "class": "Cardiomegaly",
+      "calibration": "logistic",
+      "n_bins": 20,
+      "binning": "equal_freq",
+      "ece": 0.004688
+    },
+    {
+      "class": "Effusion",
+      "calibration": "raw",
+      "n_bins": 10,
+      "binning": "equal_width",
+      "ece": 0.207741
+    },
+    {
+      "class": "Effusion",
+      "calibration": "raw",
+      "n_bins": 10,
+      "binning": "equal_freq",
+      "ece": 0.207741
+    },
+    {
+      "class": "Effusion",
+      "calibration": "raw",
+      "n_bins": 15,
+      "binning": "equal_width",
+      "ece": 0.207741
+    },
+    {
+      "class": "Effusion",
+      "calibration": "raw",
+      "n_bins": 15,
+      "binning": "equal_freq",
+      "ece": 0.207741
+    },
+    {
+      "class": "Effusion",
+      "calibration": "raw",
+      "n_bins": 20,
+      "binning": "equal_width",
+      "ece": 0.207741
+    },
+    {
+      "class": "Effusion",
+      "calibration": "raw",
+      "n_bins": 20,
+      "binning": "equal_freq",
+      "ece": 0.207741
+    },
+    {
+      "class": "Effusion",
+      "calibration": "calibrated",
+      "n_bins": 10,
+      "binning": "equal_width",
+      "ece": 0.229156
+    },
+    {
+      "class": "Effusion",
+      "calibration": "calibrated",
+      "n_bins": 10,
+      "binning": "equal_freq",
+      "ece": 0.229156
+    },
+    {
+      "class": "Effusion",
+      "calibration": "calibrated",
+      "n_bins": 15,
+      "binning": "equal_width",
+      "ece": 0.229156
+    },
+    {
+      "class": "Effusion",
+      "calibration": "calibrated",
+      "n_bins": 15,
+      "binning": "equal_freq",
+      "ece": 0.229156
+    },
+    {
+      "class": "Effusion",
+      "calibration": "calibrated",
+      "n_bins": 20,
+      "binning": "equal_width",
+      "ece": 0.229156
+    },
+    {
+      "class": "Effusion",
+      "calibration": "calibrated",
+      "n_bins": 20,
+      "binning": "equal_freq",
+      "ece": 0.229156
+    },
+    {
+      "class": "Effusion",
+      "calibration": "logistic",
+      "n_bins": 10,
+      "binning": "equal_width",
+      "ece": 0.011666
+    },
+    {
+      "class": "Effusion",
+      "calibration": "logistic",
+      "n_bins": 10,
+      "binning": "equal_freq",
+      "ece": 0.01027
+    },
+    {
+      "class": "Effusion",
+      "calibration": "logistic",
+      "n_bins": 15,
+      "binning": "equal_width",
+      "ece": 0.013603
+    },
+    {
+      "class": "Effusion",
+      "calibration": "logistic",
+      "n_bins": 15,
+      "binning": "equal_freq",
+      "ece": 0.011441
+    },
+    {
+      "class": "Effusion",
+      "calibration": "logistic",
+      "n_bins": 20,
+      "binning": "equal_width",
+      "ece": 0.015056
+    },
+    {
+      "class": "Effusion",
+      "calibration": "logistic",
+      "n_bins": 20,
+      "binning": "equal_freq",
+      "ece": 0.013278
+    }
+  ],
+  "n_rows": 36
+}

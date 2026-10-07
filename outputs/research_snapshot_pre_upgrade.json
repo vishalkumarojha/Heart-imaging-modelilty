@@ -1,0 +1,154 @@
+{
+  "phase": "pre_upgrade_baseline_snapshot",
+  "created_utc": "2026-10-07T04:21:41+00:00",
+  "purpose": "One-time capture of the frozen, verified research state BEFORE the IEEE-upgrade task (patient-level bootstrap, threshold stability, alternative calibration, ECE sensitivity, extension arms E/F, decision-policy + prevalence analysis). Do NOT overwrite.",
+  "git": {
+    "branch": "research/xray-calibration",
+    "head_commit": "dc1261ee51def9367c7ae7a6c1cd2d98feccc2a4",
+    "head_short": "dc1261e",
+    "head_subject": "docs: freeze reproducibility snapshot at clean 7e5e9bb",
+    "dirty_count": 2
+  },
+  "baseline_id": "BASELINE_v1",
+  "tests": {
+    "status": "PASS",
+    "tests_run": 193,
+    "returncode": 0,
+    "summary": "Ran 193 tests in 15.084s",
+    "command": "/home/arno/Desktop/Projects/Capstone/.venv/bin/python -m unittest discover -s tests"
+  },
+  "checkpoints": {
+    "best": {
+      "path": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_best.pt",
+      "exists": true,
+      "sha256": "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c"
+    },
+    "last": {
+      "path": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_last.pt",
+      "exists": true,
+      "sha256": "e5f6360d834a998863f60e4f86a43d5d94e3bd28162c8a1ef7543f077e995afd"
+    },
+    "manifest": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/baseline_manifest.json",
+    "legacy_root_checkpoint": {
+      "path": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/densenet121_best.pt",
+      "exists": true,
+      "note": "kept for legacy ECHO/MRI/fusion/demo hard dependency"
+    }
+  },
+  "model": {
+    "name": "DenseNet121 (torchvision, ImageNet-1K V1 pretrained)",
+    "classifier": "Linear(1024, 2), logits out; sigmoid applied for metrics",
+    "num_labels": 2,
+    "labels": [
+      "Cardiomegaly",
+      "Effusion"
+    ],
+    "checkpoint_selection": "max mean validation AUROC"
+  },
+  "study": {
+    "primary_modality": "Chest X-ray",
+    "primary_task": "multi-label Cardiomegaly + Effusion classification",
+    "research_focus": "calibration-aware decision analysis under class imbalance",
+    "secondary_analysis": "error analysis + explainability",
+    "dataset": "NIH ChestX-ray14"
+  },
+  "data": {
+    "dataset": "NIH ChestX-ray14",
+    "labels": [
+      "Cardiomegaly",
+      "Effusion"
+    ],
+    "split": {
+      "method": "patient-level 70/15/15",
+      "fractions": [
+        0.7,
+        0.15,
+        0.15
+      ],
+      "seed": 42,
+      "index_file": "/home/arno/Desktop/Projects/Capstone/data/processed/split_index.csv",
+      "rows_by_split": null,
+      "patients_by_split": null,
+      "label_counts_by_split": null,
+      "patient_overlap": null
+    }
+  },
+  "calibration": {
+    "status": "FROZEN",
+    "method": "post-hoc temperature scaling (single scalar per label)",
+    "objective": "negative log-likelihood on validation",
+    "fitted_on": "val",
+    "file": "/home/arno/Desktop/Projects/Capstone/outputs/metrics/calibration/temperature_scalers.json",
+    "temperature": {
+      "Cardiomegaly": 1.1865413532791096,
+      "Effusion": 1.3979213336039338
+    },
+    "nll_val_before": {
+      "Cardiomegaly": 0.233691,
+      "Effusion": 0.488918
+    },
+    "nll_val_after": {
+      "Cardiomegaly": 0.230191,
+      "Effusion": 0.472142
+    }
+  },
+  "thresholds": {
+    "status": "FROZEN",
+    "fitted_on": [
+      "val"
+    ],
+    "file": "/home/arno/Desktop/Projects/Capstone/outputs/metrics/thresholds/thresholds_val.json",
+    "policies": [
+      "fixed",
+      "f1_optimal",
+      "youden",
+      "sensitivity_constrained",
+      "precision_constrained"
+    ],
+    "thresholds": {
+      "fixed": {
+        "Cardiomegaly": 0.5,
+        "Effusion": 0.5
+      },
+      "f1_optimal": {
+        "Cardiomegaly": 0.9020933,
+        "Effusion": 0.7699463
+      },
+      "youden": {
+        "Cardiomegaly": 0.18257122,
+        "Effusion": 0.44875836
+      },
+      "sensitivity_constrained": {
+        "Cardiomegaly": 0.05194156,
+        "Effusion": 0.30435172
+      },
+      "precision_constrained": {
+        "Cardiomegaly": 0.98215127,
+        "Effusion": 0.8474635
+      }
+    }
+  },
+  "headline_numbers": {
+    "auroc": {
+      "Cardiomegaly": 0.8972,
+      "Effusion": 0.8587
+    },
+    "auprc": {
+      "Cardiomegaly": 0.3043,
+      "Effusion": 0.47
+    },
+    "f1_fixed_0.5": {
+      "Cardiomegaly": 0.2836,
+      "Effusion": 0.4676
+    },
+    "f1_combined_arm": {
+      "Cardiomegaly": 0.3536,
+      "Effusion": 0.4866
+    }
+  },
+  "verification_report": {
+    "status": "PASS",
+    "checks_total": 25,
+    "checks_differ": 0
+  }
+}

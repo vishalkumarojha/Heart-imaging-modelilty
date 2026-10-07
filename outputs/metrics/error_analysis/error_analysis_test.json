@@ -1,0 +1,1043 @@
+{
+  "phase": "error_analysis",
+  "status": "COMPLETED",
+  "split": "test",
+  "variant": "calibrated",
+  "n_images": 15884,
+  "labels": [
+    "Cardiomegaly",
+    "Effusion"
+  ],
+  "policies": [
+    "fixed",
+    "f1_optimal",
+    "youden",
+    "sensitivity_constrained",
+    "precision_constrained"
+  ],
+  "primary_policy_for_cases": "f1_optimal",
+  "cases_per_stratum": 2,
+  "strata": {
+    "fixed": {
+      "Cardiomegaly": {
+        "label": "Cardiomegaly",
+        "policy": "fixed",
+        "threshold": 0.5,
+        "n": 15884,
+        "positives": 415,
+        "prevalence": 0.0261269201712415,
+        "precision": 0.1786833855799373,
+        "recall": 0.6867469879518072,
+        "specificity": 0.9153144999676773,
+        "f1": 0.2835820895522388,
+        "error_rate": 0.09065726517250063,
+        "mean_certainty": 0.9070755978240003,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 274,
+          "share_of_errors": 0.19027777777777777,
+          "share_of_cohort": 0.017250062956434147
+        },
+        "strata": {
+          "TP": {
+            "count": 285,
+            "share": 0.017942583732057416,
+            "mean_confidence": 0.8339843026213036,
+            "confidence_range": [
+              0.5084609986754014,
+              0.999880683123718
+            ]
+          },
+          "FP": {
+            "count": 1310,
+            "share": 0.08247292873331655,
+            "mean_confidence": 0.7309464764183132,
+            "confidence_range": [
+              0.5002925624205377,
+              0.9982107793145426
+            ]
+          },
+          "FN": {
+            "count": 130,
+            "share": 0.008184336439184085,
+            "mean_confidence": 0.21219864882168551,
+            "confidence_range": [
+              0.0011785572251395,
+              0.499199472643108
+            ]
+          },
+          "TN": {
+            "count": 14159,
+            "share": 0.8914001510954419,
+            "mean_confidence": 0.07406248959473295,
+            "confidence_range": [
+              1.0236521577904898e-05,
+              0.4999839251399113
+            ]
+          }
+        }
+      },
+      "Effusion": {
+        "label": "Effusion",
+        "policy": "fixed",
+        "threshold": 0.5,
+        "n": 15884,
+        "positives": 1997,
+        "prevalence": 0.12572399899269707,
+        "precision": 0.3320008415737429,
+        "recall": 0.7901852779168753,
+        "specificity": 0.7713689061712393,
+        "f1": 0.46755555555555556,
+        "error_rate": 0.22626542432636615,
+        "mean_certainty": 0.7727690640186757,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 193,
+          "share_of_errors": 0.05370061213133,
+          "share_of_cohort": 0.012150591790480987
+        },
+        "strata": {
+          "TP": {
+            "count": 1578,
+            "share": 0.09934525308486528,
+            "mean_confidence": 0.7725783038963389,
+            "confidence_range": [
+              0.5006767507759919,
+              0.9909371742313408
+            ]
+          },
+          "FP": {
+            "count": 3175,
+            "share": 0.19988667841853439,
+            "mean_confidence": 0.6838308772172554,
+            "confidence_range": [
+              0.5000245595185846,
+              0.9935918829694084
+            ]
+          },
+          "FN": {
+            "count": 419,
+            "share": 0.02637874590783178,
+            "mean_confidence": 0.32958293837851527,
+            "confidence_range": [
+              0.0338821110829627,
+              0.49977896434696
+            ]
+          },
+          "TN": {
+            "count": 10712,
+            "share": 0.6743893225887686,
+            "mean_confidence": 0.19683836208550853,
+            "confidence_range": [
+              0.0014604502280783,
+              0.4999645251390584
+            ]
+          }
+        }
+      }
+    },
+    "f1_optimal": {
+      "Cardiomegaly": {
+        "label": "Cardiomegaly",
+        "policy": "f1_optimal",
+        "threshold": 0.8666406044962653,
+        "n": 15884,
+        "positives": 415,
+        "prevalence": 0.0261269201712415,
+        "precision": 0.33771929824561403,
+        "recall": 0.3710843373493976,
+        "specificity": 0.9804770831986553,
+        "f1": 0.35361653272101035,
+        "error_rate": 0.03544447242508184,
+        "mean_certainty": 0.8821901571879912,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 274,
+          "share_of_errors": 0.4866785079928952,
+          "share_of_cohort": 0.017250062956434147
+        },
+        "strata": {
+          "TP": {
+            "count": 154,
+            "share": 0.009695290858725761,
+            "mean_confidence": 0.9517059234108126,
+            "confidence_range": [
+              0.8758690985990171,
+              0.999880683123718
+            ]
+          },
+          "FP": {
+            "count": 302,
+            "share": 0.019012843112566104,
+            "mean_confidence": 0.9321938033728938,
+            "confidence_range": [
+              0.8666406044962653,
+              0.9982107793145426
+            ]
+          },
+          "FN": {
+            "count": 261,
+            "share": 0.01643162931251574,
+            "mean_confidence": 0.4548223693050787,
+            "confidence_range": [
+              0.0011785572251395,
+              0.862594618441848
+            ]
+          },
+          "TN": {
+            "count": 15167,
+            "share": 0.9548602367161924,
+            "mean_confidence": 0.1137118840681216,
+            "confidence_range": [
+              1.0236521577904898e-05,
+              0.866450248600193
+            ]
+          }
+        }
+      },
+      "Effusion": {
+        "label": "Effusion",
+        "policy": "f1_optimal",
+        "threshold": 0.7035260950635486,
+        "n": 15884,
+        "positives": 1997,
+        "prevalence": 0.12572399899269707,
+        "precision": 0.4440313919867823,
+        "recall": 0.5383074611917876,
+        "specificity": 0.9030748181752718,
+        "f1": 0.4866455409687641,
+        "error_rate": 0.14278519264668849,
+        "mean_certainty": 0.7438576027849574,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 193,
+          "share_of_errors": 0.08509700176366843,
+          "share_of_cohort": 0.012150591790480987
+        },
+        "strata": {
+          "TP": {
+            "count": 1075,
+            "share": 0.06767816670863762,
+            "mean_confidence": 0.8461154307749932,
+            "confidence_range": [
+              0.7038174248460706,
+              0.9909371742313408
+            ]
+          },
+          "FP": {
+            "count": 1346,
+            "share": 0.08473936036262907,
+            "mean_confidence": 0.8061684141990351,
+            "confidence_range": [
+              0.7035260950635486,
+              0.9935918829694084
+            ]
+          },
+          "FN": {
+            "count": 922,
+            "share": 0.058045832284059434,
+            "mean_confidence": 0.48552031089577347,
+            "confidence_range": [
+              0.0338821110829627,
+              0.7033803605523503
+            ]
+          },
+          "TN": {
+            "count": 12541,
+            "share": 0.7895366406446739,
+            "mean_confidence": 0.2547319100799659,
+            "confidence_range": [
+              0.0014604502280783,
+              0.7033803605523503
+            ]
+          }
+        }
+      }
+    },
+    "youden": {
+      "Cardiomegaly": {
+        "label": "Cardiomegaly",
+        "policy": "youden",
+        "threshold": 0.22039682338148656,
+        "n": 15884,
+        "positives": 415,
+        "prevalence": 0.0261269201712415,
+        "precision": 0.10450061652281134,
+        "recall": 0.8168674698795181,
+        "specificity": 0.812205055271834,
+        "f1": 0.18529652910631317,
+        "error_rate": 0.18767313019390583,
+        "mean_certainty": 0.8745066913286003,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 274,
+          "share_of_errors": 0.09191546460919155,
+          "share_of_cohort": 0.017250062956434147
+        },
+        "strata": {
+          "TP": {
+            "count": 339,
+            "share": 0.02134223117602619,
+            "mean_confidence": 0.7613692129573679,
+            "confidence_range": [
+              0.2219563294090333,
+              0.999880683123718
+            ]
+          },
+          "FP": {
+            "count": 2905,
+            "share": 0.1828884411986905,
+            "mean_confidence": 0.5173697045700683,
+            "confidence_range": [
+              0.2205382620701194,
+              0.9982107793145426
+            ]
+          },
+          "FN": {
+            "count": 76,
+            "share": 0.004784688995215311,
+            "mean_confidence": 0.09430509738609115,
+            "confidence_range": [
+              0.0011785572251395,
+              0.2123042797423782
+            ]
+          },
+          "TN": {
+            "count": 12564,
+            "share": 0.790984638630068,
+            "mean_confidence": 0.04005346088059265,
+            "confidence_range": [
+              1.0236521577904898e-05,
+              0.2203968233814865
+            ]
+          }
+        }
+      },
+      "Effusion": {
+        "label": "Effusion",
+        "policy": "youden",
+        "threshold": 0.4632815196125169,
+        "n": 15884,
+        "positives": 1997,
+        "prevalence": 0.12572399899269707,
+        "precision": 0.3138115223197253,
+        "recall": 0.8237356034051077,
+        "specificity": 0.7409807733851804,
+        "f1": 0.4544826633512916,
+        "error_rate": 0.24861495844875348,
+        "mean_certainty": 0.7715922594362759,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 193,
+          "share_of_errors": 0.04887313243859205,
+          "share_of_cohort": 0.012150591790480987
+        },
+        "strata": {
+          "TP": {
+            "count": 1645,
+            "share": 0.10356333417275246,
+            "mean_confidence": 0.7606974956067227,
+            "confidence_range": [
+              0.4634118012662898,
+              0.9909371742313408
+            ]
+          },
+          "FP": {
+            "count": 3597,
+            "share": 0.22645429362880887,
+            "mean_confidence": 0.6600216948698169,
+            "confidence_range": [
+              0.4634986572923993,
+              0.9935918829694084
+            ]
+          },
+          "FN": {
+            "count": 352,
+            "share": 0.0221606648199446,
+            "mean_confidence": 0.3007853251589828,
+            "confidence_range": [
+              0.0338821110829627,
+              0.4629775527613252
+            ]
+          },
+          "TN": {
+            "count": 10290,
+            "share": 0.6478217073784941,
+            "mean_confidence": 0.1851892646625872,
+            "confidence_range": [
+              0.0014604502280783,
+              0.4632163815536442
+            ]
+          }
+        }
+      }
+    },
+    "sensitivity_constrained": {
+      "Cardiomegaly": {
+        "label": "Cardiomegaly",
+        "policy": "sensitivity_constrained",
+        "threshold": 0.0796069293860885,
+        "n": 15884,
+        "positives": 415,
+        "prevalence": 0.0261269201712415,
+        "precision": 0.0688536409516943,
+        "recall": 0.9204819277108434,
+        "specificity": 0.6660417609412373,
+        "f1": 0.1281234278047962,
+        "error_rate": 0.3273105011332158,
+        "mean_certainty": 0.7693003298686232,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 266,
+          "share_of_errors": 0.05116368532410079,
+          "share_of_cohort": 0.01674641148325359
+        },
+        "strata": {
+          "TP": {
+            "count": 382,
+            "share": 0.024049357844371694,
+            "mean_confidence": 0.6918125683105281,
+            "confidence_range": [
+              0.0806991704267955,
+              0.999880683123718
+            ]
+          },
+          "FP": {
+            "count": 5166,
+            "share": 0.325232938806346,
+            "mean_confidence": 0.35099532155610463,
+            "confidence_range": [
+              0.0796069293860885,
+              0.9982107793145426
+            ]
+          },
+          "FN": {
+            "count": 33,
+            "share": 0.002077562326869806,
+            "mean_confidence": 0.030271196947543096,
+            "confidence_range": [
+              0.0011785572251395,
+              0.0687710692623468
+            ]
+          },
+          "TN": {
+            "count": 10303,
+            "share": 0.6486401410224125,
+            "mean_confidence": 0.01872744279539723,
+            "confidence_range": [
+              1.0236521577904898e-05,
+              0.0793660526918225
+            ]
+          }
+        }
+      },
+      "Effusion": {
+        "label": "Effusion",
+        "policy": "sensitivity_constrained",
+        "threshold": 0.3563252634307085,
+        "n": 15884,
+        "positives": 1997,
+        "prevalence": 0.12572399899269707,
+        "precision": 0.26824487334137515,
+        "recall": 0.8908362543815723,
+        "specificity": 0.6505364729603226,
+        "f1": 0.4123305133850968,
+        "error_rate": 0.3192520775623269,
+        "mean_certainty": 0.7556725996396942,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 193,
+          "share_of_errors": 0.038059554328534806,
+          "share_of_cohort": 0.012150591790480987
+        },
+        "strata": {
+          "TP": {
+            "count": 1779,
+            "share": 0.11199949634852682,
+            "mean_confidence": 0.734480938237047,
+            "confidence_range": [
+              0.3575278539543864,
+              0.9909371742313408
+            ]
+          },
+          "FP": {
+            "count": 4853,
+            "share": 0.30552757491815663,
+            "mean_confidence": 0.5949659776409711,
+            "confidence_range": [
+              0.3564053764837921,
+              0.9935918829694084
+            ]
+          },
+          "FN": {
+            "count": 218,
+            "share": 0.013724502644170234,
+            "mean_confidence": 0.232028557822543,
+            "confidence_range": [
+              0.0338821110829627,
+              0.3558447344058509
+            ]
+          },
+          "TN": {
+            "count": 9034,
+            "share": 0.5687484260891463,
+            "mean_confidence": 0.15412061991732576,
+            "confidence_range": [
+              0.0014604502280783,
+              0.3562451551366244
+            ]
+          }
+        }
+      }
+    },
+    "precision_constrained": {
+      "Cardiomegaly": {
+        "label": "Cardiomegaly",
+        "policy": "precision_constrained",
+        "threshold": 0.9670011437406602,
+        "n": 15884,
+        "positives": 415,
+        "prevalence": 0.0261269201712415,
+        "precision": 0.5303030303030303,
+        "recall": 0.1686746987951807,
+        "specificity": 0.9959919839679359,
+        "f1": 0.25594149908592323,
+        "error_rate": 0.025623268698060944,
+        "mean_certainty": 0.8650244723830945,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 103,
+          "share_of_errors": 0.25307125307125306,
+          "share_of_cohort": 0.006484512717199698
+        },
+        "strata": {
+          "TP": {
+            "count": 70,
+            "share": 0.004406950390329891,
+            "mean_confidence": 0.984762715608466,
+            "confidence_range": [
+              0.9675223848842766,
+              0.999880683123718
+            ]
+          },
+          "FP": {
+            "count": 62,
+            "share": 0.0039032989171493325,
+            "mean_confidence": 0.9809997098515705,
+            "confidence_range": [
+              0.9674187761328218,
+              0.9982107793145426
+            ]
+          },
+          "FN": {
+            "count": 345,
+            "share": 0.02171996978091161,
+            "mean_confidence": 0.5690955376849219,
+            "confidence_range": [
+              0.0011785572251395,
+              0.9668959290417992
+            ]
+          },
+          "TN": {
+            "count": 15407,
+            "share": 0.9699697809116091,
+            "mean_confidence": 0.12626524906010364,
+            "confidence_range": [
+              1.0236521577904898e-05,
+              0.9666845323011471
+            ]
+          }
+        }
+      },
+      "Effusion": {
+        "label": "Effusion",
+        "policy": "precision_constrained",
+        "threshold": 0.7732421936203356,
+        "n": 15884,
+        "positives": 1997,
+        "prevalence": 0.12572399899269707,
+        "precision": 0.5157194679564692,
+        "recall": 0.4271407110665999,
+        "specificity": 0.9423201555411536,
+        "f1": 0.46726924130375236,
+        "error_rate": 0.12245026441702342,
+        "mean_certainty": 0.720802334234436,
+        "high_confidence_errors": {
+          "confidence_floor": 0.9,
+          "count": 193,
+          "share_of_errors": 0.09922879177377893,
+          "share_of_cohort": 0.012150591790480987
+        },
+        "strata": {
+          "TP": {
+            "count": 853,
+            "share": 0.05370183832787711,
+            "mean_confidence": 0.8736881315715266,
+            "confidence_range": [
+              0.7732421936203356,
+              0.9909371742313408
+            ]
+          },
+          "FP": {
+            "count": 801,
+            "share": 0.050428103752203475,
+            "mean_confidence": 0.8524542503573856,
+            "confidence_range": [
+              0.773364650842252,
+              0.9935918829694084
+            ]
+          },
+          "FN": {
+            "count": 1144,
+            "share": 0.07202216066481995,
+            "mean_confidence": 0.5349369217644308,
+            "confidence_range": [
+              0.0338821110829627,
+              0.7731196770951152
+            ]
+          },
+          "TN": {
+            "count": 13086,
+            "share": 0.8238478972550994,
+            "mean_confidence": 0.27486471918756594,
+            "confidence_range": [
+              0.0014604502280783,
+              0.7731196770951152
+            ]
+          }
+        }
+      }
+    }
+  },
+  "confidence_error_bins": {
+    "Cardiomegaly": [
+      {
+        "bin": 0,
+        "lo": 0.0,
+        "hi": 0.1,
+        "count": 10881,
+        "error_rate": 0.003768036026100542,
+        "mean_p": 0.022310265396874817
+      },
+      {
+        "bin": 1,
+        "lo": 0.1,
+        "hi": 0.2,
+        "count": 1541,
+        "error_rate": 0.018170019467878003,
+        "mean_p": 0.1440457785508795
+      },
+      {
+        "bin": 2,
+        "lo": 0.2,
+        "hi": 0.30000000000000004,
+        "count": 820,
+        "error_rate": 0.01951219512195122,
+        "mean_p": 0.24447032141956976
+      },
+      {
+        "bin": 3,
+        "lo": 0.30000000000000004,
+        "hi": 0.4,
+        "count": 590,
+        "error_rate": 0.03898305084745763,
+        "mean_p": 0.3499521730259961
+      },
+      {
+        "bin": 4,
+        "lo": 0.4,
+        "hi": 0.5,
+        "count": 457,
+        "error_rate": 0.04814004376367615,
+        "mean_p": 0.447629379297501
+      },
+      {
+        "bin": 5,
+        "lo": 0.5,
+        "hi": 0.6000000000000001,
+        "count": 359,
+        "error_rate": 0.9080779944289693,
+        "mean_p": 0.5497217499075344
+      },
+      {
+        "bin": 6,
+        "lo": 0.6000000000000001,
+        "hi": 0.7000000000000001,
+        "count": 296,
+        "error_rate": 0.8918918918918919,
+        "mean_p": 0.6499372024303502
+      },
+      {
+        "bin": 7,
+        "lo": 0.7000000000000001,
+        "hi": 0.8,
+        "count": 307,
+        "error_rate": 0.8762214983713354,
+        "mean_p": 0.748265016390689
+      },
+      {
+        "bin": 8,
+        "lo": 0.8,
+        "hi": 0.9,
+        "count": 266,
+        "error_rate": 0.8195488721804511,
+        "mean_p": 0.8512029647404917
+      },
+      {
+        "bin": 9,
+        "lo": 0.9,
+        "hi": 1.0,
+        "count": 367,
+        "error_rate": 0.6348773841961853,
+        "mean_p": 0.9519251813786406
+      }
+    ],
+    "Effusion": [
+      {
+        "bin": 0,
+        "lo": 0.0,
+        "hi": 0.1,
+        "count": 3242,
+        "error_rate": 0.006785934608266502,
+        "mean_p": 0.05951321972948259
+      },
+      {
+        "bin": 1,
+        "lo": 0.1,
+        "hi": 0.2,
+        "count": 3083,
+        "error_rate": 0.018164125851443398,
+        "mean_p": 0.146952620911335
+      },
+      {
+        "bin": 2,
+        "lo": 0.2,
+        "hi": 0.30000000000000004,
+        "count": 2020,
+        "error_rate": 0.039603960396039604,
+        "mean_p": 0.2473953885262691
+      },
+      {
+        "bin": 3,
+        "lo": 0.30000000000000004,
+        "hi": 0.4,
+        "count": 1503,
+        "error_rate": 0.07451763140385895,
+        "mean_p": 0.34777120218118385
+      },
+      {
+        "bin": 4,
+        "lo": 0.4,
+        "hi": 0.5,
+        "count": 1283,
+        "error_rate": 0.11613406079501169,
+        "mean_p": 0.4506564267393251
+      },
+      {
+        "bin": 5,
+        "lo": 0.5,
+        "hi": 0.6000000000000001,
+        "count": 1198,
+        "error_rate": 0.837228714524207,
+        "mean_p": 0.5486516463546273
+      },
+      {
+        "bin": 6,
+        "lo": 0.6000000000000001,
+        "hi": 0.7000000000000001,
+        "count": 1100,
+        "error_rate": 0.730909090909091,
+        "mean_p": 0.6495161800457689
+      },
+      {
+        "bin": 7,
+        "lo": 0.7000000000000001,
+        "hi": 0.8,
+        "count": 1064,
+        "error_rate": 0.6860902255639098,
+        "mean_p": 0.7493458396919627
+      },
+      {
+        "bin": 8,
+        "lo": 0.8,
+        "hi": 0.9,
+        "count": 923,
+        "error_rate": 0.5059588299024919,
+        "mean_p": 0.8495049418932988
+      },
+      {
+        "bin": 9,
+        "lo": 0.9,
+        "hi": 1.0,
+        "count": 468,
+        "error_rate": 0.36538461538461536,
+        "mean_p": 0.9340643024150782
+      }
+    ]
+  },
+  "cross_label_overlap": {
+    "threshold": 0.5,
+    "n_both_wrong": 585,
+    "n_either_wrong": 4449,
+    "jaccard_of_error_sets": 0.13149022252191503
+  },
+  "patient_error_concentration": {
+    "n_patients_with_errors": 1317,
+    "n_error_images": 4449,
+    "max_errors_by_one_patient": 60,
+    "top5_patients": [
+      {
+        "patient_id": 12021,
+        "error_images": 60
+      },
+      {
+        "patient_id": 16587,
+        "error_images": 57
+      },
+      {
+        "patient_id": 11925,
+        "error_images": 54
+      },
+      {
+        "patient_id": 17236,
+        "error_images": 50
+      },
+      {
+        "patient_id": 4342,
+        "error_images": 49
+      }
+    ]
+  },
+  "gradcam_case_list": [
+    {
+      "case_id": "Cardiomegaly_TP_00004533_023",
+      "label": "Cardiomegaly",
+      "stratum": "TP",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.999880683123718,
+      "probability": 0.999880683123718,
+      "predicted_positive": true,
+      "true_positive": true,
+      "image_index": "00004533_023.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_003/images/00004533_023.png"
+    },
+    {
+      "case_id": "Cardiomegaly_TP_00004533_018",
+      "label": "Cardiomegaly",
+      "stratum": "TP",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.9986199612678552,
+      "probability": 0.9986199612678552,
+      "predicted_positive": true,
+      "true_positive": true,
+      "image_index": "00004533_018.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_003/images/00004533_018.png"
+    },
+    {
+      "case_id": "Cardiomegaly_FP_00004342_004",
+      "label": "Cardiomegaly",
+      "stratum": "FP",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.9982107793145426,
+      "probability": 0.9982107793145426,
+      "predicted_positive": true,
+      "true_positive": false,
+      "image_index": "00004342_004.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_003/images/00004342_004.png"
+    },
+    {
+      "case_id": "Cardiomegaly_FP_00004533_024",
+      "label": "Cardiomegaly",
+      "stratum": "FP",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.9971192660915214,
+      "probability": 0.9971192660915214,
+      "predicted_positive": true,
+      "true_positive": false,
+      "image_index": "00004533_024.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_003/images/00004533_024.png"
+    },
+    {
+      "case_id": "Cardiomegaly_FN_00002059_002",
+      "label": "Cardiomegaly",
+      "stratum": "FN",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.9988214427748605,
+      "probability": 0.0011785572251395,
+      "predicted_positive": false,
+      "true_positive": true,
+      "image_index": "00002059_002.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_002/images/00002059_002.png"
+    },
+    {
+      "case_id": "Cardiomegaly_FN_00028211_020",
+      "label": "Cardiomegaly",
+      "stratum": "FN",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.9979051201410227,
+      "probability": 0.0020948798589773,
+      "predicted_positive": false,
+      "true_positive": true,
+      "image_index": "00028211_020.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_012/images/00028211_020.png"
+    },
+    {
+      "case_id": "Cardiomegaly_TN_00012215_003",
+      "label": "Cardiomegaly",
+      "stratum": "TN",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.9999897634784221,
+      "probability": 1.0236521577904898e-05,
+      "predicted_positive": false,
+      "true_positive": false,
+      "image_index": "00012215_003.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_006/images/00012215_003.png"
+    },
+    {
+      "case_id": "Cardiomegaly_TN_00009004_000",
+      "label": "Cardiomegaly",
+      "stratum": "TN",
+      "policy": "f1_optimal",
+      "threshold": 0.8666406044962653,
+      "certainty": 0.9999870254130775,
+      "probability": 1.2974586922455262e-05,
+      "predicted_positive": false,
+      "true_positive": false,
+      "image_index": "00009004_000.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_004/images/00009004_000.png"
+    },
+    {
+      "case_id": "Effusion_TP_00021887_001",
+      "label": "Effusion",
+      "stratum": "TP",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.9909371742313408,
+      "probability": 0.9909371742313408,
+      "predicted_positive": true,
+      "true_positive": true,
+      "image_index": "00021887_001.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_010/images/00021887_001.png"
+    },
+    {
+      "case_id": "Effusion_TP_00012452_004",
+      "label": "Effusion",
+      "stratum": "TP",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.988343730270772,
+      "probability": 0.988343730270772,
+      "predicted_positive": true,
+      "true_positive": true,
+      "image_index": "00012452_004.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_006/images/00012452_004.png"
+    },
+    {
+      "case_id": "Effusion_FP_00017151_011",
+      "label": "Effusion",
+      "stratum": "FP",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.9935918829694084,
+      "probability": 0.9935918829694084,
+      "predicted_positive": true,
+      "true_positive": false,
+      "image_index": "00017151_011.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_008/images/00017151_011.png"
+    },
+    {
+      "case_id": "Effusion_FP_00000402_008",
+      "label": "Effusion",
+      "stratum": "FP",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.989820103967746,
+      "probability": 0.989820103967746,
+      "predicted_positive": true,
+      "true_positive": false,
+      "image_index": "00000402_008.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_001/images/00000402_008.png"
+    },
+    {
+      "case_id": "Effusion_FN_00017839_000",
+      "label": "Effusion",
+      "stratum": "FN",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.9661178889170373,
+      "probability": 0.0338821110829627,
+      "predicted_positive": false,
+      "true_positive": true,
+      "image_index": "00017839_000.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_008/images/00017839_000.png"
+    },
+    {
+      "case_id": "Effusion_FN_00006381_024",
+      "label": "Effusion",
+      "stratum": "FN",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.9539922322201412,
+      "probability": 0.0460077677798588,
+      "predicted_positive": false,
+      "true_positive": true,
+      "image_index": "00006381_024.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_003/images/00006381_024.png"
+    },
+    {
+      "case_id": "Effusion_TN_00018458_001",
+      "label": "Effusion",
+      "stratum": "TN",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.9985395497719217,
+      "probability": 0.0014604502280783,
+      "predicted_positive": false,
+      "true_positive": false,
+      "image_index": "00018458_001.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_009/images/00018458_001.png"
+    },
+    {
+      "case_id": "Effusion_TN_00001826_000",
+      "label": "Effusion",
+      "stratum": "TN",
+      "policy": "f1_optimal",
+      "threshold": 0.7035260950635486,
+      "certainty": 0.9971796999431405,
+      "probability": 0.0028203000568595,
+      "predicted_positive": false,
+      "true_positive": false,
+      "image_index": "00001826_000.png",
+      "path": "/home/arno/Desktop/Projects/Capstone/data/raw/images_002/images/00001826_000.png"
+    }
+  ],
+  "provenance": {
+    "predictions": "/home/arno/Desktop/Projects/Capstone/outputs/predictions/calibrated/calibrated_test_predictions.csv",
+    "thresholds": "outputs/metrics/thresholds (fitted on val, frozen)",
+    "environment": {
+      "timestamp_utc": "2026-10-07T04:14:36+00:00",
+      "python": "3.14.7",
+      "python_full": "3.14.7 (main, Aug 10 2026, 00:00:00) [GCC 15.3.1 20260722 (Red Hat 15.3.1-1)]",
+      "platform": "Linux-7.2.5-100.fc43.x86_64-x86_64-with-glibc2.42",
+      "machine": "x86_64",
+      "processor": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+      "torch": "2.14.0+cu130",
+      "cuda_available": true,
+      "cuda_runtime": "13.0",
+      "cudnn": 92400,
+      "gpu": {
+        "name": "NVIDIA GeForce GTX 1650",
+        "total_memory_gb": 3.63,
+        "capability": "7.5"
+      },
+      "torchvision": "0.29.0+cu130"
+    }
+  }
+}

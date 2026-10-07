@@ -472,5 +472,6 @@ def build_app() -> gr.Blocks:
 
 if __name__ == "__main__":
     build_app().queue().launch(
-        server_name="127.0.0.1", server_port=7860, show_error=True, theme=THEME, css=CSS,
+        server_name="127.0.0.1", server_port=int(os.getenv("GRADIO_SERVER_PORT", "7860")),
+        show_error=True, theme=THEME, css=CSS,
     )

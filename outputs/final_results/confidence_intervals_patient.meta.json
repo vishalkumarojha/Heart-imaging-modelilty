@@ -1,0 +1,67 @@
+{
+  "split": "test",
+  "n_images": 15884,
+  "n_patients": 4455,
+  "n_bootstraps": 5000,
+  "confidence_level": 0.95,
+  "rng_seed": 42,
+  "resampling_unit": "patient (cluster / block bootstrap)",
+  "method": "patient-level cluster bootstrap (resampling unit = patient; percentile CI)",
+  "variants": [
+    "raw",
+    "calibrated",
+    "logistic"
+  ],
+  "policies": [
+    "fixed",
+    "f1_optimal",
+    "youden",
+    "sensitivity_constrained",
+    "precision_constrained"
+  ],
+  "arms": {
+    "A": {
+      "variant": "raw",
+      "policy": "fixed"
+    },
+    "B": {
+      "variant": "calibrated",
+      "policy": "fixed"
+    },
+    "C": {
+      "variant": "raw",
+      "policy": "f1_optimal"
+    },
+    "D": {
+      "variant": "calibrated",
+      "policy": "f1_optimal"
+    },
+    "E": {
+      "variant": "logistic",
+      "policy": "fixed"
+    },
+    "F": {
+      "variant": "logistic",
+      "policy": "f1_optimal"
+    }
+  },
+  "paired_comparisons": [
+    [
+      "A",
+      "C"
+    ],
+    [
+      "A",
+      "D"
+    ],
+    [
+      "B",
+      "D"
+    ],
+    [
+      "C",
+      "D"
+    ]
+  ],
+  "note": "AUROC/AUPRC are monotone-invariant so one pair of rows per label; precision := 0 when a resample has no predicted positives; a resample that loses an entire outcome class contributes NaN to the AUROC/AUPRC distribution.  Paired differences are computed on the identical patient resamples."
+}

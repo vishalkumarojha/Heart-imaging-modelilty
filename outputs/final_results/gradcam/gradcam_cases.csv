@@ -1,0 +1,17 @@
+sample_id,class,ground_truth,prediction,confidence,error_type
+Cardiomegaly_TP_00004533_023,Cardiomegaly,1,1,0.9999,TP
+Cardiomegaly_TP_00004533_018,Cardiomegaly,1,1,0.9986,TP
+Cardiomegaly_FP_00004342_004,Cardiomegaly,0,1,0.9982,FP
+Cardiomegaly_FP_00004533_024,Cardiomegaly,0,1,0.9971,FP
+Cardiomegaly_FN_00002059_002,Cardiomegaly,1,0,0.9988,FN
+Cardiomegaly_FN_00028211_020,Cardiomegaly,1,0,0.9979,FN
+Cardiomegaly_TN_00012215_003,Cardiomegaly,0,0,1.0,TN
+Cardiomegaly_TN_00009004_000,Cardiomegaly,0,0,1.0,TN
+Effusion_TP_00021887_001,Effusion,1,1,0.9909,TP
+Effusion_TP_00012452_004,Effusion,1,1,0.9883,TP
+Effusion_FP_00017151_011,Effusion,0,1,0.9936,FP
+Effusion_FP_00000402_008,Effusion,0,1,0.9898,FP
+Effusion_FN_00017839_000,Effusion,1,0,0.9661,FN
+Effusion_FN_00006381_024,Effusion,1,0,0.954,FN
+Effusion_TN_00018458_001,Effusion,0,0,0.9985,TN
+Effusion_TN_00001826_000,Effusion,0,0,0.9972,TN

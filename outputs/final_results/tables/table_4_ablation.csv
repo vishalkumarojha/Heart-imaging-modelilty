@@ -1,0 +1,9 @@
+class,arm,f1,precision,recall,specificity,auc_unchanged,ece,brier
+Cardiomegaly,A baseline,0.2836,0.1787,0.6867,0.9153,True,0.1061,0.0681
+Cardiomegaly,B calibration only,0.2836,0.1787,0.6867,0.9153,True,0.1169,0.0678
+Cardiomegaly,C threshold only,0.3536,0.3377,0.3711,0.9805,True,0.1061,0.0681
+Cardiomegaly,D calibration + threshold,0.3536,0.3377,0.3711,0.9805,True,0.1169,0.0678
+Effusion,A baseline,0.4676,0.332,0.7902,0.7714,True,0.2077,0.1561
+Effusion,B calibration only,0.4676,0.332,0.7902,0.7714,True,0.2292,0.1533
+Effusion,C threshold only,0.4866,0.444,0.5383,0.9031,True,0.2077,0.1561
+Effusion,D calibration + threshold,0.4866,0.444,0.5383,0.9031,True,0.2292,0.1533

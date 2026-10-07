@@ -1,0 +1,7 @@
+class,method,ece_reference_name,ece_at_reference,ece_grid_min,ece_grid_max,logistic_a,logistic_b,val_nll_before,val_nll_after
+Cardiomegaly,raw,15 bins / equal width,0.1061,0.1061,0.1063,,,0.2337,
+Cardiomegaly,calibrated,15 bins / equal width,0.1169,0.1169,0.1169,,,0.2337,0.2302
+Cardiomegaly,logistic,15 bins / equal width,0.0029,0.0017,0.0047,0.5441,-2.8079,0.2337,0.0845
+Effusion,raw,15 bins / equal width,0.2077,0.2077,0.2077,,,0.4889,
+Effusion,calibrated,15 bins / equal width,0.2292,0.2292,0.2292,,,0.4889,0.4721
+Effusion,logistic,15 bins / equal width,0.0136,0.0103,0.0151,0.7474,-1.9919,0.4889,0.265
