@@ -22,11 +22,138 @@ TITLE = "Separating Calibration and Threshold Effects in Multi-Label Chest X-Ray
 DATA: dict[str, Any] | None = None
 
 CSS = """
-body, .gradio-container { background:#f4f6f8 !important; color:#18232d !important; }
-.gradio-container { max-width:1280px !important; }
-h1,h2,h3 { color:#172c3d !important; }
-.lead { border-left:4px solid #27707a; padding:12px 18px; background:#eaf1f2; }
-.warning { border-left:4px solid #9a5b28; padding:12px 18px; background:#fbf2e8; }
+:root, .gradio-container {
+  color-scheme: light;
+  --body-background-fill:#f5f7f8;
+  --body-text-color:#17232e;
+  --body-text-color-subdued:#465562;
+  --background-fill-primary:#ffffff;
+  --background-fill-secondary:#edf1f4;
+  --block-background-fill:#ffffff;
+  --block-border-color:#d2dae0;
+  --input-background-fill:#ffffff;
+  --input-border-color:#a9b5bf;
+  --border-color-primary:#c7d1d8;
+  --button-primary-background-fill:#28566b;
+  --button-primary-background-fill-hover:#1d4658;
+  --button-primary-text-color:#ffffff;
+  --checkbox-label-background-fill:#ffffff;
+  --checkbox-label-text-color:#17232e;
+  background:#f5f7f8 !important;
+  color:#17232e !important;
+}
+.gradio-container { max-width:1680px !important; margin:0 auto; padding:20px 30px 36px !important; }
+.gradio-container :is(p,li,span,small,label,summary,td,th,strong,em,code) { color:#263642; }
+.gradio-container h1,.gradio-container h2,.gradio-container h3,.gradio-container h4 {
+  color:#142b3b !important; font-family:Georgia,"Times New Roman",serif !important;
+  line-height:1.24 !important;
+}
+.gradio-container h1 { font-size:2.15rem !important; margin-bottom:.25rem !important; }
+.gradio-container h2 { font-size:1.55rem !important; }
+.gradio-container h3 { font-size:1.2rem !important; }
+.gradio-container p,.gradio-container li { font-size:1rem; line-height:1.58; }
+.gradio-container .prose { color:#263642 !important; }
+.gradio-container .block,.gradio-container .form {
+  background:#ffffff !important; border-color:#d2dae0 !important;
+  box-shadow:none !important; border-radius:8px !important;
+}
+.gradio-container input,.gradio-container textarea,.gradio-container select {
+  color:#17232e !important; background:#ffffff !important; border-color:#9eacb7 !important;
+}
+.gradio-container input::placeholder,.gradio-container textarea::placeholder { color:#64727d !important; opacity:1; }
+.gradio-container label,.gradio-container [data-testid="block-label"] {
+  color:#263642 !important; font-weight:600 !important;
+}
+.gradio-container label[data-testid$="-radio-label"] {
+  color:#253744 !important; background:#ffffff !important;
+  border:1px solid #c4cfd7 !important; border-radius:6px !important;
+}
+.gradio-container label[data-testid$="-radio-label"].selected {
+  color:#12384b !important; background:#e4eef2 !important;
+  border-color:#527989 !important;
+}
+.gradio-container label[data-testid$="-radio-label"] span { color:inherit !important; }
+.lead { border-left:4px solid #286473; padding:18px 22px; background:#edf3f5; border-radius:4px; }
+.warning { border-left:4px solid #98602f; padding:13px 17px; background:#fff5e9; border-radius:4px; }
+.dashboard-tabs .tab-wrapper {
+  display:block !important; width:100% !important; height:auto !important;
+  min-height:0 !important; overflow:visible !important;
+}
+.dashboard-tabs .tab-container[role="tablist"] {
+  display:grid !important; grid-template-columns:repeat(5,minmax(0,1fr));
+  width:100% !important; height:auto !important; flex:none !important;
+  gap:8px; padding:8px 0 14px; border-bottom:1px solid #cbd5dc;
+  overflow:visible !important; white-space:normal !important;
+}
+.dashboard-tabs .tab-container[role="tablist"] > button[role="tab"] {
+  min-width:0 !important; min-height:48px; padding:9px 12px !important;
+  white-space:normal !important; line-height:1.25 !important; text-align:center;
+  color:#253744 !important; background:#ffffff !important;
+  border:1px solid #c4cfd7 !important; border-radius:6px !important;
+  font-size:15px !important; font-weight:600 !important; opacity:1 !important;
+}
+.dashboard-tabs .tab-container[role="tablist"] > button[role="tab"]:hover { background:#edf3f6 !important; border-color:#7f96a4 !important; }
+.dashboard-tabs .tab-container[role="tablist"] > button[role="tab"].selected {
+  color:#12384b !important; background:#e4eef2 !important;
+  border-color:#527989 !important; box-shadow:inset 0 -3px #286473 !important;
+}
+.dashboard-tabs .overflow-menu { display:none !important; }
+.dashboard-tabs .overflow-menu:has(.overflow-dropdown button) {
+  display:block !important; width:100% !important; position:static !important;
+}
+.dashboard-tabs .overflow-menu > button { display:none !important; }
+.dashboard-tabs .overflow-menu .overflow-dropdown,
+.dashboard-tabs .overflow-menu .overflow-dropdown.hide {
+  display:grid !important; position:static !important; inset:auto !important;
+  width:100% !important; grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px; padding:0 !important; margin:0 !important; border:0 !important;
+  background:transparent !important; box-shadow:none !important;
+}
+.dashboard-tabs .overflow-menu .overflow-dropdown > button {
+  min-width:0 !important; min-height:48px; padding:9px 12px !important;
+  white-space:normal !important; line-height:1.25 !important; text-align:center;
+  color:#253744 !important; background:#ffffff !important;
+  border:1px solid #c4cfd7 !important; border-radius:6px !important;
+  font-size:15px !important; font-weight:600 !important;
+}
+.dashboard-tabs .tab-container[role="tablist"] > button[role="tab"]:focus-visible,.gradio-container button:focus-visible,
+.gradio-container input:focus-visible { outline:3px solid #27697c !important; outline-offset:2px; }
+.gradio-container .table-container,.gradio-container .table-wrap,
+.gradio-container .virtual-table-viewport,.gradio-container table.header-table {
+  color:#17232e !important; background:#ffffff !important;
+}
+.gradio-container .table-container table { border-collapse:collapse !important; }
+.gradio-container .table-container th.header-cell {
+  color:#172b39 !important; background:#e9eff2 !important; font-weight:700 !important;
+  border-bottom:2px solid #b9c6ce !important;
+}
+.gradio-container .table-container td,.gradio-container .table-container .body-cell,
+.gradio-container .table-container .cell-wrap {
+  color:#263642 !important; background:#ffffff !important;
+  border-bottom:1px solid #e0e6ea !important;
+}
+.gradio-container .table-container .header-content,
+.gradio-container .table-container .header-content span { color:#172b39 !important; }
+.gradio-container .table-container .header-row,.gradio-container .table-container .label,
+.gradio-container .table-container .label p { color:#172b39 !important; background:#ffffff !important; }
+.gradio-container .table-container .body-cell:nth-child(even),
+.gradio-container .table-container .cell-wrap:nth-child(even) { background:#f7f9fa !important; }
+.gradio-container img { max-width:100%; height:auto; object-fit:contain; }
+.gradio-container .prose code,.gradio-container p code,.gradio-container code {
+  color:#17394a !important; background:#e7eef2 !important;
+  border:1px solid #d0dce2; border-radius:4px; padding:2px 5px;
+  white-space:normal !important; overflow-wrap:anywhere;
+}
+.gradio-container details summary { color:#23495b !important; font-weight:600; cursor:pointer; }
+@media (max-width:1100px) {
+  .dashboard-tabs .tab-container[role="tablist"] { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .gradio-container { padding:16px !important; }
+}
+@media (max-width:650px) {
+  .dashboard-tabs .tab-container[role="tablist"] { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .dashboard-tabs .tab-container[role="tablist"] > button[role="tab"] { font-size:14px !important; }
+  .gradio-container h1 { font-size:1.7rem !important; }
+}
 """
 
 
@@ -195,7 +322,7 @@ def build_app():
     with gr.Blocks(title=TITLE) as app:
         gr.Markdown(f"# {TITLE}\n### Controlled DenseNet121 Study on Cardiomegaly and Effusion")
         mode=gr.Radio(["Presentation","Technical"],value="Presentation",label="Display mode")
-        with gr.Tabs():
+        with gr.Tabs(elem_classes=["dashboard-tabs"]):
             with gr.Tab("Research Overview"):
                 ov=gr.Markdown(overview("Presentation"),elem_classes="lead")
                 mode.change(overview,mode,ov)
