@@ -1,0 +1,632 @@
+{
+  "phase": "paper_package",
+  "rule": "no paper number may exist without a traceable source artifact",
+  "n_claims": 69,
+  "n_verified": 69,
+  "claims": [
+    {
+      "claim": "76977 images in train split",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 76977,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_images_train"
+    },
+    {
+      "claim": "16451 images in val split",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 16451,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_images_val"
+    },
+    {
+      "claim": "15884 images in test split",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 15884,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_images_test"
+    },
+    {
+      "claim": "20797 patients in train split",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 20797,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_patients_train"
+    },
+    {
+      "claim": "4468 patients in val split",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 4468,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_patients_val"
+    },
+    {
+      "claim": "4455 patients in test split",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 4455,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_patients_test"
+    },
+    {
+      "claim": "109,312 total images",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 109312,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_total_images"
+    },
+    {
+      "claim": "29,720 total patients",
+      "section": "dataset",
+      "kind": "numeric",
+      "value": 29720,
+      "source_artifact": "data/processed/split_index.csv",
+      "verified": true,
+      "id": "ds_total_patients"
+    },
+    {
+      "claim": "external validation pending; dataset unavailable",
+      "section": "external_validation",
+      "kind": "text",
+      "value": "BLOCKED \u2014 EXTERNAL DATASET NOT AVAILABLE",
+      "source_artifact": "outputs/metrics/external/status.json",
+      "verified": true,
+      "id": "ext_pending"
+    },
+    {
+      "claim": "no external metrics computed",
+      "section": "external_validation",
+      "kind": "text",
+      "value": true,
+      "source_artifact": "outputs/metrics/external/status.json",
+      "verified": true,
+      "id": "ext_no_metrics"
+    },
+    {
+      "claim": "Cardiomegaly F1 gains 0.2836 -> 0.3536 (threshold policy)",
+      "section": "results_ablation",
+      "kind": "numeric",
+      "value": null,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "abl_f1_gain_cardio"
+    },
+    {
+      "claim": "Calibration alone does not change fixed-0.50 confusion (monotone sigmoid)",
+      "section": "results_ablation",
+      "kind": "text",
+      "value": true,
+      "source_artifact": "outputs/metrics/experiments/exp3_thresholds_calibrated.json",
+      "verified": true,
+      "id": "abl_B_no_change"
+    },
+    {
+      "claim": "baseline Cardiomegaly auroc",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.8972,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_cardiomegaly_auroc"
+    },
+    {
+      "claim": "baseline Cardiomegaly auprc",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.3043,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_cardiomegaly_auprc"
+    },
+    {
+      "claim": "baseline Cardiomegaly f1",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.2836,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_cardiomegaly_f1"
+    },
+    {
+      "claim": "baseline Cardiomegaly precision",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.1787,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_cardiomegaly_precision"
+    },
+    {
+      "claim": "baseline Cardiomegaly recall",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.6867,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_cardiomegaly_recall"
+    },
+    {
+      "claim": "baseline Cardiomegaly specificity",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.9153,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_cardiomegaly_specificity"
+    },
+    {
+      "claim": "baseline Effusion auroc",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.8587,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_effusion_auroc"
+    },
+    {
+      "claim": "baseline Effusion auprc",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.47,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_effusion_auprc"
+    },
+    {
+      "claim": "baseline Effusion f1",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.4676,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_effusion_f1"
+    },
+    {
+      "claim": "baseline Effusion precision",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.332,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_effusion_precision"
+    },
+    {
+      "claim": "baseline Effusion recall",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.7902,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_effusion_recall"
+    },
+    {
+      "claim": "baseline Effusion specificity",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.7714,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_effusion_specificity"
+    },
+    {
+      "claim": "macro AUROC 0.8780",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.878,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_macro_auroc"
+    },
+    {
+      "claim": "macro AUPRC 0.3871",
+      "section": "results_baseline",
+      "kind": "numeric",
+      "value": 0.3871,
+      "source_artifact": "outputs/metrics/baseline/baseline_metrics_test.json",
+      "verified": true,
+      "id": "base_macro_auprc"
+    },
+    {
+      "claim": "Cardiomegaly NLL raw->calibrated",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": null,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_cardiomegaly_nll"
+    },
+    {
+      "claim": "Cardiomegaly Brier raw->calibrated",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": null,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_cardiomegaly_brier"
+    },
+    {
+      "claim": "Cardiomegaly ECE raw->calibrated",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": null,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_cardiomegaly_ece"
+    },
+    {
+      "claim": "Cardiomegaly ECE rises after temperature scaling",
+      "section": "results_calibration",
+      "kind": "text",
+      "value": true,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_cardiomegaly_ece_up"
+    },
+    {
+      "claim": "Effusion NLL raw->calibrated",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": null,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_effusion_nll"
+    },
+    {
+      "claim": "Effusion Brier raw->calibrated",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": null,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_effusion_brier"
+    },
+    {
+      "claim": "Effusion ECE raw->calibrated",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": null,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_effusion_ece"
+    },
+    {
+      "claim": "Effusion ECE rises after temperature scaling",
+      "section": "results_calibration",
+      "kind": "text",
+      "value": true,
+      "source_artifact": "outputs/metrics/experiments/exp1_calibration.json",
+      "verified": true,
+      "id": "cal_effusion_ece_up"
+    },
+    {
+      "claim": "Cardiomegaly temperature T = 1.187",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": 1.1865,
+      "source_artifact": "outputs/metrics/calibration/temperature_scalers.json",
+      "verified": true,
+      "id": "cal_T_cardio"
+    },
+    {
+      "claim": "Effusion temperature T = 1.398",
+      "section": "results_calibration",
+      "kind": "numeric",
+      "value": 1.3979,
+      "source_artifact": "outputs/metrics/calibration/temperature_scalers.json",
+      "verified": true,
+      "id": "cal_T_eff"
+    },
+    {
+      "claim": "Cardiomegaly 563 errors",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 563,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_cardio_errors"
+    },
+    {
+      "claim": "Cardiomegaly high-confidence (>=0.9) errors = 274",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 274,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_cardio_hc"
+    },
+    {
+      "claim": "Cardiomegaly high-confidence share of errors = 48.7%",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 0.4867,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_cardio_hc_share"
+    },
+    {
+      "claim": "Effusion 2,268 errors",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 2268,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_eff_errors"
+    },
+    {
+      "claim": "Effusion high-confidence share of errors = 8.5%",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 0.0851,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_eff_hc_share"
+    },
+    {
+      "claim": "cross-label error Jaccard = 0.131",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 0.131,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_jaccard"
+    },
+    {
+      "claim": "1,317 patients with errors",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 1317,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_patients"
+    },
+    {
+      "claim": "4,449 error images",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 4449,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_error_images"
+    },
+    {
+      "claim": "worst patient has 60 error images",
+      "section": "results_error_analysis",
+      "kind": "numeric",
+      "value": 60,
+      "source_artifact": "outputs/metrics/error_analysis/error_analysis_test.json",
+      "verified": true,
+      "id": "ea_max_patient"
+    },
+    {
+      "claim": "16 deterministic Grad-CAM cases",
+      "section": "results_explainability",
+      "kind": "numeric",
+      "value": 16,
+      "source_artifact": "outputs/gradcam/gradcam_summary.json",
+      "verified": true,
+      "id": "gc_n_cases"
+    },
+    {
+      "claim": "region/bbox sanity cohort n = 43",
+      "section": "results_explainability",
+      "kind": "numeric",
+      "value": 43,
+      "source_artifact": "outputs/gradcam/bbox_localization.json",
+      "verified": true,
+      "id": "gc_cohort"
+    },
+    {
+      "claim": "pointing-game hits = 21/43",
+      "section": "results_explainability",
+      "kind": "numeric",
+      "value": 21,
+      "source_artifact": "outputs/gradcam/bbox_localization.json",
+      "verified": true,
+      "id": "gc_hits"
+    },
+    {
+      "claim": "mean concentration ratio = 2.60",
+      "section": "results_explainability",
+      "kind": "numeric",
+      "value": 2.6,
+      "source_artifact": "outputs/gradcam/bbox_localization.json",
+      "verified": true,
+      "id": "gc_cr"
+    },
+    {
+      "claim": "combined-arm Cardiomegaly test F1 = 0.3536",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.3536,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_cardiomegaly_f1"
+    },
+    {
+      "claim": "combined-arm Effusion test F1 = 0.4866",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.4866,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_effusion_f1"
+    },
+    {
+      "claim": "combined-arm Cardiomegaly test precision = 0.3377",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.3377,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_cardiomegaly_prec"
+    },
+    {
+      "claim": "combined-arm Effusion test precision = 0.444",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.444,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_effusion_prec"
+    },
+    {
+      "claim": "combined-arm Cardiomegaly test recall = 0.3711",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.3711,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_cardiomegaly_rec"
+    },
+    {
+      "claim": "combined-arm Cardiomegaly test specificity = 0.9805",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.9805,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_cardiomegaly_spec"
+    },
+    {
+      "claim": "combined-arm Effusion test recall = 0.5383",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.5383,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_effusion_rec"
+    },
+    {
+      "claim": "combined-arm Effusion test specificity = 0.9031",
+      "section": "results_main",
+      "kind": "numeric",
+      "value": 0.9031,
+      "source_artifact": "outputs/final_results/master_results.csv",
+      "verified": true,
+      "id": "d_effusion_spec"
+    },
+    {
+      "claim": "Cardiomegaly fixed val-frozen threshold (raw) = 0.5",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.5,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_cardiomegaly_fixed"
+    },
+    {
+      "claim": "Cardiomegaly f1_optimal val-frozen threshold (raw) = 0.9021",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.9021,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_cardiomegaly_f1_optimal"
+    },
+    {
+      "claim": "Cardiomegaly youden val-frozen threshold (raw) = 0.1826",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.1826,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_cardiomegaly_youden"
+    },
+    {
+      "claim": "Cardiomegaly sensitivity_constrained val-frozen threshold (raw) = 0.0519",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.0519,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_cardiomegaly_sensitivity_constrained"
+    },
+    {
+      "claim": "Cardiomegaly precision_constrained val-frozen threshold (raw) = 0.9822",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.9822,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_cardiomegaly_precision_constrained"
+    },
+    {
+      "claim": "Effusion fixed val-frozen threshold (raw) = 0.5",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.5,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_effusion_fixed"
+    },
+    {
+      "claim": "Effusion f1_optimal val-frozen threshold (raw) = 0.7699",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.7699,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_effusion_f1_optimal"
+    },
+    {
+      "claim": "Effusion youden val-frozen threshold (raw) = 0.4488",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.4488,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_effusion_youden"
+    },
+    {
+      "claim": "Effusion sensitivity_constrained val-frozen threshold (raw) = 0.3044",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.3044,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_effusion_sensitivity_constrained"
+    },
+    {
+      "claim": "Effusion precision_constrained val-frozen threshold (raw) = 0.8475",
+      "section": "results_thresholds",
+      "kind": "numeric",
+      "value": 0.8475,
+      "source_artifact": "outputs/metrics/thresholds/thresholds_val.json",
+      "verified": true,
+      "id": "thr_effusion_precision_constrained"
+    },
+    {
+      "claim": "193 tests passing",
+      "section": "testing",
+      "kind": "numeric",
+      "value": 193,
+      "source_artifact": "tests",
+      "verified": true,
+      "id": "tests_count"
+    },
+    {
+      "claim": "checkpoint sha256 matches manifest",
+      "section": "testing",
+      "kind": "text",
+      "value": true,
+      "source_artifact": "outputs/checkpoints/baseline/baseline_manifest.json",
+      "verified": true,
+      "id": "ckpt_sha"
+    }
+  ],
+  "verified_by_construction": [
+    "tables/table_01..09.csv and figures/figure_01..09.png are generated in this phase directly from the artifact JSON/CSV files cited here"
+  ]
+}

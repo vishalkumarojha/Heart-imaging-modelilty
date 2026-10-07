@@ -9,3 +9,4 @@ albumentations
 Pillow
 tqdm
 matplotlib
+scipy

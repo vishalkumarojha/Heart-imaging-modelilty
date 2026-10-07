@@ -1,0 +1,7 @@
+class,arm,f1,precision,recall,specificity,auroc,auprc
+Cardiomegaly,"A (baseline, fixed tau=0.50)",0.283582,0.178683,0.686747,0.915314,0.897229,0.304267
+Cardiomegaly,D (calibration + f1-optimal policy),0.353617,0.337719,0.371084,0.980477,0.897229,0.304267
+Cardiomegaly,Delta F1 (D - A),0.07,0.159,-0.3157,0.0652,,
+Effusion,"A (baseline, fixed tau=0.50)",0.467556,0.332001,0.790185,0.771369,0.858686,0.469965
+Effusion,D (calibration + f1-optimal policy),0.486646,0.444031,0.538307,0.903075,0.858686,0.469965
+Effusion,Delta F1 (D - A),0.0191,0.112,-0.2519,0.1317,,

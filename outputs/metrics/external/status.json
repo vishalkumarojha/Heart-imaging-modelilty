@@ -1,0 +1,25 @@
+{
+  "phase": "external_validation",
+  "status": "BLOCKED \u2014 EXTERNAL DATASET NOT AVAILABLE",
+  "project_status": {
+    "project": "chest_xray_research_migration",
+    "core_research": "COMPLETE",
+    "external_validation": "PENDING",
+    "explanation": "The core research pipeline is frozen and its results are verified (final_results/). External validity is a SEPARATE open question: it stays PENDING until an external cohort is available and the `src.external_eval` run completes."
+  },
+  "reason": "/home/arno/Desktop/Projects/Capstone/data/raw/chexpert (missing valid.csv, images/); /mnt/data/chexpert (missing valid.csv, images/); /data/chexpert (missing valid.csv, images/)",
+  "what_is_implemented": [
+    "CheXpert label loader with an explicit uncertainty policy",
+    "external dataset/dataloader with the frozen evaluation transform",
+    "evaluation with the frozen model + frozen temperature + frozen validation thresholds (no refitting on external data)",
+    "AUROC / AUPRC / ECE / Brier / per-policy operating points + plots"
+  ],
+  "what_is_missing": [
+    "/home/arno/Desktop/Projects/Capstone/data/raw/chexpert (missing valid.csv, images/)",
+    "/mnt/data/chexpert (missing valid.csv, images/)",
+    "/data/chexpert (missing valid.csv, images/)"
+  ],
+  "how_to_unblock": "Place the official CheXpert files under data/raw/chexpert/ (or point $CHEXPERT_ROOT / $CHEXPERT_DATA_DIR at a mounted copy) and re-run `python -m src.external_eval --split valid`.",
+  "no_metrics_were_computed": true,
+  "checked_utc": "2026-10-07T03:33:42Z"
+}

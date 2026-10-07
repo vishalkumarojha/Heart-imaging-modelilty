@@ -1,0 +1,10 @@
+{
+  "split": "test",
+  "n_images": 15884,
+  "n_bootstraps": 2000,
+  "confidence_level": 0.95,
+  "rng_seed": 42,
+  "resampling_unit": "test image (row)",
+  "method": "percentile bootstrap (percentiles 2.5 / 97.5)",
+  "note": "AUROC/AUPRC are temperature-invariant so a single pair of rows is emitted per label; calibration metrics use frozen binning; precision=0 for bootstrap samples with no predicted positives."
+}

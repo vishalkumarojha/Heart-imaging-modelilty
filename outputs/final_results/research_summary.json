@@ -1,0 +1,80 @@
+{
+  "phase": "final_results",
+  "research_question": "Can a frozen DenseNet-121 generalize to Cardiomegaly/Effusion in an imbalanced chest X-ray cohort, and how do post-hoc probability calibration and threshold policies change operating behaviour?",
+  "baseline_description": "DenseNet-121 (ImageNet V1) trained from scratch for the two-label task with BCEWithLogits on the train split; patient-level split; one frozen checkpoint (best validation mean AUROC).",
+  "proposed_method": "post-hoc per-label temperature scaling (fit on validation NLL) plus a threshold policy chosen on validation (F1-optimal, with constrained alternatives); all thresholds frozen before the test split is touched.",
+  "main_metric_change": {
+    "description": "the F1 operating point improves on both classes while rank discrimination is exactly invariant to temperature",
+    "per_label": {
+      "Cardiomegaly": {
+        "f1_fixed_0.5": 0.2836,
+        "f1_f1_optimal_calibrated": 0.3536,
+        "delta_f1": 0.07,
+        "auroc": 0.8972,
+        "auprc": 0.3043
+      },
+      "Effusion": {
+        "f1_fixed_0.5": 0.4676,
+        "f1_f1_optimal_calibrated": 0.4866,
+        "delta_f1": 0.0191,
+        "auroc": 0.8587,
+        "auprc": 0.47
+      }
+    }
+  },
+  "calibration_change": {
+    "raw_vs_calibrated": {
+      "Cardiomegaly": {
+        "nll_before": 0.22967,
+        "nll_after": 0.22617,
+        "brier_before": 0.06808,
+        "brier_after": 0.06776,
+        "ece_before": 0.10614,
+        "ece_after": 0.11688
+      },
+      "Effusion": {
+        "nll_before": 0.48193,
+        "nll_after": 0.46902,
+        "brier_before": 0.15615,
+        "brier_after": 0.15332,
+        "ece_before": 0.20774,
+        "ece_after": 0.22916
+      }
+    },
+    "headline": "temperature scaling reduces NLL and Brier but RAISES binned ECE because ECE \u2248 mean-confidence \u2212 prevalence and calibration sharpens overconfident misclassifications"
+  },
+  "error_analysis_finding": {
+    "metric": "share of test errors that are high-confidence (\u22650.90)",
+    "value_per_class": {
+      "Cardiomegaly": {
+        "n_errors": 563.0,
+        "share_high_confidence": 0.4866785079928952
+      },
+      "Effusion": {
+        "n_errors": 2268.0,
+        "share_high_confidence": 0.08509700176366843
+      }
+    },
+    "headline": "Cardiomegaly errors are dominated by confident wrong predictions (48.7% of errors have p\u22650.90), whereas Effusion errors are mostly low-confidence."
+  },
+  "external_validation_status": "BLOCKED \u2014 EXTERNAL DATASET NOT AVAILABLE",
+  "no_external_metrics_computed": true,
+  "limitations": [
+    "external cohort absent \u2014 external validity UNVERIFIED (Table 8 is a status row)",
+    "bootstrap CIs resample test images, not patients (patient clustering noted)",
+    "error analysis / Grad-CAM use the combined arm's fixed policy and cohort",
+    "pointing game is a localization sanity check on 43 boxed images, not a validation",
+    "ECE increase after calibration is a known binned-ECE pathology, reported"
+  ],
+  "provenance": {
+    "source_artifacts": [
+      "outputs/metrics/baseline/baseline_metrics_test.json",
+      "outputs/metrics/experiments/exp1_calibration.json",
+      "outputs/metrics/experiments/exp2_thresholds_raw.json",
+      "outputs/metrics/experiments/exp3_thresholds_calibrated.json",
+      "outputs/metrics/error_analysis/error_analysis_test.json",
+      "outputs/gradcam/bbox_localization.json",
+      "outputs/metrics/external/status.json"
+    ]
+  }
+}

@@ -1,0 +1,614 @@
+{
+  "cohort": "test images with a NIH radiologist box, for the boxed label only (fixed set, no cherry-picking)",
+  "n_with_box": 43,
+  "n_labels": 2,
+  "pointing_game_hits": 21,
+  "pointing_game_accuracy": 0.4883720930232558,
+  "mean_concentration_ratio": 2.600987329780574,
+  "ratio_above_1": 38,
+  "median_concentration_ratio": 2.8726094169175216,
+  "cases": [
+    {
+      "image_index": "00000398_003.png",
+      "label": "Cardiomegaly",
+      "box": [
+        369.506878306878,
+        389.01164021164,
+        484.368253968254,
+        376.008465608466
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.641484015563371,
+      "box_area_fraction": 0.1769969706632653,
+      "concentration_ratio": 3.6242655066893033
+    },
+    {
+      "image_index": "00001369_000.png",
+      "label": "Cardiomegaly",
+      "box": [
+        336.998941798942,
+        276.31746031746,
+        553.718518518519,
+        386.844444444444
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.593091869372815,
+      "box_area_fraction": 0.20910395408163265,
+      "concentration_ratio": 2.836349374537778
+    },
+    {
+      "image_index": "00002059_008.png",
+      "label": "Cardiomegaly",
+      "box": [
+        374.924867724868,
+        465.94708994709,
+        554.802116402116,
+        364.088888888889
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.0003138446809943379,
+      "box_area_fraction": 0.19694674744897958,
+      "concentration_ratio": 0.0015935509728366624
+    },
+    {
+      "image_index": "00002583_014.png",
+      "label": "Effusion",
+      "box": [
+        608.982010582011,
+        397.680423280423,
+        318.577777777778,
+        407.432804232804
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.393487724564759,
+      "box_area_fraction": 0.126953125,
+      "concentration_ratio": 3.099472538110102
+    },
+    {
+      "image_index": "00004342_002.png",
+      "label": "Cardiomegaly",
+      "box": [
+        200.465608465608,
+        487.619047619048,
+        477.866666666667,
+        478.950264550265
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.7240693828442489,
+      "box_area_fraction": 0.22393176020408162,
+      "concentration_ratio": 3.2334376427192093
+    },
+    {
+      "image_index": "00004342_020.png",
+      "label": "Cardiomegaly",
+      "box": [
+        316.410582010582,
+        386.844444444444,
+        474.615873015873,
+        431.271957671958
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.611916086593623,
+      "box_area_fraction": 0.19880022321428573,
+      "concentration_ratio": 3.0780452692653255
+    },
+    {
+      "image_index": "00004342_023.png",
+      "label": "Cardiomegaly",
+      "box": [
+        342.416931216931,
+        435.606349206349,
+        455.111111111111,
+        378.175661375661
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.33691174072217495,
+      "box_area_fraction": 0.16908482142857142,
+      "concentration_ratio": 1.9925605259872525
+    },
+    {
+      "image_index": "00004344_013.png",
+      "label": "Cardiomegaly",
+      "box": [
+        350.002116402116,
+        346.751322751323,
+        525.544973544974,
+        422.603174603175
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.637289801284779,
+      "box_area_fraction": 0.21731505102040816,
+      "concentration_ratio": 2.932561726821815
+    },
+    {
+      "image_index": "00004344_014.png",
+      "label": "Cardiomegaly",
+      "box": [
+        329.413756613757,
+        312.076190476191,
+        467.030687830688,
+        450.77671957672
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.5206707245662199,
+      "box_area_fraction": 0.20322464923469388,
+      "concentration_ratio": 2.5620451383578158
+    },
+    {
+      "image_index": "00004344_018.png",
+      "label": "Cardiomegaly",
+      "box": [
+        391.178835978836,
+        393.346031746032,
+        504.956613756614,
+        430.18835978836
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.690172401113596,
+      "box_area_fraction": 0.21205357142857142,
+      "concentration_ratio": 3.254707744198853
+    },
+    {
+      "image_index": "00004344_022.png",
+      "label": "Cardiomegaly",
+      "box": [
+        376.008465608466,
+        508.207407407407,
+        465.94708994709,
+        374.924867724868
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.5753697160322413,
+      "box_area_fraction": 0.17038026147959184,
+      "concentration_ratio": 3.3769740170351783
+    },
+    {
+      "image_index": "00004344_046.png",
+      "label": "Cardiomegaly",
+      "box": [
+        368.42328042328,
+        332.66455026455,
+        480.033862433862,
+        373.84126984127
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.4659830047176735,
+      "box_area_fraction": 0.17534279336734693,
+      "concentration_ratio": 2.6575543583443952
+    },
+    {
+      "image_index": "00004461_000.png",
+      "label": "Cardiomegaly",
+      "box": [
+        329.220338983051,
+        393.491525423729,
+        412.203389830508,
+        347.118644067797
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.3717347943510374,
+      "box_area_fraction": 0.1396484375,
+      "concentration_ratio": 2.6619330728354007
+    },
+    {
+      "image_index": "00004533_014.png",
+      "label": "Cardiomegaly",
+      "box": [
+        450.77671957672,
+        306.658201058201,
+        448.609523809524,
+        392.262433862434
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.4516643586859837,
+      "box_area_fraction": 0.1696827168367347,
+      "concentration_ratio": 2.661817108459939
+    },
+    {
+      "image_index": "00004630_001.png",
+      "label": "Cardiomegaly",
+      "box": [
+        284.745762711864,
+        439.050847457627,
+        512.0,
+        343.864406779661
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.6376514536695257,
+      "box_area_fraction": 0.17115752551020408,
+      "concentration_ratio": 3.725523910028193
+    },
+    {
+      "image_index": "00007735_040.png",
+      "label": "Cardiomegaly",
+      "box": [
+        399.847619047619,
+        477.866666666667,
+        541.798941798942,
+        447.525925925926
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.6486031315721581,
+      "box_area_fraction": 0.23479352678571427,
+      "concentration_ratio": 2.7624404320316276
+    },
+    {
+      "image_index": "00008399_007.png",
+      "label": "Cardiomegaly",
+      "box": [
+        363.005291005291,
+        379.259259259259,
+        547.216931216931,
+        371.674074074074
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.4244200956252639,
+      "box_area_fraction": 0.20015545280612246,
+      "concentration_ratio": 2.1204523268040667
+    },
+    {
+      "image_index": "00008841_025.png",
+      "label": "Effusion",
+      "box": [
+        155.306666666667,
+        486.153489583333,
+        265.102222222222,
+        101.262222222222
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.0997107857798476,
+      "box_area_fraction": 0.027044802295918366,
+      "concentration_ratio": 3.686874272136797
+    },
+    {
+      "image_index": "00010277_000.png",
+      "label": "Effusion",
+      "box": [
+        863.004444444444,
+        693.229045138889,
+        72.8177777777778,
+        112.64
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.04033048887269291,
+      "box_area_fraction": 0.008808992346938776,
+      "concentration_ratio": 4.578331696100089
+    },
+    {
+      "image_index": "00011269_019.png",
+      "label": "Effusion",
+      "box": [
+        733.595767195767,
+        418.268783068783,
+        217.803174603175,
+        189.62962962963
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.14270368321348323,
+      "box_area_fraction": 0.041015625,
+      "concentration_ratio": 3.4792517050144482
+    },
+    {
+      "image_index": "00012686_003.png",
+      "label": "Cardiomegaly",
+      "box": [
+        325.079365079365,
+        410.683597883598,
+        536.380952380952,
+        403.098412698413
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.0,
+      "box_area_fraction": 0.21165497448979592,
+      "concentration_ratio": 0.0
+    },
+    {
+      "image_index": "00012973_005.png",
+      "label": "Effusion",
+      "box": [
+        122.446560846561,
+        62.8486772486773,
+        279.568253968254,
+        762.85291005291
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.29568723299112964,
+      "box_area_fraction": 0.20758928571428573,
+      "concentration_ratio": 1.4243858105379148
+    },
+    {
+      "image_index": "00014015_003.png",
+      "label": "Effusion",
+      "box": [
+        105.244444444444,
+        408.784600694444,
+        275.342222222222,
+        178.631111111111
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.20470602845464173,
+      "box_area_fraction": 0.04862882653061224,
+      "concentration_ratio": 4.209561345795125
+    },
+    {
+      "image_index": "00014447_004.png",
+      "label": "Effusion",
+      "box": [
+        154.954497354497,
+        429.104761904762,
+        94.2730158730159,
+        268.732275132275
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.003926179034014635,
+      "box_area_fraction": 0.026307397959183673,
+      "concentration_ratio": 0.14924239334145328
+    },
+    {
+      "image_index": "00016964_011.png",
+      "label": "Effusion",
+      "box": [
+        729.884444444444,
+        553.282378472222,
+        92.16,
+        59.1644444444444
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.020550643583489455,
+      "box_area_fraction": 0.005440848214285714,
+      "concentration_ratio": 3.777102902729549
+    },
+    {
+      "image_index": "00016972_025.png",
+      "label": "Effusion",
+      "box": [
+        689.168253968254,
+        524.461375661376,
+        120.279365079365,
+        196.131216931217
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.036231476372802184,
+      "box_area_fraction": 0.024553571428571428,
+      "concentration_ratio": 1.4756092195468526
+    },
+    {
+      "image_index": "00017511_006.png",
+      "label": "Cardiomegaly",
+      "box": [
+        338.983050847458,
+        423.864406779661,
+        397.016949152542,
+        334.101694915254
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.39281676848290914,
+      "box_area_fraction": 0.12830835459183673,
+      "concentration_ratio": 3.0615057743706817
+    },
+    {
+      "image_index": "00017524_028.png",
+      "label": "Cardiomegaly",
+      "box": [
+        251.394708994709,
+        435.606349206349,
+        497.371428571429,
+        430.18835978836
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.41449736659377495,
+      "box_area_fraction": 0.20826690051020408,
+      "concentration_ratio": 1.9902219967664356
+    },
+    {
+      "image_index": "00017582_003.png",
+      "label": "Effusion",
+      "box": [
+        107.27619047619,
+        342.416931216931,
+        114.861375661376,
+        309.908994708995
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.05559380719786515,
+      "box_area_fraction": 0.03575414540816327,
+      "concentration_ratio": 1.5548912318618069
+    },
+    {
+      "image_index": "00018233_057.png",
+      "label": "Cardiomegaly",
+      "box": [
+        347.661016949153,
+        385.898305084746,
+        411.118644067797,
+        347.118644067797
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.47372018323613296,
+      "box_area_fraction": 0.13811383928571427,
+      "concentration_ratio": 3.4299255287238397
+    },
+    {
+      "image_index": "00020438_011.png",
+      "label": "Cardiomegaly",
+      "box": [
+        329.413756613757,
+        360.838095238095,
+        486.53544973545,
+        480.033862433862
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.7708754980979209,
+      "box_area_fraction": 0.22604432397959184,
+      "concentration_ratio": 3.410284693401629
+    },
+    {
+      "image_index": "00021443_000.png",
+      "label": "Cardiomegaly",
+      "box": [
+        286.069841269841,
+        372.757671957672,
+        545.049735449736,
+        415.017989417989
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.6320473525743271,
+      "box_area_fraction": 0.22002551020408162,
+      "concentration_ratio": 2.8726094169175216
+    },
+    {
+      "image_index": "00021703_001.png",
+      "label": "Effusion",
+      "box": [
+        563.768888888889,
+        511.184600694444,
+        208.213333333333,
+        155.875555555556
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.12063102677710098,
+      "box_area_fraction": 0.03208705357142857,
+      "concentration_ratio": 3.7594921736446083
+    },
+    {
+      "image_index": "00021845_001.png",
+      "label": "Cardiomegaly",
+      "box": [
+        307.741798941799,
+        373.84126984127,
+        387.928042328042,
+        364.088888888889
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.4315233943831288,
+      "box_area_fraction": 0.1388313137755102,
+      "concentration_ratio": 3.1082569389273433
+    },
+    {
+      "image_index": "00025252_040.png",
+      "label": "Effusion",
+      "box": [
+        600.313227513228,
+        203.716402116402,
+        262.230687830688,
+        417.185185185185
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.14527997049608196,
+      "box_area_fraction": 0.10634566326530612,
+      "concentration_ratio": 1.3661109069736523
+    },
+    {
+      "image_index": "00025252_053.png",
+      "label": "Effusion",
+      "box": [
+        14.2222222222222,
+        640.891267361111,
+        336.782222222222,
+        160.426666666667
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.1845845587017102,
+      "box_area_fraction": 0.05309311224489796,
+      "concentration_ratio": 3.4766196762075867
+    },
+    {
+      "image_index": "00025529_018.png",
+      "label": "Effusion",
+      "box": [
+        724.926984126984,
+        167.957671957672,
+        184.21164021164,
+        603.564021164021
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.18310544253106076,
+      "box_area_fraction": 0.10867745535714286,
+      "concentration_ratio": 1.684852133584908
+    },
+    {
+      "image_index": "00025787_027.png",
+      "label": "Effusion",
+      "box": [
+        604.647619047619,
+        99.6910052910053,
+        377.092063492064,
+        736.846560846561
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.18550639555547138,
+      "box_area_fraction": 0.26797672193877553,
+      "concentration_ratio": 0.6922481707118349
+    },
+    {
+      "image_index": "00026087_000.png",
+      "label": "Cardiomegaly",
+      "box": [
+        338.983050847458,
+        462.915254237288,
+        417.627118644068,
+        393.762711864407
+      ],
+      "pointing_game_hit": true,
+      "heat_mass_inside": 0.6072382896550546,
+      "box_area_fraction": 0.1595184948979592,
+      "concentration_ratio": 3.806695205113945
+    },
+    {
+      "image_index": "00027103_001.png",
+      "label": "Effusion",
+      "box": [
+        672.914285714286,
+        236.224338624339,
+        203.716402116402,
+        269.815873015873
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.09701533493024399,
+      "box_area_fraction": 0.053810586734693876,
+      "concentration_ratio": 1.8029042390592305
+    },
+    {
+      "image_index": "00028774_047.png",
+      "label": "Effusion",
+      "box": [
+        53.0962962962963,
+        488.702645502646,
+        184.21164021164,
+        308.825396825397
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.01842581598815962,
+      "box_area_fraction": 0.05638153698979592,
+      "concentration_ratio": 0.32680584765708626
+    },
+    {
+      "image_index": "00029579_005.png",
+      "label": "Effusion",
+      "box": [
+        104.106666666667,
+        524.837934027778,
+        27.3066666666667,
+        63.7155555555556
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.009003719239521316,
+      "box_area_fraction": 0.0020926339285714285,
+      "concentration_ratio": 4.302577300592587
+    },
+    {
+      "image_index": "00029588_004.png",
+      "label": "Effusion",
+      "box": [
+        41.1767195767196,
+        198.298412698413,
+        265.481481481482,
+        565.638095238095
+      ],
+      "pointing_game_hit": false,
+      "heat_mass_inside": 0.26961909354390523,
+      "box_area_fraction": 0.14698262117346939,
+      "concentration_ratio": 1.8343603576486764
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "type": "temperature_scaling",
+  "labels": [
+    "Cardiomegaly",
+    "Effusion"
+  ],
+  "temperatures": [
+    1.1865413532791096,
+    1.3979213336039338
+  ],
+  "metadata": {
+    "split": "val",
+    "n_rows": 16451,
+    "labels": [
+      "Cardiomegaly",
+      "Effusion"
+    ],
+    "temperatures": {
+      "Cardiomegaly": 1.1865413532791096,
+      "Effusion": 1.3979213336039338
+    },
+    "nll_before": {
+      "Cardiomegaly": 0.23369075828209662,
+      "Effusion": 0.4889182845839118
+    },
+    "nll_after": {
+      "Cardiomegaly": 0.23019090475053544,
+      "Effusion": 0.4721418442664876
+    },
+    "fitted_utc": "2026-10-06T21:04:27+00:00",
+    "bounds": [
+      0.05,
+      50.0
+    ]
+  }
+}

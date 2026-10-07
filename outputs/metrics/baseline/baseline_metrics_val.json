@@ -1,0 +1,177 @@
+{
+  "experiment": "baseline_densenet121_val",
+  "status": "COMPLETED",
+  "role": "experimental control (frozen)",
+  "checkpoint": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_best.pt",
+  "checkpoint_sha256": "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c",
+  "split": "val",
+  "threshold": 0.5,
+  "labels": [
+    "Cardiomegaly",
+    "Effusion"
+  ],
+  "n_images": 16451,
+  "metrics": {
+    "threshold": 0.5,
+    "per_label": {
+      "Cardiomegaly": {
+        "threshold": 0.5,
+        "n": 16451,
+        "support_pos": 392,
+        "support_neg": 16059,
+        "tp": 230,
+        "tn": 14635,
+        "fp": 1424,
+        "fn": 162,
+        "accuracy": 0.9035924867789192,
+        "precision": 0.13905683192261184,
+        "recall": 0.5867346938775511,
+        "sensitivity": 0.5867346938775511,
+        "specificity": 0.9113269817547792,
+        "f1": 0.22482893450635386,
+        "prevalence": 0.02382833870281442,
+        "auroc": 0.875063302922514,
+        "auprc": 0.23067291392607156
+      },
+      "Effusion": {
+        "threshold": 0.5,
+        "n": 16451,
+        "support_pos": 1966,
+        "support_neg": 14485,
+        "tp": 1588,
+        "tn": 11105,
+        "fp": 3380,
+        "fn": 378,
+        "accuracy": 0.7715640386602638,
+        "precision": 0.3196457326892109,
+        "recall": 0.8077314343845371,
+        "sensitivity": 0.8077314343845371,
+        "specificity": 0.7666551605108733,
+        "f1": 0.4580328814537064,
+        "prevalence": 0.11950641298401313,
+        "auroc": 0.8605203895986693,
+        "auprc": 0.47514856602298294
+      },
+      "mean": {
+        "auroc": 0.8677918462605916,
+        "auprc": 0.35291073997452727
+      }
+    },
+    "macro": {
+      "auroc": 0.8677918462605916,
+      "auprc": 0.35291073997452727
+    }
+  },
+  "predictions_file": "/home/arno/Desktop/Projects/Capstone/outputs/predictions/baseline/baseline_val_predictions.csv",
+  "baseline_configuration": {
+    "dataset": "NIH ChestX-ray14",
+    "labels": [
+      "Cardiomegaly",
+      "Effusion"
+    ],
+    "architecture": "densenet121 (torchvision, ImageNet-1K V1 pretrained)",
+    "classifier": "Linear(1024, 2), logits out; sigmoid applied for metrics",
+    "image_size": 224,
+    "normalization": {
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    },
+    "augmentation": {
+      "rotate_deg": 10,
+      "brightness": 0.15,
+      "contrast": 0.15,
+      "horizontal_flip": false
+    },
+    "split": "patient-level 70/15/15, seed 42",
+    "loss": "BCEWithLogitsLoss(pos_weight from train prevalence)",
+    "optimizer": "Adam (weight_decay=0), no LR scheduler",
+    "schedule": {
+      "phase1_epochs": 5,
+      "phase1_lr": 0.0001,
+      "phase2_epochs": 5,
+      "phase2_lr": 1e-05
+    },
+    "batch_size": 32,
+    "amp": true,
+    "seed": 42,
+    "checkpoint_selection": "max mean validation AUROC"
+  },
+  "split_statistics": {
+    "rows": 109312,
+    "patients": 29720,
+    "rows_by_split": {
+      "train": 76977,
+      "val": 16451,
+      "test": 15884
+    },
+    "patients_by_split": {
+      "test": 4455,
+      "train": 20797,
+      "val": 4468
+    },
+    "label_counts_by_split": {
+      "Cardiomegaly": {
+        "test": 415,
+        "train": 1880,
+        "val": 392
+      },
+      "Effusion": {
+        "test": 1996,
+        "train": 9001,
+        "val": 1966
+      }
+    },
+    "label_counts_total": {
+      "Cardiomegaly": 2687,
+      "Effusion": 12963
+    },
+    "patient_overlap": {
+      "train_val": 0,
+      "train_test": 0,
+      "val_test": 0
+    }
+  },
+  "environment": {
+    "timestamp_utc": "2026-10-06T20:54:01+00:00",
+    "python": "3.14.7",
+    "python_full": "3.14.7 (main, Aug 10 2026, 00:00:00) [GCC 15.3.1 20260722 (Red Hat 15.3.1-1)]",
+    "platform": "Linux-7.2.5-100.fc43.x86_64-x86_64-with-glibc2.42",
+    "machine": "x86_64",
+    "processor": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+    "torch": "2.14.0+cu130",
+    "cuda_available": true,
+    "cuda_runtime": "13.0",
+    "cudnn": 92400,
+    "gpu": {
+      "name": "NVIDIA GeForce GTX 1650",
+      "total_memory_gb": 3.63,
+      "capability": "7.5"
+    },
+    "torchvision": "0.29.0+cu130",
+    "packages": {
+      "numpy": "2.5.3",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "albumentations": "2.0.8",
+      "Pillow": "12.3.0",
+      "tqdm": "4.70.0",
+      "matplotlib": "3.11.1",
+      "opencv-python-headless": "5.0.0.93",
+      "nibabel": "5.4.2",
+      "gradio": "6.26.0",
+      "pytest": null
+    }
+  },
+  "notes": [
+    "Raw (uncalibrated) sigmoid probabilities; single fixed threshold 0.50.",
+    "AUPRC was not part of the original Phase 1 evaluation; it is added here as the class-imbalance-aware companion to AUROC."
+  ]
+}

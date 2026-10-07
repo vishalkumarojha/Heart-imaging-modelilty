@@ -1,0 +1,4 @@
+scope,label,n_with_box,pointing_game_hits,pointing_game_accuracy,concentration_ratio_gt_1,mean_concentration_ratio,median_concentration_ratio
+localization sanity check (fixed cohort),all,43,21,0.4884,38,2.601,2.8726
+fixed cohort,Cardiomegaly,24,19,0.7917,22,2.7151,2.9026
+fixed cohort,Effusion,19,2,0.1053,16,2.4569,1.8344

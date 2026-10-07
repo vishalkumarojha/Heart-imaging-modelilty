@@ -1,0 +1,109 @@
+{
+  "split": "val",
+  "labels": [
+    "Cardiomegaly",
+    "Effusion"
+  ],
+  "checkpoint": "/home/arno/Desktop/Projects/Capstone/outputs/checkpoints/baseline/densenet121_best.pt",
+  "checkpoint_sha256": "35965f610c8b578b3ad52e9d7d06a1b3054948df6df52e80aa02f2b81803d68c",
+  "n_rows": 16451,
+  "n_bins": 15,
+  "binning": "equal_width",
+  "raw": {
+    "Cardiomegaly": {
+      "ece": 0.1086454240007964,
+      "mce": 0.7306760728971966,
+      "brier": 0.07049823802523855,
+      "nll": 0.23369075679834403,
+      "n": 16451,
+      "prevalence": 0.02382833870281442,
+      "mean_confidence": 0.1324737627036109,
+      "n_bins": 15,
+      "binning": "equal_width"
+    },
+    "Effusion": {
+      "ece": 0.2145337534411385,
+      "mce": 0.5078722218619585,
+      "brier": 0.15854845871279646,
+      "nll": 0.488918284369708,
+      "n": 16451,
+      "prevalence": 0.11950641298401313,
+      "mean_confidence": 0.33404016642515166,
+      "n_bins": 15,
+      "binning": "equal_width"
+    }
+  },
+  "calibrated": {
+    "Cardiomegaly": {
+      "ece": 0.11944754796411211,
+      "mce": 0.7050296973847762,
+      "brier": 0.06994577597569201,
+      "nll": 0.23019090475053544,
+      "n": 16451,
+      "prevalence": 0.02382833870281442,
+      "mean_confidence": 0.14327588666692645,
+      "n_bins": 15,
+      "binning": "equal_width"
+    },
+    "Effusion": {
+      "ece": 0.2351314064489706,
+      "mce": 0.4395981932506979,
+      "brier": 0.15476207607184567,
+      "nll": 0.4721418442664876,
+      "n": 16451,
+      "prevalence": 0.11950641298401313,
+      "mean_confidence": 0.35463781943298384,
+      "n_bins": 15,
+      "binning": "equal_width"
+    }
+  },
+  "temperatures": {
+    "Cardiomegaly": 1.1865413532791096,
+    "Effusion": 1.3979213336039338
+  },
+  "thresholds_raw": {
+    "fixed": {
+      "Cardiomegaly": 0.5,
+      "Effusion": 0.5
+    },
+    "f1_optimal": {
+      "Cardiomegaly": 0.9020933,
+      "Effusion": 0.7699463
+    },
+    "youden": {
+      "Cardiomegaly": 0.18257122,
+      "Effusion": 0.44875836
+    },
+    "sensitivity_constrained": {
+      "Cardiomegaly": 0.05194156,
+      "Effusion": 0.30435172
+    },
+    "precision_constrained": {
+      "Cardiomegaly": 0.98215127,
+      "Effusion": 0.8474635
+    }
+  },
+  "thresholds_calibrated": {
+    "fixed": {
+      "Cardiomegaly": 0.5,
+      "Effusion": 0.5
+    },
+    "f1_optimal": {
+      "Cardiomegaly": 0.8666406044962653,
+      "Effusion": 0.7035260950635486
+    },
+    "youden": {
+      "Cardiomegaly": 0.22039682338148656,
+      "Effusion": 0.4632815196125169
+    },
+    "sensitivity_constrained": {
+      "Cardiomegaly": 0.0796069293860885,
+      "Effusion": 0.3563252634307085
+    },
+    "precision_constrained": {
+      "Cardiomegaly": 0.9670011437406602,
+      "Effusion": 0.7732421936203356
+    }
+  },
+  "status": "PARAMETERS FITTED ON VALIDATION ONLY"
+}

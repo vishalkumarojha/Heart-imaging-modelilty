@@ -1,0 +1,186 @@
+{
+  "phase": "final_results",
+  "status": "PASS",
+  "checks_total": 25,
+  "checks_passed": 25,
+  "checks_differ": 0,
+  "master_rows": 24,
+  "checks": [
+    {
+      "claim": "baseline test AUROC [Cardiomegaly]",
+      "artifact_value": 0.8972288922968361,
+      "documented_value": 0.8972,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "baseline test F1 [fixed 0.5][Cardiomegaly]",
+      "artifact_value": 0.2835820895522388,
+      "documented_value": 0.2836,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "baseline test AUROC [Effusion]",
+      "artifact_value": 0.8586858468735723,
+      "documented_value": 0.8587,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "baseline test F1 [fixed 0.5][Effusion]",
+      "artifact_value": 0.46755555555555556,
+      "documented_value": 0.4676,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "ECE test raw [Cardiomegaly]",
+      "artifact_value": 0.10614299535375264,
+      "documented_value": 0.1061,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "ECE test calibrated [Cardiomegaly]",
+      "artifact_value": 0.11687622921642567,
+      "documented_value": 0.1169,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "ECE rises after calibration [Cardiomegaly]",
+      "artifact_value": true,
+      "documented_value": true,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "ECE test raw [Effusion]",
+      "artifact_value": 0.207740562650292,
+      "documented_value": 0.2077,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "ECE test calibrated [Effusion]",
+      "artifact_value": 0.22915634503612273,
+      "documented_value": 0.2292,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "ECE rises after calibration [Effusion]",
+      "artifact_value": true,
+      "documented_value": true,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "confusion identical raw vs calibrated [Cardiomegaly]",
+      "artifact_value": true,
+      "documented_value": true,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "confusion identical raw vs calibrated [Effusion]",
+      "artifact_value": true,
+      "documented_value": true,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "Cardiomegaly high-confidence errors == 48.7% of errors",
+      "artifact_value": 0.4866785079928952,
+      "documented_value": 0.487,
+      "status": "PASS",
+      "tolerance": 0.005
+    },
+    {
+      "claim": "high-confidence error count == 274",
+      "artifact_value": 274,
+      "documented_value": 274,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "bbox cohort n == 43",
+      "artifact_value": 43,
+      "documented_value": 43,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "pointing hits == 21",
+      "artifact_value": 21,
+      "documented_value": 21,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "concentration ratio == 2.60",
+      "artifact_value": 2.600987329780574,
+      "documented_value": 2.6,
+      "status": "PASS",
+      "tolerance": 0.03
+    },
+    {
+      "claim": "ratio_above_1 == 38",
+      "artifact_value": 38,
+      "documented_value": 38,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "test F1 f1_optimal [Cardiomegaly]",
+      "artifact_value": 0.3536165327210103,
+      "documented_value": 0.3536,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "test F1 fixed [Cardiomegaly]",
+      "artifact_value": 0.2835820895522388,
+      "documented_value": 0.2836,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "test F1 f1_optimal [Effusion]",
+      "artifact_value": 0.4866455409687641,
+      "documented_value": 0.4866,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "test F1 fixed [Effusion]",
+      "artifact_value": 0.4675555555555555,
+      "documented_value": 0.4676,
+      "status": "PASS",
+      "tolerance": 0.0005
+    },
+    {
+      "claim": "n error images == 4449",
+      "artifact_value": 4449,
+      "documented_value": 4449,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "max errors one patient == 60",
+      "artifact_value": 60,
+      "documented_value": 60,
+      "status": "PASS",
+      "tolerance": 0.0
+    },
+    {
+      "claim": "n patients with errors == 1317",
+      "artifact_value": 1317,
+      "documented_value": 1317,
+      "status": "PASS",
+      "tolerance": 0.0
+    }
+  ],
+  "note": "A DIFF here means documentation drifted from an artifact \u2014 fix the DOCUMENT, never the artifact."
+}

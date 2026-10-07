@@ -1,0 +1,6 @@
+field,value
+status,EXTERNAL VALIDATION PENDING — DATASET UNAVAILABLE
+no_metrics_were_computed,true
+dataset_probed,"$CHEXPERT_ROOT, $CHEXPERT_DATA_DIR, data/raw/chexpert, /mnt/data/chexpert, /data/chexpert"
+pipeline_implemented,true (src/external_eval.py)
+recommended_next_step,place the official CheXpert cohort at data/raw/chexpert/ or $CHEXPERT_ROOT and run: .venv/bin/python -m src.external_eval --split valid

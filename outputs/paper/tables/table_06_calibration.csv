@@ -1,0 +1,11 @@
+class,metric,raw,calibrated,delta
+Cardiomegaly,nll,0.2297,0.2262,-0.0035
+Cardiomegaly,brier,0.0681,0.0678,-0.0003
+Cardiomegaly,ece,0.1061,0.1169,0.0107
+Cardiomegaly,mce,0.6926,0.6783,-0.0142
+Cardiomegaly,mean_confidence,0.1323,0.143,0.0107
+Effusion,nll,0.4819,0.469,-0.0129
+Effusion,brier,0.1561,0.1533,-0.0028
+Effusion,ece,0.2077,0.2292,0.0214
+Effusion,mce,0.5115,0.4357,-0.0758
+Effusion,mean_confidence,0.3335,0.3549,0.0214

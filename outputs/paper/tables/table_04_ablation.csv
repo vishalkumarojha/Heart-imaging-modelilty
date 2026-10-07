@@ -1,0 +1,9 @@
+arm,class,calibration,threshold_policy,f1,precision,recall,specificity,ece,brier_score
+A baseline,Cardiomegaly,raw,fixed,0.283582,0.178683,0.686747,0.915314,0.106143,0.068083
+A baseline,Effusion,raw,fixed,0.467556,0.332001,0.790185,0.771369,0.207741,0.156148
+B calibration only,Cardiomegaly,calibrated,fixed,0.283582,0.178683,0.686747,0.915314,0.116876,0.067758
+B calibration only,Effusion,calibrated,fixed,0.467556,0.332001,0.790185,0.771369,0.229156,0.153321
+C threshold only,Cardiomegaly,raw,f1_optimal,0.353617,0.337719,0.371084,0.980477,0.106143,0.068083
+C threshold only,Effusion,raw,f1_optimal,0.486646,0.444031,0.538307,0.903075,0.207741,0.156148
+D calibration + threshold,Cardiomegaly,calibrated,f1_optimal,0.353617,0.337719,0.371084,0.980477,0.116876,0.067758
+D calibration + threshold,Effusion,calibrated,f1_optimal,0.486646,0.444031,0.538307,0.903075,0.229156,0.153321

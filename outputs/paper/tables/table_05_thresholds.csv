@@ -1,0 +1,11 @@
+class,policy,threshold_val_raw,threshold_val_calibrated,test_f1_raw,test_f1_calibrated,test_precision_calibrated,test_recall_calibrated,test_specificity_calibrated
+Cardiomegaly,fixed,0.5,0.5,0.2836,0.2836,0.1787,0.6867,0.9153
+Cardiomegaly,f1_optimal,0.9021,0.8666,0.3536,0.3536,0.3377,0.3711,0.9805
+Cardiomegaly,youden,0.1826,0.2204,0.1852,0.1852,0.1044,0.8169,0.8121
+Cardiomegaly,sensitivity_constrained,0.0519,0.0796,0.1281,0.1281,0.0689,0.9205,0.666
+Cardiomegaly,precision_constrained,0.9822,0.967,0.2559,0.2559,0.5303,0.1687,0.996
+Effusion,fixed,0.5,0.5,0.4676,0.4676,0.332,0.7902,0.7714
+Effusion,f1_optimal,0.7699,0.7035,0.4866,0.4866,0.444,0.5383,0.9031
+Effusion,youden,0.4488,0.4633,0.4545,0.4545,0.3138,0.8237,0.741
+Effusion,sensitivity_constrained,0.3044,0.3563,0.4123,0.4123,0.2682,0.8908,0.6505
+Effusion,precision_constrained,0.8475,0.7732,0.4673,0.4673,0.5157,0.4271,0.9423
